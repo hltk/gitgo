@@ -1,19 +1,19 @@
 package main
 
 import (
-"flag"
-"fmt"
-"io"
-"log"
-"os"
-"strings"
+	"flag"
+	"fmt"
+	"io"
+	"log"
+	"os"
+	"strings"
 
-"github.com/libgit2/git2go/v30"
+	"github.com/libgit2/git2go/v30"
 )
 
 var licensefiles = [...]string{"HEAD:LICENSE", "HEAD:LICENSE.md", "HEAD:COPYING"}
 var readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
-var mainfiles = [...]string{"index.html", "tree.html", "log.html"}
+var mainfiles = [...]string{"index.html", "tree", "log"}
 
 func writetofile(file *os.File, str string) {
 	_, err := io.WriteString(file, str)
@@ -46,11 +46,11 @@ func writelogline(commit *git.Commit, logfile *os.File) {
 	name := commit.Author().Name
 	date := commit.Author().When.Format("15:04:05 2006-01-02")
 	link := commit.TreeId().String() + ".html"
-	writetofile(logfile, "<a href=\"/commit/" + link + "\">")
-	writetofile(logfile, commit_msg + "<br>")
+	writetofile(logfile, "<a href=\"/commit/"+link+"\">")
+	writetofile(logfile, commit_msg+"<br>")
 	writetofile(logfile, "</a>")
-	writetofile(logfile, name + "<br>")
-	writetofile(logfile, date + "<br>")
+	writetofile(logfile, name+"<br>")
+	writetofile(logfile, date+"<br>")
 	writetofile(logfile, "<br>")
 }
 
@@ -84,7 +84,6 @@ func writelogtofile(repo *git.Repository, head *git.Oid, logfile *os.File) {
 
 		closefile(commitfile)
 
-
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -108,7 +107,7 @@ func writetreetofilerecursive(repo *git.Repository, tree *git.Tree, treefile *os
 			if _, err := os.Stat(newpath); os.IsNotExist(err) {
 				os.Mkdir(newpath, 755)
 			}
-			writetofile(treefile, "<a href=\"/" + newpath + "\">" + entry.Name + "/</a><br>")
+			writetofile(treefile, "<a href=\"/"+newpath+"\">"+entry.Name+"/</a><br>")
 			newtreefile := openfile(newpath + "index.html")
 			writetreetofilerecursive(repo, nexttree, newtreefile, newpath)
 			closefile(newtreefile)
@@ -131,7 +130,7 @@ func writetreetofilerecursive(repo *git.Repository, tree *git.Tree, treefile *os
 				log.Fatal(err)
 			}
 			closefile(file)
-			writetofile(treefile, "<a href=\"/" + newpath + ".html\">" + entry.Name + "</a><br>")
+			writetofile(treefile, "<a href=\"/"+newpath+".html\">"+entry.Name+"</a><br>")
 		}
 		if entry.Type == git.ObjectCommit {
 			log.Print("FATAL: submodules not implemented")
@@ -187,7 +186,7 @@ func main() {
 		fileObj, _, err := repo.RevparseExt(file)
 		if err == nil && fileObj.Type() == git.ObjectBlob {
 			realname := strings.TrimPrefix(file, "HEAD:")
-			writetofile(indexfile, "<a href=\"/" + "file/" + realname + "\">LICENSE</a><br>")
+			writetofile(indexfile, "<a href=\"/"+"tree/"+realname+".html\">LICENSE</a><br>")
 			break
 		}
 	}
@@ -196,14 +195,13 @@ func main() {
 		fileObj, _, err := repo.RevparseExt(file)
 		if err == nil && fileObj.Type() == git.ObjectBlob {
 			realname := strings.TrimPrefix(file, "HEAD:")
-			writetofile(indexfile, "<a href=\"/" + "file/" + realname + "\">README</a><br>")
+			writetofile(indexfile, "<a href=\"/"+"tree/"+realname+".html\">README</a><br>")
 			break
 		}
 	}
 
 	for _, file := range mainfiles {
-		cleanname := strings.TrimSuffix(file, ".html")
-		writetofile(indexfile, "<a href=\"/" + file + "\">" + cleanname + "</a><br>")
+		writetofile(indexfile, "<a href=\"/"+file+"\">" + file + "</a><br>")
 	}
 	closefile(indexfile)
 
@@ -213,7 +211,10 @@ func main() {
 		os.Mkdir("commit", 755)
 	}
 
-	logfile := openfile("log.html")
+	if _, err := os.Stat("log"); os.IsNotExist(err) {
+		os.Mkdir("log", 755)
+	}
+	logfile := openfile("log/index.html")
 	writelogtofile(repo, head, logfile)
 	closefile(logfile)
 
