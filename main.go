@@ -4,10 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
-	"io"
 	"log"
-	"os"
 	"strings"
+	"time"
 
 	"github.com/libgit2/git2go/v30"
 )
@@ -76,6 +75,17 @@ type FileRenderData struct {
 	FileViewData FileViewRenderData
 }
 
+type CommitRenderData struct {
+	GlobalData    *GlobalRenderData
+	Id            string
+	Author        string
+	Mail          string
+	Parents       []string
+	HasAnyParents bool
+	Date          time.Time
+	Msg           string
+}
+
 func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 	var commitlist []CommitListElem
 
@@ -103,7 +113,28 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 
 		commitfile_name := Config.DestDir + "commit/" + commit.TreeId().String() + ".html"
 		commitfile := openfile(commitfile_name)
-		// TODO: write commit info to file
+
+		var parents []string
+
+		parentcount := int(commit.ParentCount())
+		parentcountispositive := parentcount > 0
+
+		for i := 0; i < parentcount; i++ {
+			parents = append(parents, commit.Parent(uint(i)).TreeId().String())
+		}
+
+		err = t.ExecuteTemplate(commitfile, "commit.html", CommitRenderData{GlobalData: &GlobalDataGlobal,
+			Author:        commit.Author().Name,
+			Mail:          commit.Author().Email,
+			Date:          commit.Author().When,
+			Id:            commit.TreeId().String(),
+			Parents:       parents,
+			HasAnyParents: parentcountispositive,
+			Msg:           commit.Message()})
+		if err != nil {
+			log.Print("execute:", err)
+		}
+
 		closefile(commitfile)
 
 		link := "/commit/" + commit.TreeId().String() + ".html"

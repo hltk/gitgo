@@ -10,12 +10,14 @@ Commit:
 </th>
 </tr>
 <tr>
-{{if .HasParent -}}
+{{if .HasAnyParents -}}
 <th>
-Parent:
+Parent(s):
 </th>
 <th>
-{{.Parent -}}
+{{range .Parents -}}
+<a href="/commit/{{. -}}.html">{{. -}}</a><br>
+{{end -}}
 </th>
 </tr>
 {{end -}}
@@ -25,6 +27,14 @@ Author:
 </th>
 <th>
 {{.Author -}} &lt;<a href="mailto:{{.Mail -}}">{{.Mail}}</a>&gt;
+</th>
+</tr>
+<tr>
+<th>
+Message:
+</th>
+<th>
+{{.Msg -}}
 </th>
 </tr>
 </table>
