@@ -123,9 +123,9 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 
 func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 	var filelist []FileListElem
-	count := tree.EntryCount()
-	for i := uint64(0); i < count; i++ {
-		entry := tree.EntryByIndex(i)
+	count := int(tree.EntryCount())
+	for i := 0; i < count; i++ {
+		entry := tree.EntryByIndex(uint64(i))
 		if entry.Type == git.ObjectTree {
 			// possibly very slow?
 			nexttree, err := repo.LookupTree(entry.Id)
