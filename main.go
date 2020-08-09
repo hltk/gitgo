@@ -12,18 +12,47 @@ import (
 	"github.com/libgit2/git2go/v30"
 )
 
+type ConfigStruct struct {
+	InstallDir string
+	DestDir string
+}
+
+var Config ConfigStruct
+
+type RenderFile struct {
+	Name string
+	Contents string
+}
+
+type LinkListElem struct {
+	Pretty string
+	Link string
+}
+
+type CommitListElem struct {
+	Link string
+	Msg string
+	Name string
+	Date string
+}
 
 type GlobalRenderData struct {
-	Reponame string
+	RepoName string
+	Links []LinkListElem
+	ReadmeFile RenderFile
 }
+
+var GlobalDataGlobal GlobalRenderData
 
 type IndexRenderData struct {
-	GlobalData GlobalRenderData
+	GlobalData *GlobalRenderData
 }
+var IndexData = IndexRenderData{&GlobalDataGlobal}
 
-// var licensefiles = [...]string{"HEAD:LICENSE", "HEAD:LICENSE.md", "HEAD:COPYING"}
-var readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
-var mainfiles = [...]string{"index.html", "tree", "log"}
+type LogRenderData struct {
+	GlobalData *GlobalRenderData
+	Commits []CommitListElem
+}
 
 func writetofile(file *os.File, str string) {
 	_, err := io.WriteString(file, str)
@@ -51,21 +80,9 @@ func closefile(file *os.File) {
 	}
 }
 
-func writelogline(commit *git.Commit, logfile *os.File) {
-	commit_msg := commit.Summary()
-	name := commit.Author().Name
-	date := commit.Author().When.Format("15:04:05 2006-01-02")
-	link := commit.TreeId().String() + ".html"
-	writetofile(logfile, "<a href=\"/commit/"+link+"\">")
-	writetofile(logfile, commit_msg+"<br>")
-	writetofile(logfile, "</a>")
-	writetofile(logfile, name+"<br>")
-	writetofile(logfile, date+"<br>")
-	writetofile(logfile, "<br>")
-}
+func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
+	var commitlist []CommitListElem
 
-func writelogtofile(repo *git.Repository, head *git.Oid, logfile *os.File) {
-	writetofile(logfile, "commit log:\n<br><br>\n")
 	walk, err := repo.Walk()
 	if err != nil {
 		log.Fatal(err)
@@ -88,18 +105,22 @@ func writelogtofile(repo *git.Repository, head *git.Oid, logfile *os.File) {
 			log.Fatal(err)
 		}
 
-		commitfile_name := "commit/" + commit.TreeId().String() + ".html"
+		// commitfile_name := Config.DestDir + "commit/" + commit.TreeId().String() + ".html"
+		// commitfile := openfile(commitfile_name)
+		// closefile(commitfile)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 
-		commitfile := openfile(commitfile_name)
+		link := "/commit/" + commit.TreeId().String() + ".html"
+		msg := commit.Summary()
+		name := commit.Author().Name
+		date := commit.Author().When.Format("15:04:05 2006-01-02")
 
-		closefile(commitfile)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		writelogline(commit, logfile)
+		commitlist = append(commitlist, CommitListElem{link, msg, name, date})
 	}
+
+	return commitlist
 
 }
 
@@ -158,19 +179,38 @@ func writetreetofile(repo *git.Repository, head *git.Oid, treefile *os.File) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	writetreetofilerecursive(repo, tree, treefile, "tree/")
+	writetreetofilerecursive(repo, tree, treefile, Config.DestDir + "tree/")
+}
+
+func fixpath(str *string) {
+	if ((*str)[len(*str) - 1] != '/') {
+		(*str) += "/"
+	}
+}
+
+func cleanname(name string) string {
+	name = strings.TrimSuffix(name, ".git")
+
+	lastslash := strings.LastIndex(name, "/")
+
+	if lastslash != -1 {
+		name = name[lastslash+1:]
+	}
+
+	return name
+}
+
+func makedir(dir string) {
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		os.Mkdir(dir, 0755)
+	}
 }
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	var (
-		targetdir string
-		installdir string
-	)
-
-	flag.StringVar(&targetdir, "destdir", ".", "target directory")
-	flag.StringVar(&installdir, "installdir", "/usr/share/gitgo", "install directory")
+	flag.StringVar(&Config.DestDir, "destdir", ".", "target directory")
+	flag.StringVar(&Config.InstallDir, "installdir", "/usr/share/gitgo", "install directory")
 
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "usage: gitgo [options] <git repo>\n")
@@ -185,115 +225,77 @@ func main() {
 		return
 	}
 
-	if targetdir[len(targetdir) - 1] != '/' {
-		targetdir += "/"
-	}
-	if installdir[len(installdir) - 1] != '/' {
-		installdir += "/"
-	}
+	fixpath(&Config.DestDir)
+	fixpath(&Config.InstallDir)
 
-	reponame := args[0]
-
-	repo, err := git.OpenRepositoryExtended(reponame, git.RepositoryOpenNoSearch, "")
+	repo, err := git.OpenRepositoryExtended(args[0], git.RepositoryOpenNoSearch, "")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// ignore the reference
 	obj, _, err := repo.RevparseExt("HEAD")
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	head := obj.Id()
 
-	cleanreponame := strings.TrimSuffix(reponame, ".git")
 
-	lastslash := strings.LastIndex(cleanreponame, "/")
-
-	if lastslash != -1 {
-		cleanreponame = cleanreponame[lastslash+1:]
-	}
-
-	var IndexData = IndexRenderData{GlobalRenderData{cleanreponame}}
+	GlobalDataGlobal.RepoName = cleanname(args[0])
+	GlobalDataGlobal.Links = []LinkListElem{{"summary", "/"}, {"tree", "/tree"}, {"log", "/log"}}
 
 	templ := template.New("")
 
-	t, err := templ.ParseGlob(installdir + "templates/*.html")
+	t, err := templ.ParseGlob(Config.InstallDir + "templates/*.html")
 
 	if err != nil {
 		log.Print("parse:", err)
 	}
 
-	err = t.ExecuteTemplate(os.Stdout, "index.html", IndexData)
-
-	if err != nil {
-		log.Print("execute:", err)
-	}
-
-
-	os.Exit(0)
-
-	indexfile := openfile("index.html")
-
-	writetofile(indexfile, "<h1>"+cleanreponame+"</h1>")
-
-	for _, file := range mainfiles {
-		writetofile(indexfile, "<a href=\"/"+file+"\">"+file+"</a><br>")
-	}
-
-	// TODO: make LICENSE file easily accessible
-	// for _, file := range licensefiles {
-	// 	fileObj, _, err := repo.RevparseExt(file)
-	// 	if err == nil && fileObj.Type() == git.ObjectBlob {
-	// 		realname := strings.TrimPrefix(file, "HEAD:")
-	// 		writetofile(indexfile, "<a href=\"/"+"tree/"+realname+".html\">LICENSE</a><br>")
-	// 		break
-	// 	}
-	// }
-
+	var readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
 	for _, file := range readmefiles {
 		fileobj, _, err := repo.RevparseExt(file)
 		if err == nil && fileobj.Type() == git.ObjectBlob {
-			writetofile(indexfile, "<hr>")
-
 			blob, err := fileobj.AsBlob()
 
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			size := blob.Size()
-			contents := blob.Contents()
-
-			writtensize, err := indexfile.Write(contents)
-			if int64(writtensize) != size {
-				log.Fatal()
-			}
-			if err != nil {
-				log.Fatal(err)
-			}
+			GlobalDataGlobal.ReadmeFile.Name = strings.TrimPrefix(file, "HEAD:")
+			GlobalDataGlobal.ReadmeFile.Contents  = string(blob.Contents())
 			break
 		}
 	}
 
+	// var licensefiles = [...]string{"HEAD:LICENSE", "HEAD:COPYING", "HEAD:LICENSE.md"}
+	// TODO: make the LICENSE file easily accessible (the same way as README)
+
+	indexfile := openfile(Config.DestDir + "index.html")
+	err = t.ExecuteTemplate(indexfile, "index.html", IndexData)
+	if err != nil {
+		log.Print("execute:", err)
+	}
 	closefile(indexfile)
+
 
 	// TODO: submodules are listed in .submodules
 
-	if _, err := os.Stat("commit"); os.IsNotExist(err) {
-		os.Mkdir("commit", 755)
-	}
+	makedir(Config.DestDir + "commit")
+	makedir(Config.DestDir + "tree")
+	makedir(Config.DestDir + "log")
 
-	if _, err := os.Stat("log"); os.IsNotExist(err) {
-		os.Mkdir("log", 755)
+
+	commitlist := getcommitlog(repo, head)
+
+	logfile := openfile(Config.DestDir + "log/index.html")
+	err = t.ExecuteTemplate(logfile, "log.html", LogRenderData{GlobalData: &GlobalDataGlobal, Commits: commitlist})
+	if err != nil {
+		log.Print("execute:", err)
 	}
-	logfile := openfile("log/index.html")
-	writelogtofile(repo, head, logfile)
 	closefile(logfile)
 
-	if _, err := os.Stat("tree"); os.IsNotExist(err) {
-		os.Mkdir("tree", 755)
-	}
+	os.Exit(0)
 
 	treefile := openfile("tree/index.html")
 	writetreetofile(repo, head, treefile)

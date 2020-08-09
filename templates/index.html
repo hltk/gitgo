@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-{{template "header.html" .}}
-this text is saved in the file <pre>index.html</pre>
-</html>
+{{template "header.html" . -}}
+{{template "nav.html" . -}}
+{{template "file.html" .GlobalData.ReadmeFile -}}
+{{template "footer.html" . -}}
