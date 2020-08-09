@@ -18,8 +18,8 @@ var (
 )
 
 type ConfigStruct struct {
-	InstallDir string
-	DestDir    string
+	InstallDir    string
+	DestDir       string
 	MaxSummaryLen int
 }
 

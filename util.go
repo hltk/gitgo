@@ -56,7 +56,7 @@ func contentstolines(contents []byte, size int) []string {
 		c := contents[i]
 		if c != '\n' {
 			lines[len(lines)-1] += string(c)
-		} else if i + 1 != size {
+		} else if i+1 != size {
 			lines = append(lines, "")
 		}
 	}
@@ -66,7 +66,7 @@ func contentstolines(contents []byte, size int) []string {
 
 func capcommitsummary(summary string) string {
 	if len(summary) > Config.MaxSummaryLen {
-		summary = summary[:Config.MaxSummaryLen - 3] + "..."
+		summary = summary[:Config.MaxSummaryLen-3] + "..."
 	}
 	return summary
 }
