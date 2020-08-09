@@ -1,8 +1,4 @@
 {{template "header.html" . -}}
 {{template "nav.html" . -}}
-<p>{{.Name -}}</p>
-<hr>
-<pre>
-{{.Contents -}}
-</pre>
+{{template "fileview.html" .FileViewData -}}
 {{template "footer.html" . -}}

@@ -45,16 +45,15 @@ type FileListElem struct {
 type GlobalRenderData struct {
 	RepoName   string
 	Links      []LinkListElem
-	ReadmeFile FileRenderData
 }
 
 var GlobalDataGlobal GlobalRenderData
 
 type IndexRenderData struct {
 	GlobalData *GlobalRenderData
+	ReadmeFile FileViewRenderData
+	ReadmeFound bool
 }
-
-var IndexData = IndexRenderData{&GlobalDataGlobal}
 
 type LogRenderData struct {
 	GlobalData *GlobalRenderData
@@ -66,10 +65,14 @@ type TreeRenderData struct {
 	Files      []FileListElem
 }
 
+type FileViewRenderData struct {
+	Name       string
+	Lines []string
+}
+
 type FileRenderData struct {
 	GlobalData *GlobalRenderData
-	Name       string
-	Contents   string
+	FileViewData FileViewRenderData
 }
 
 func writetofile(file *os.File, str string) {
@@ -121,6 +124,21 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 
 }
 
+func contentstolines(contents []byte, size int) []string {
+	var lines = []string{""}
+
+	for i := 0; i < size; i++ {
+		c := contents[i]
+		if c != '\n' {
+			lines[len(lines) - 1] += string(c)
+		} else {
+			lines = append(lines, "")
+		}
+	}
+
+	return lines
+}
+
 func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 	var filelist []FileListElem
 	count := int(tree.EntryCount())
@@ -132,8 +150,11 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			if err != nil {
 				log.Fatal()
 			}
+
 			newpath := path + entry.Name + "/"
+
 			makedir(Config.DestDir + newpath)
+
 			filelist = append(filelist, FileListElem{entry.Name + "/", "/" + newpath, "TODO"})
 
 			indextreerecursive(repo, nexttree, newpath)
@@ -143,11 +164,13 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			if err != nil {
 				log.Fatal()
 			}
-			contents := blob.Contents()
 
 			newpath := path + entry.Name
 			file := openfile(Config.DestDir + newpath + ".html")
-			err = t.ExecuteTemplate(file, "file.html", FileRenderData{&GlobalDataGlobal, entry.Name, string(contents)})
+
+			lines := contentstolines(blob.Contents(), int(blob.Size()))
+
+			err = t.ExecuteTemplate(file, "file.html", FileRenderData{&GlobalDataGlobal, FileViewRenderData{entry.Name, lines}})
 			if err != nil {
 				log.Print("execute:", err)
 			}
@@ -225,7 +248,12 @@ func main() {
 		log.Print("parse:", err)
 	}
 
-	var readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
+	var (
+		readmefile FileViewRenderData
+		readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
+		readmefound = false
+	)
+
 	for _, file := range readmefiles {
 		fileobj, _, err := repo.RevparseExt(file)
 		if err == nil && fileobj.Type() == git.ObjectBlob {
@@ -235,8 +263,11 @@ func main() {
 				log.Fatal(err)
 			}
 
-			GlobalDataGlobal.ReadmeFile.Name = strings.TrimPrefix(file, "HEAD:")
-			GlobalDataGlobal.ReadmeFile.Contents = string(blob.Contents())
+			lines := contentstolines(blob.Contents(), int(blob.Size()))
+
+			readmefile.Name = strings.TrimPrefix(file, "HEAD:")
+			readmefile.Lines = lines
+			readmefound = true;
 			break
 		}
 	}
@@ -245,7 +276,7 @@ func main() {
 	// TODO: make the LICENSE file easily accessible (the same way as README)
 
 	indexfile := openfile(Config.DestDir + "index.html")
-	err = t.ExecuteTemplate(indexfile, "index.html", IndexData)
+	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{&GlobalDataGlobal, readmefile, readmefound})
 	if err != nil {
 		log.Print("execute:", err)
 	}
