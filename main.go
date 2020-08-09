@@ -7,9 +7,19 @@ import (
 	"log"
 	"os"
 	"strings"
+	"html/template"
 
 	"github.com/libgit2/git2go/v30"
 )
+
+
+type GlobalRenderData struct {
+	Reponame string
+}
+
+type IndexRenderData struct {
+	GlobalData GlobalRenderData
+}
 
 // var licensefiles = [...]string{"HEAD:LICENSE", "HEAD:LICENSE.md", "HEAD:COPYING"}
 var readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
@@ -154,9 +164,13 @@ func writetreetofile(repo *git.Repository, head *git.Oid, treefile *os.File) {
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	gitgodirectory := "/usr/share/gitgo"
+	var (
+		targetdir string
+		installdir string
+	)
 
-	flag.StringVar(&gitgodirectory, "dir", "", "gitgo installation directory (default /usr/share/gitgo)")
+	flag.StringVar(&targetdir, "destdir", ".", "target directory")
+	flag.StringVar(&installdir, "installdir", "/usr/share/gitgo", "install directory")
 
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "usage: gitgo [options] <git repo>\n")
@@ -164,12 +178,18 @@ func main() {
 	}
 
 	flag.Parse()
-
 	args := flag.Args()
 
 	if len(args) != 1 {
 		flag.Usage()
 		return
+	}
+
+	if targetdir[len(targetdir) - 1] != '/' {
+		targetdir += "/"
+	}
+	if installdir[len(installdir) - 1] != '/' {
+		installdir += "/"
 	}
 
 	reponame := args[0]
@@ -186,8 +206,6 @@ func main() {
 	}
 	head := obj.Id()
 
-	indexfile := openfile("index.html")
-
 	cleanreponame := strings.TrimSuffix(reponame, ".git")
 
 	lastslash := strings.LastIndex(cleanreponame, "/")
@@ -195,6 +213,27 @@ func main() {
 	if lastslash != -1 {
 		cleanreponame = cleanreponame[lastslash+1:]
 	}
+
+	var IndexData = IndexRenderData{GlobalRenderData{cleanreponame}}
+
+	templ := template.New("")
+
+	t, err := templ.ParseGlob(installdir + "templates/*.html")
+
+	if err != nil {
+		log.Print("parse:", err)
+	}
+
+	err = t.ExecuteTemplate(os.Stdout, "index.html", IndexData)
+
+	if err != nil {
+		log.Print("execute:", err)
+	}
+
+
+	os.Exit(0)
+
+	indexfile := openfile("index.html")
 
 	writetofile(indexfile, "<h1>"+cleanreponame+"</h1>")
 
