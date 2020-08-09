@@ -1,4 +1,6 @@
 {{template "header.html" . -}}
 {{template "nav.html" . -}}
+{{if .ReadmeFound -}}
 {{template "fileview.html" .ReadmeFile -}}
+{{end -}}
 {{template "footer.html" . -}}
