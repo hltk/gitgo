@@ -84,6 +84,7 @@ type CommitRenderData struct {
 	HasAnyParents bool
 	Date          time.Time
 	Msg           string
+	DiffStat      string
 }
 
 func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
@@ -123,6 +124,61 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			parents = append(parents, commit.Parent(uint(i)).TreeId().String())
 		}
 
+		var diffstat = ""
+
+		if parentcountispositive {
+			opts, err := git.DefaultDiffOptions()
+			if err != nil {
+				log.Fatal(err)
+			}
+			opts.Flags |= git.DiffDisablePathspecMatch | git.DiffIgnoreSubmodules | git.DiffIncludeTypeChange;
+
+
+			parenttree, err := commit.Parent(0).Tree()
+			if err != nil {
+				log.Fatal(err)
+			}
+			tree, err := commit.Tree()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			diff, err := repo.DiffTreeToTree(parenttree, tree, &opts)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fopts, err := git.DefaultDiffFindOptions()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fopts.Flags |= git.DiffFindRenames | git.DiffFindCopies | git.DiffFindExactMatchOnly;
+			err = diff.FindSimilar(&fopts)
+			if err != nil {
+				log.Fatal(err)
+			}
+			numdeltas, err := diff.NumDeltas()
+
+			for i := 0; i < numdeltas; i++ {
+				delta, err := diff.GetDelta(i)
+				if err != nil {
+					log.Fatal(err)
+				}
+				patch, err := diff.Patch(i)
+				if err != nil {
+					log.Fatal(err)
+				}
+				if (delta.Flags & git.DiffFlagBinary) > 0 {
+					continue;
+				}
+				str, err := patch.String()
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				diffstat += str + "\n"
+			}
+		}
+
 		err = t.ExecuteTemplate(commitfile, "commit.html", CommitRenderData{GlobalData: &GlobalDataGlobal,
 			Author:        commit.Author().Name,
 			Mail:          commit.Author().Email,
@@ -130,7 +186,9 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			Id:            commit.TreeId().String(),
 			Parents:       parents,
 			HasAnyParents: parentcountispositive,
-			Msg:           commit.Message()})
+			Msg:           commit.Message(),
+			DiffStat: diffstat})
+
 		if err != nil {
 			log.Print("execute:", err)
 		}
