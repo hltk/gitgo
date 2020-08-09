@@ -20,9 +20,10 @@ var (
 type ConfigStruct struct {
 	InstallDir string
 	DestDir    string
+	MaxSummaryLen int
 }
 
-var Config ConfigStruct
+var Config = ConfigStruct{MaxSummaryLen: 20}
 
 type LinkListElem struct {
 	Pretty string
@@ -113,7 +114,7 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 		closefile(commitfile)
 
 		link := "/commit/" + commit.TreeId().String() + ".html"
-		msg := commit.Summary()
+		msg := capcommitsummary(commit.Summary())
 		name := commit.Author().Name
 		date := commit.Author().When.Format("15:04:05 2006-01-02")
 
