@@ -38,7 +38,9 @@ Date:
 </th>
 </tr>
 </table>
-{{.Msg -}}
+{{range .MsgLines -}}
+{{. -}}<br>
+{{end -}}
 <br>
 <div style="border: 1px">
 <pre>

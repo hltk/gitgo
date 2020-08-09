@@ -83,7 +83,7 @@ type CommitRenderData struct {
 	Parents       []string
 	HasAnyParents bool
 	Date          time.Time
-	Msg           string
+	MsgLines      []string
 	DiffStat      string
 }
 
@@ -131,8 +131,7 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			if err != nil {
 				log.Fatal(err)
 			}
-			opts.Flags |= git.DiffDisablePathspecMatch | git.DiffIgnoreSubmodules | git.DiffIncludeTypeChange;
-
+			opts.Flags |= git.DiffDisablePathspecMatch | git.DiffIgnoreSubmodules | git.DiffIncludeTypeChange
 
 			parenttree, err := commit.Parent(0).Tree()
 			if err != nil {
@@ -151,7 +150,7 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			if err != nil {
 				log.Fatal(err)
 			}
-			fopts.Flags |= git.DiffFindRenames | git.DiffFindCopies | git.DiffFindExactMatchOnly;
+			fopts.Flags |= git.DiffFindRenames | git.DiffFindCopies | git.DiffFindExactMatchOnly
 			err = diff.FindSimilar(&fopts)
 			if err != nil {
 				log.Fatal(err)
@@ -168,7 +167,7 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 					log.Fatal(err)
 				}
 				if (delta.Flags & git.DiffFlagBinary) > 0 {
-					continue;
+					continue
 				}
 				str, err := patch.String()
 				if err != nil {
@@ -186,8 +185,8 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			Id:            commit.TreeId().String(),
 			Parents:       parents,
 			HasAnyParents: parentcountispositive,
-			Msg:           commit.Message(),
-			DiffStat: diffstat})
+			MsgLines:      strings.Split(commit.Message(), "\n"),
+			DiffStat:      diffstat})
 
 		if err != nil {
 			log.Print("execute:", err)
