@@ -16,15 +16,15 @@ var readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
 var mainfiles = [...]string{"index.html", "tree.html", "log.html"}
 
 func writetofile(file *os.File, str string) {
-_, err := io.WriteString(file, str)
-if err != nil {
-	log.Fatal(err)
-}
+	_, err := io.WriteString(file, str)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func openfile(str string) *os.File {
-file, err := os.Create(str)
-if err != nil {
+	file, err := os.Create(str)
+	if err != nil {
 		log.Fatal(err)
 	}
 	return file
@@ -94,7 +94,53 @@ func writelogtofile(repo *git.Repository, head *git.Oid, logfile *os.File) {
 
 }
 
-func writetreetofile(repo *git.Repository, head *git.Oid, logfile *os.File) {
+func writetreetofilerecursive(repo *git.Repository, tree *git.Tree, treefile *os.File, path string) {
+	count := tree.EntryCount()
+	for i := uint64(0); i < count; i++ {
+		entry := tree.EntryByIndex(i)
+		if entry.Type == git.ObjectTree {
+			// possibly very slow?
+			nexttree, err := repo.LookupTree(entry.Id)
+			if err != nil {
+				log.Fatal()
+			}
+			newpath := path + entry.Name + "/"
+			if _, err := os.Stat(newpath); os.IsNotExist(err) {
+				os.Mkdir(newpath, 755)
+			}
+			writetofile(treefile, "<a href=\"/" + newpath + "\">" + entry.Name + "/</a><br>")
+			newtreefile := openfile(newpath + "index.html")
+			writetreetofilerecursive(repo, nexttree, newtreefile, newpath)
+			closefile(newtreefile)
+		}
+		if entry.Type == git.ObjectBlob {
+			blob, err := repo.LookupBlob(entry.Id)
+			if err != nil {
+				log.Fatal()
+			}
+			size := blob.Size()
+			contents := blob.Contents()
+
+			newpath := path + entry.Name
+			file := openfile(newpath + ".html")
+			writtensize, err := file.Write(contents)
+			if int64(writtensize) != size {
+				log.Fatal()
+			}
+			if err != nil {
+				log.Fatal(err)
+			}
+			closefile(file)
+			writetofile(treefile, "<a href=\"/" + newpath + ".html\">" + entry.Name + "</a><br>")
+		}
+		if entry.Type == git.ObjectCommit {
+			log.Print("FATAL: submodules not implemented")
+			log.Fatal()
+		}
+	}
+}
+
+func writetreetofile(repo *git.Repository, head *git.Oid, treefile *os.File) {
 	commit, err := repo.LookupCommit(head)
 	if err != nil {
 		log.Fatal(err)
@@ -103,7 +149,7 @@ func writetreetofile(repo *git.Repository, head *git.Oid, logfile *os.File) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	writetreetofilerecursive(repo, tree, treefile, "tree/")
 }
 
 func main() {
@@ -171,7 +217,11 @@ func main() {
 	writelogtofile(repo, head, logfile)
 	closefile(logfile)
 
-	treefile := openfile("tree.html")
+	if _, err := os.Stat("tree"); os.IsNotExist(err) {
+		os.Mkdir("tree", 755)
+	}
+
+	treefile := openfile("tree/index.html")
 	writetreetofile(repo, head, treefile)
 	closefile(treefile)
 
