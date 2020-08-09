@@ -153,8 +153,13 @@ func writetreetofile(repo *git.Repository, head *git.Oid, treefile *os.File) {
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
+	gitgodirectory := "/usr/share/gitgo"
+
+	flag.StringVar(&gitgodirectory, "dir", "", "gitgo installation directory (default /usr/share/gitgo)")
+
 	flag.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "usage: FIXME [options...] <git repo>\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "usage: gitgo [options] <git repo>\n")
 		flag.PrintDefaults()
 	}
 
