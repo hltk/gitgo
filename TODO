@@ -1,1 +1,3 @@
-convert all "Date string" to date.date
+- convert all "Date string" to date.date
+- add file size to tree.html
+- add file mode to tree.html
