@@ -33,13 +33,13 @@ type CommitListElem struct {
 	Link string
 	Msg  string
 	Name string
-	Date string
+	Date time.Time
 }
 
 type FileListElem struct {
 	Name string
 	Link string
-	Date string
+	Date time.Time
 }
 
 type GlobalRenderData struct {
@@ -140,7 +140,7 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 		link := "/commit/" + commit.TreeId().String() + ".html"
 		msg := capcommitsummary(commit.Summary())
 		name := commit.Author().Name
-		date := commit.Author().When.Format("15:04:05 2006-01-02")
+		date := commit.Author().When
 
 		commitlist = append(commitlist, CommitListElem{link, msg, name, date})
 	}
@@ -165,7 +165,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 
 			makedir(Config.DestDir + newpath)
 
-			filelist = append(filelist, FileListElem{entry.Name + "/", "/" + newpath, "TODO"})
+			filelist = append(filelist, FileListElem{entry.Name + "/", "/" + newpath, time.Now()})
 
 			indextreerecursive(repo, nexttree, newpath)
 		}
@@ -186,7 +186,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			}
 			closefile(file)
 
-			filelist = append(filelist, FileListElem{entry.Name, "/" + newpath + ".html", "TODO"})
+			filelist = append(filelist, FileListElem{entry.Name, "/" + newpath + ".html", time.Now()})
 		}
 		if entry.Type == git.ObjectCommit {
 			log.Print("FATAL: submodules not implemented")

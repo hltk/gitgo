@@ -31,11 +31,17 @@ Author:
 </tr>
 <tr>
 <th>
-Message:
+Date:
 </th>
 <th>
-{{.Msg -}}
+{{.Date.Format "2006-01-02 15:04:05" -}}
 </th>
 </tr>
 </table>
+{{.Msg -}}
+<br>
+<div style="border: 1px">
+<pre>
+</pre>
+</div>
 {{template "footer.html" . -}}

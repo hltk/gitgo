@@ -4,7 +4,7 @@
 {{range .Files -}}
 <tr>
 <th><a href="{{.Link -}}">{{.Name -}}</a></th>
-<th>{{.Date -}}</th>
+<th>{{.Date.Format "2006-01-02 15:04:05" -}}</th>
 </tr>
 {{end -}}
 </table> 
