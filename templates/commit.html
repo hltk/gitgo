@@ -1,0 +1,31 @@
+{{template "header.html" . -}}
+{{template "nav.html" . -}}
+<table>
+<tr>
+<th>
+Commit:
+</th>
+<th>
+{{.Id -}}
+</th>
+</tr>
+<tr>
+{{if .HasParent -}}
+<th>
+Parent:
+</th>
+<th>
+{{.Parent -}}
+</th>
+</tr>
+{{end -}}
+<tr>
+<th>
+Author:
+</th>
+<th>
+{{.Author -}} <a href="mailto:{{.Mail -}}">{{ "<" + .Mail + ">"}}</a>
+</th>
+</tr>
+</table>
+{{template "footer.html" . -}}
