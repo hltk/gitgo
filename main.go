@@ -124,21 +124,6 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 
 }
 
-func contentstolines(contents []byte, size int) []string {
-	var lines = []string{""}
-
-	for i := 0; i < size; i++ {
-		c := contents[i]
-		if c != '\n' {
-			lines[len(lines)-1] += string(c)
-		} else if i + 1 != size {
-			lines = append(lines, "")
-		}
-	}
-
-	return lines
-}
-
 func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 	var filelist []FileListElem
 	count := int(tree.EntryCount())
