@@ -201,7 +201,7 @@ func main() {
 	}
 
 	for _, file := range mainfiles {
-		writetofile(indexfile, "<a href=\"/"+file+"\">" + file + "</a><br>")
+		writetofile(indexfile, "<a href=\"/"+file+"\">"+file+"</a><br>")
 	}
 	closefile(indexfile)
 
