@@ -6,7 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
-// 	"strings"
+	"strings"
 
 	"github.com/libgit2/git2go/v30"
 )
@@ -182,6 +182,17 @@ func main() {
 	head := obj.Id()
 
 	indexfile := openfile("index.html")
+
+	cleanreponame := strings.TrimSuffix(reponame, ".git")
+
+	lastslash := strings.LastIndex(cleanreponame, "/")
+
+	if lastslash != -1 {
+		cleanreponame = cleanreponame[lastslash+1:]
+	}
+
+	writetofile(indexfile, "<h1>"+cleanreponame+"</h1>")
+
 	for _, file := range mainfiles {
 		writetofile(indexfile, "<a href=\"/"+file+"\">"+file+"</a><br>")
 	}
