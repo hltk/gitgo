@@ -1,6 +1,13 @@
+Gitgo
+
 Go program for creating static web pages for git repositories.
 
-Utilizes libgit.
+This project started as a fork of stagit. The basic structure of the code and
+the interaction with the libgit2 api are from stagit. Gitgo retains the
+MIT/X Consortium License of stagit.
 
-Stagit's source code has influenced many parts of this project.
-This project retains the MIT/X Consortium License of stagit.
+Requirements:
+	- github.com/libgit2/git2go.
+
+Authors:
+	- Henrik Aalto <hltk@hltk.fi>
