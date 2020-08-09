@@ -43,15 +43,15 @@ type FileListElem struct {
 }
 
 type GlobalRenderData struct {
-	RepoName   string
-	Links      []LinkListElem
+	RepoName string
+	Links    []LinkListElem
 }
 
 var GlobalDataGlobal GlobalRenderData
 
 type IndexRenderData struct {
-	GlobalData *GlobalRenderData
-	ReadmeFile FileViewRenderData
+	GlobalData  *GlobalRenderData
+	ReadmeFile  FileViewRenderData
 	ReadmeFound bool
 }
 
@@ -66,12 +66,12 @@ type TreeRenderData struct {
 }
 
 type FileViewRenderData struct {
-	Name       string
+	Name  string
 	Lines []string
 }
 
 type FileRenderData struct {
-	GlobalData *GlobalRenderData
+	GlobalData   *GlobalRenderData
 	FileViewData FileViewRenderData
 }
 
@@ -130,7 +130,7 @@ func contentstolines(contents []byte, size int) []string {
 	for i := 0; i < size; i++ {
 		c := contents[i]
 		if c != '\n' {
-			lines[len(lines) - 1] += string(c)
+			lines[len(lines)-1] += string(c)
 		} else {
 			lines = append(lines, "")
 		}
@@ -249,7 +249,7 @@ func main() {
 	}
 
 	var (
-		readmefile FileViewRenderData
+		readmefile  FileViewRenderData
 		readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
 		readmefound = false
 	)
@@ -267,7 +267,7 @@ func main() {
 
 			readmefile.Name = strings.TrimPrefix(file, "HEAD:")
 			readmefile.Lines = lines
-			readmefound = true;
+			readmefound = true
 			break
 		}
 	}
