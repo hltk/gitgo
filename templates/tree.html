@@ -1,0 +1,12 @@
+{{template "header.html" . -}}
+{{template "nav.html" . -}}
+<table>
+{{range .Files -}}
+<tr>
+<th>{{.Mode -}}</th>
+<th><a href="{{.Link -}}">{{.Name -}}</a></th>
+<th>{{.Size -}}</th>
+</tr>
+{{end -}}
+</table> 
+{{template "footer.html" . -}}

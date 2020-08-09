@@ -1,0 +1,12 @@
+{{template "header.html" . -}}
+{{template "nav.html" . -}}
+<table>
+{{range .Commits -}}
+<tr>
+<th><a href="{{.Link -}}">{{.Msg -}}</a></th>
+<th>{{.Name -}}</th>
+<th>{{.Date -}}</th>
+</tr>
+{{end -}}
+</table> 
+{{template "footer.html" . -}}
