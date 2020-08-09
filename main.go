@@ -12,6 +12,11 @@ import (
 	"github.com/libgit2/git2go/v30"
 )
 
+var (
+	templ *template.Template
+	t *template.Template
+)
+
 type ConfigStruct struct {
 	InstallDir string
 	DestDir string
@@ -19,10 +24,6 @@ type ConfigStruct struct {
 
 var Config ConfigStruct
 
-type RenderFile struct {
-	Name string
-	Contents string
-}
 
 type LinkListElem struct {
 	Pretty string
@@ -36,10 +37,16 @@ type CommitListElem struct {
 	Date string
 }
 
+type FileListElem struct {
+	Name string
+	Link string
+	Date string
+}
+
 type GlobalRenderData struct {
 	RepoName string
 	Links []LinkListElem
-	ReadmeFile RenderFile
+	ReadmeFile FileRenderData
 }
 
 var GlobalDataGlobal GlobalRenderData
@@ -52,6 +59,17 @@ var IndexData = IndexRenderData{&GlobalDataGlobal}
 type LogRenderData struct {
 	GlobalData *GlobalRenderData
 	Commits []CommitListElem
+}
+
+type TreeRenderData struct {
+	GlobalData *GlobalRenderData
+	Files []FileListElem
+}
+
+type FileRenderData struct {
+	GlobalData *GlobalRenderData
+	Name string
+	Contents string
 }
 
 func writetofile(file *os.File, str string) {
@@ -105,12 +123,10 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			log.Fatal(err)
 		}
 
-		// commitfile_name := Config.DestDir + "commit/" + commit.TreeId().String() + ".html"
-		// commitfile := openfile(commitfile_name)
-		// closefile(commitfile)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
+		commitfile_name := Config.DestDir + "commit/" + commit.TreeId().String() + ".html"
+		commitfile := openfile(commitfile_name)
+		// TODO: write commit info to file
+		closefile(commitfile)
 
 		link := "/commit/" + commit.TreeId().String() + ".html"
 		msg := commit.Summary()
@@ -124,7 +140,8 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 
 }
 
-func writetreetofilerecursive(repo *git.Repository, tree *git.Tree, treefile *os.File, path string) {
+func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
+	var filelist []FileListElem
 	count := tree.EntryCount()
 	for i := uint64(0); i < count; i++ {
 		entry := tree.EntryByIndex(i)
@@ -135,42 +152,42 @@ func writetreetofilerecursive(repo *git.Repository, tree *git.Tree, treefile *os
 				log.Fatal()
 			}
 			newpath := path + entry.Name + "/"
-			if _, err := os.Stat(newpath); os.IsNotExist(err) {
-				os.Mkdir(newpath, 755)
-			}
-			writetofile(treefile, "<a href=\"/"+newpath+"\">"+entry.Name+"/</a><br>")
-			newtreefile := openfile(newpath + "index.html")
-			writetreetofilerecursive(repo, nexttree, newtreefile, newpath)
-			closefile(newtreefile)
+			makedir(Config.DestDir + newpath)
+			filelist = append(filelist, FileListElem{entry.Name + "/", "/" + newpath, "TODO"});
+
+			indextreerecursive(repo, nexttree, newpath)
 		}
 		if entry.Type == git.ObjectBlob {
 			blob, err := repo.LookupBlob(entry.Id)
 			if err != nil {
 				log.Fatal()
 			}
-			size := blob.Size()
 			contents := blob.Contents()
 
 			newpath := path + entry.Name
-			file := openfile(newpath + ".html")
-			writtensize, err := file.Write(contents)
-			if int64(writtensize) != size {
-				log.Fatal()
-			}
+			file := openfile(Config.DestDir + newpath + ".html")
+			err = t.ExecuteTemplate(file, "file.html", FileRenderData{&GlobalDataGlobal, entry.Name, string(contents)})
 			if err != nil {
-				log.Fatal(err)
+				log.Print("execute:", err)
 			}
 			closefile(file)
-			writetofile(treefile, "<a href=\"/"+newpath+".html\">"+entry.Name+"</a><br>")
+
+			filelist = append(filelist, FileListElem{entry.Name, "/" + newpath + ".html", "TODO"})
 		}
 		if entry.Type == git.ObjectCommit {
 			log.Print("FATAL: submodules not implemented")
 			log.Fatal()
 		}
 	}
+	treefile := openfile(Config.DestDir + path + "index.html")
+	err := t.ExecuteTemplate(treefile, "tree.html", TreeRenderData{GlobalData: &GlobalDataGlobal, Files: filelist})
+	if err != nil {
+		log.Print("execute:", err)
+	}
+	closefile(treefile)
 }
 
-func writetreetofile(repo *git.Repository, head *git.Oid, treefile *os.File) {
+func indextree(repo *git.Repository, head *git.Oid) {
 	commit, err := repo.LookupCommit(head)
 	if err != nil {
 		log.Fatal(err)
@@ -179,7 +196,7 @@ func writetreetofile(repo *git.Repository, head *git.Oid, treefile *os.File) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	writetreetofilerecursive(repo, tree, treefile, Config.DestDir + "tree/")
+	indextreerecursive(repo, tree, "tree/")
 }
 
 func fixpath(str *string) {
@@ -244,9 +261,9 @@ func main() {
 	GlobalDataGlobal.RepoName = cleanname(args[0])
 	GlobalDataGlobal.Links = []LinkListElem{{"summary", "/"}, {"tree", "/tree"}, {"log", "/log"}}
 
-	templ := template.New("")
+	templ = template.New("")
 
-	t, err := templ.ParseGlob(Config.InstallDir + "templates/*.html")
+	t, err = templ.ParseGlob(Config.InstallDir + "templates/*.html")
 
 	if err != nil {
 		log.Print("parse:", err)
@@ -295,13 +312,7 @@ func main() {
 	}
 	closefile(logfile)
 
-	os.Exit(0)
-
-	treefile := openfile("tree/index.html")
-	writetreetofile(repo, head, treefile)
-	closefile(treefile)
+	indextree(repo, head)
 
 	// TODO: add refs.html for branches and tags
-	// refsfile := openfile("refs.html")
-	// closefile(refsfile)
 }

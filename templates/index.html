@@ -1,4 +1,8 @@
 {{template "header.html" . -}}
 {{template "nav.html" . -}}
-{{template "file.html" .GlobalData.ReadmeFile -}}
+<p>{{.GlobalData.ReadmeFile.Name -}}</p>
+<hr>
+<pre>
+{{.GlobalData.ReadmeFile.Contents -}}
+</pre>
 {{template "footer.html" . -}}
