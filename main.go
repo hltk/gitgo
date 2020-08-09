@@ -76,13 +76,6 @@ type FileRenderData struct {
 	FileViewData FileViewRenderData
 }
 
-func writetofile(file *os.File, str string) {
-	_, err := io.WriteString(file, str)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 	var commitlist []CommitListElem
 

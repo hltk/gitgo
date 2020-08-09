@@ -6,6 +6,13 @@ import (
 	"strings"
 )
 
+func writetofile(file *os.File, str string) {
+	_, err := io.WriteString(file, str)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func openfile(str string) *os.File {
 	file, err := os.Create(str)
 	if err != nil {
