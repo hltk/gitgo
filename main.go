@@ -79,25 +79,6 @@ func writetofile(file *os.File, str string) {
 	}
 }
 
-func openfile(str string) *os.File {
-	file, err := os.Create(str)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return file
-
-}
-
-func closefile(file *os.File) {
-	if err := file.Sync(); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := file.Close(); err != nil {
-		log.Fatal(err)
-	}
-}
-
 func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 	var commitlist []CommitListElem
 
@@ -197,30 +178,6 @@ func indextree(repo *git.Repository, head *git.Oid) {
 		log.Fatal(err)
 	}
 	indextreerecursive(repo, tree, "tree/")
-}
-
-func fixpath(str *string) {
-	if ((*str)[len(*str) - 1] != '/') {
-		(*str) += "/"
-	}
-}
-
-func cleanname(name string) string {
-	name = strings.TrimSuffix(name, ".git")
-
-	lastslash := strings.LastIndex(name, "/")
-
-	if lastslash != -1 {
-		name = name[lastslash+1:]
-	}
-
-	return name
-}
-
-func makedir(dir string) {
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		os.Mkdir(dir, 0755)
-	}
 }
 
 func main() {
