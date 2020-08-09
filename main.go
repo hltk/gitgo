@@ -131,7 +131,7 @@ func contentstolines(contents []byte, size int) []string {
 		c := contents[i]
 		if c != '\n' {
 			lines[len(lines)-1] += string(c)
-		} else {
+		} else if i + 1 != size {
 			lines = append(lines, "")
 		}
 	}
