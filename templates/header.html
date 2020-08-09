@@ -3,12 +3,6 @@
 <head>
 <title>{{.GlobalData.RepoName}}</title>
 <style>
-pre.code {
-	white-space: pre-wrap;
-}
-pre.code:before {
-	counter-reset: listing;
-}
 pre.code code {
 	counter-increment: listing;
 }
@@ -16,9 +10,8 @@ pre.code code::before {
 	content: counter(listing) ". ";
 	display: inline-block;
 	width: 8em;
-	padding-left: auto;
-	margin-left: auto;
 	text-align: right;
+	background-color: ivory;
 }
 </style>
 </head>
