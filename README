@@ -1,0 +1,6 @@
+Go program for creating static web pages for git repositories.
+
+Utilizes libgit.
+
+Stagit's source code has influenced many parts of this project.
+This project retains the MIT/X Consortium License of stagit.
