@@ -1,4 +1,4 @@
-module github.com/hhltk/gowebgit
+module git.hltk.fi/gitgo
 
 go 1.14
 
