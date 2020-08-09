@@ -1,8 +1,8 @@
 package main
 
 import (
-	"os"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -26,7 +26,7 @@ func closefile(file *os.File) {
 }
 
 func fixpath(str *string) {
-	if ((*str)[len(*str) - 1] != '/') {
+	if (*str)[len(*str)-1] != '/' {
 		(*str) += "/"
 	}
 }

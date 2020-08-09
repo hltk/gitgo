@@ -3,36 +3,35 @@ package main
 import (
 	"flag"
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"os"
 	"strings"
-	"html/template"
 
 	"github.com/libgit2/git2go/v30"
 )
 
 var (
 	templ *template.Template
-	t *template.Template
+	t     *template.Template
 )
 
 type ConfigStruct struct {
 	InstallDir string
-	DestDir string
+	DestDir    string
 }
 
 var Config ConfigStruct
 
-
 type LinkListElem struct {
 	Pretty string
-	Link string
+	Link   string
 }
 
 type CommitListElem struct {
 	Link string
-	Msg string
+	Msg  string
 	Name string
 	Date string
 }
@@ -44,8 +43,8 @@ type FileListElem struct {
 }
 
 type GlobalRenderData struct {
-	RepoName string
-	Links []LinkListElem
+	RepoName   string
+	Links      []LinkListElem
 	ReadmeFile FileRenderData
 }
 
@@ -54,22 +53,23 @@ var GlobalDataGlobal GlobalRenderData
 type IndexRenderData struct {
 	GlobalData *GlobalRenderData
 }
+
 var IndexData = IndexRenderData{&GlobalDataGlobal}
 
 type LogRenderData struct {
 	GlobalData *GlobalRenderData
-	Commits []CommitListElem
+	Commits    []CommitListElem
 }
 
 type TreeRenderData struct {
 	GlobalData *GlobalRenderData
-	Files []FileListElem
+	Files      []FileListElem
 }
 
 type FileRenderData struct {
 	GlobalData *GlobalRenderData
-	Name string
-	Contents string
+	Name       string
+	Contents   string
 }
 
 func writetofile(file *os.File, str string) {
@@ -134,7 +134,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			}
 			newpath := path + entry.Name + "/"
 			makedir(Config.DestDir + newpath)
-			filelist = append(filelist, FileListElem{entry.Name + "/", "/" + newpath, "TODO"});
+			filelist = append(filelist, FileListElem{entry.Name + "/", "/" + newpath, "TODO"})
 
 			indextreerecursive(repo, nexttree, newpath)
 		}
@@ -214,7 +214,6 @@ func main() {
 
 	head := obj.Id()
 
-
 	GlobalDataGlobal.RepoName = cleanname(args[0])
 	GlobalDataGlobal.Links = []LinkListElem{{"summary", "/"}, {"tree", "/tree"}, {"log", "/log"}}
 
@@ -237,7 +236,7 @@ func main() {
 			}
 
 			GlobalDataGlobal.ReadmeFile.Name = strings.TrimPrefix(file, "HEAD:")
-			GlobalDataGlobal.ReadmeFile.Contents  = string(blob.Contents())
+			GlobalDataGlobal.ReadmeFile.Contents = string(blob.Contents())
 			break
 		}
 	}
@@ -252,13 +251,11 @@ func main() {
 	}
 	closefile(indexfile)
 
-
 	// TODO: submodules are listed in .submodules
 
 	makedir(Config.DestDir + "commit")
 	makedir(Config.DestDir + "tree")
 	makedir(Config.DestDir + "log")
-
 
 	commitlist := getcommitlog(repo, head)
 
