@@ -6,12 +6,12 @@ import (
 	"io"
 	"log"
 	"os"
-	"strings"
+// 	"strings"
 
 	"github.com/libgit2/git2go/v30"
 )
 
-var licensefiles = [...]string{"HEAD:LICENSE", "HEAD:LICENSE.md", "HEAD:COPYING"}
+// var licensefiles = [...]string{"HEAD:LICENSE", "HEAD:LICENSE.md", "HEAD:COPYING"}
 var readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
 var mainfiles = [...]string{"index.html", "tree", "log"}
 
@@ -182,27 +182,45 @@ func main() {
 	head := obj.Id()
 
 	indexfile := openfile("index.html")
-	for _, file := range licensefiles {
-		fileObj, _, err := repo.RevparseExt(file)
-		if err == nil && fileObj.Type() == git.ObjectBlob {
-			realname := strings.TrimPrefix(file, "HEAD:")
-			writetofile(indexfile, "<a href=\"/"+"tree/"+realname+".html\">LICENSE</a><br>")
-			break
-		}
-	}
-
-	for _, file := range readmefiles {
-		fileObj, _, err := repo.RevparseExt(file)
-		if err == nil && fileObj.Type() == git.ObjectBlob {
-			realname := strings.TrimPrefix(file, "HEAD:")
-			writetofile(indexfile, "<a href=\"/"+"tree/"+realname+".html\">README</a><br>")
-			break
-		}
-	}
-
 	for _, file := range mainfiles {
 		writetofile(indexfile, "<a href=\"/"+file+"\">"+file+"</a><br>")
 	}
+
+	// TODO: make LICENSE file easily accessible
+	// for _, file := range licensefiles {
+	// 	fileObj, _, err := repo.RevparseExt(file)
+	// 	if err == nil && fileObj.Type() == git.ObjectBlob {
+	// 		realname := strings.TrimPrefix(file, "HEAD:")
+	// 		writetofile(indexfile, "<a href=\"/"+"tree/"+realname+".html\">LICENSE</a><br>")
+	// 		break
+	// 	}
+	// }
+
+	for _, file := range readmefiles {
+		fileobj, _, err := repo.RevparseExt(file)
+		if err == nil && fileobj.Type() == git.ObjectBlob {
+			writetofile(indexfile, "<hr>")
+
+			blob, err := fileobj.AsBlob()
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			size := blob.Size()
+			contents := blob.Contents()
+
+			writtensize, err := indexfile.Write(contents)
+			if int64(writtensize) != size {
+				log.Fatal()
+			}
+			if err != nil {
+				log.Fatal(err)
+			}
+			break
+		}
+	}
+
 	closefile(indexfile)
 
 	// TODO: submodules are listed in .submodules
