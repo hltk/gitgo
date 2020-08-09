@@ -185,8 +185,8 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			Id:            commit.TreeId().String(),
 			Parents:       parents,
 			HasAnyParents: parentcountispositive,
-			MsgLines:      strings.Split(commit.Message(), "\n"),
-			DiffStatLines: strings.Split(diffstat, "\n")})
+			MsgLines:      strings.Split(strings.TrimRight(commit.Message(), "\n"), "\n"),
+			DiffStatLines: strings.Split(strings.TrimRight(diffstat, "\n"), "\n")})
 
 		if err != nil {
 			log.Print("execute:", err)
