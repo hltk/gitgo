@@ -44,7 +44,7 @@ Date:
 <br>
 <div style="border: 1px">
 <pre>
-{{.DiffStat -}}
+{{template "linenumberer.html" .DiffStatLines -}}
 </pre>
 </div>
 {{template "footer.html" . -}}

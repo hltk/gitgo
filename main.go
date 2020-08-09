@@ -84,7 +84,7 @@ type CommitRenderData struct {
 	HasAnyParents bool
 	Date          time.Time
 	MsgLines      []string
-	DiffStat      string
+	DiffStatLines []string
 }
 
 func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
@@ -186,7 +186,7 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			Parents:       parents,
 			HasAnyParents: parentcountispositive,
 			MsgLines:      strings.Split(commit.Message(), "\n"),
-			DiffStat:      diffstat})
+			DiffStatLines: strings.Split(diffstat, "\n")})
 
 		if err != nil {
 			log.Print("execute:", err)
