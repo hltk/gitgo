@@ -37,18 +37,19 @@ type CommitListElem struct {
 }
 
 type FileListElem struct {
-	Name string
-	Link string
-	Date time.Time
+	Name   string
+	Link   string
+	IsFile bool
+	Date   time.Time
 }
 
 type GlobalRenderData struct {
-	GitUrl string
+	GitUrl   string
 	RepoName string
 	Links    []LinkListElem
 }
 
-var GlobalDataGlobal GlobalRenderData;
+var GlobalDataGlobal GlobalRenderData
 
 type IndexRenderData struct {
 	GlobalData  *GlobalRenderData
@@ -223,7 +224,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 
 			makedir(Config.DestDir + newpath)
 
-			filelist = append(filelist, FileListElem{entry.Name + "/", "/" + newpath, time.Now()})
+			filelist = append(filelist, FileListElem{entry.Name + "/", "/" + newpath, false, time.Now()})
 
 			indextreerecursive(repo, nexttree, newpath)
 		}
@@ -244,7 +245,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			}
 			closefile(file)
 
-			filelist = append(filelist, FileListElem{entry.Name, "/" + newpath + ".html", time.Now()})
+			filelist = append(filelist, FileListElem{entry.Name, "/" + newpath + ".html", true, time.Now()})
 		}
 		if entry.Type == git.ObjectCommit {
 			log.Print("FATAL: submodules not implemented")
