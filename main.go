@@ -312,6 +312,10 @@ func main() {
 
 	Config.RepoName = cleanname(args[0])
 
+	Config.DestDir += Config.RepoName + "/"
+
+	makedir(Config.DestDir)
+
 	templ = template.New("")
 
 	t, err = templ.ParseGlob(Config.InstallDir + "templates/*.html")
