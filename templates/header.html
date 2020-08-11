@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>{{.GlobalData.RepoName}}</title>
+<title>{{.GlobalData.Config.RepoName}}</title>
 <style>
 pre.code code {
 	counter-increment: listing;
@@ -28,7 +28,7 @@ table {
 </head>
 <body>
 <header>
-<h1>{{.GlobalData.RepoName}}</h1>
-<p><small><pre>git clone git://{{.GlobalData.GitUrl}}/{{.GlobalData.RepoName}}</pre></small><p>
+<h1>{{.GlobalData.Config.RepoName}}</h1>
+<p><small><pre>git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</pre></small><p>
 </header>
 <hr>

@@ -17,12 +17,16 @@ var (
 )
 
 type ConfigStruct struct {
-	InstallDir    string
-	DestDir       string
 	MaxSummaryLen int
+	GitUrl        string
+	// received from the command line arguments and flags:
+	RepoName   string
+	InstallDir string
+	DestDir    string
 }
 
-var Config = ConfigStruct{MaxSummaryLen: 20}
+var Config = ConfigStruct{MaxSummaryLen: 20,
+	GitUrl: "git.hltk.fi"}
 
 type LinkListElem struct {
 	Pretty string
@@ -44,12 +48,12 @@ type FileListElem struct {
 }
 
 type GlobalRenderData struct {
-	GitUrl   string
-	RepoName string
-	Links    []LinkListElem
+	Config *ConfigStruct
+	Links  []LinkListElem
 }
 
-var GlobalDataGlobal GlobalRenderData
+var GlobalDataGlobal = GlobalRenderData{Config: &Config,
+	Links: []LinkListElem{{"summary", "/"}, {"tree", "/tree"}, {"log", "/log"}}}
 
 type IndexRenderData struct {
 	GlobalData  *GlobalRenderData
@@ -306,9 +310,7 @@ func main() {
 
 	head := obj.Id()
 
-	GlobalDataGlobal.RepoName = cleanname(args[0])
-	GlobalDataGlobal.Links = []LinkListElem{{"summary", "/"}, {"tree", "/tree"}, {"log", "/log"}}
-	GlobalDataGlobal.GitUrl = "hltk.fi"
+	Config.RepoName = cleanname(args[0])
 
 	templ = template.New("")
 

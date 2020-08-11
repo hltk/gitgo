@@ -16,7 +16,7 @@ Parent(s):
 </th>
 <th>
 {{range .Parents -}}
-<a href="/{{$.GlobalData.RepoName -}}/commit/{{. -}}.html">{{. -}}</a><br>
+<a href="/{{$.GlobalData.Config.RepoName -}}/commit/{{. -}}.html">{{. -}}</a><br>
 {{end -}}
 </th>
 </tr>

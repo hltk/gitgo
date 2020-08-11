@@ -3,7 +3,7 @@
 <table>
 {{range .Commits -}}
 <tr>
-<th><a href="/{{$.GlobalData.RepoName}}{{.Link -}}">{{.Msg -}}</a></th>
+<th><a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.Msg -}}</a></th>
 <th>{{.Name -}}</th>
 <th>{{.Date.Format "2006-01-02 15:04:05" -}}</th>
 </tr>
