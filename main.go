@@ -43,11 +43,12 @@ type FileListElem struct {
 }
 
 type GlobalRenderData struct {
+	GitUrl string
 	RepoName string
 	Links    []LinkListElem
 }
 
-var GlobalDataGlobal GlobalRenderData
+var GlobalDataGlobal GlobalRenderData;
 
 type IndexRenderData struct {
 	GlobalData  *GlobalRenderData
@@ -306,6 +307,7 @@ func main() {
 
 	GlobalDataGlobal.RepoName = cleanname(args[0])
 	GlobalDataGlobal.Links = []LinkListElem{{"summary", "/"}, {"tree", "/tree"}, {"log", "/log"}}
+	GlobalDataGlobal.GitUrl = "hltk.fi"
 
 	templ = template.New("")
 
