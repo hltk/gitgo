@@ -3,11 +3,23 @@ Gitgo: Go program for creating static web pages of git repositories.
 This project started as a fork of stagit[1]. The basic structure of the code and
 the interaction with the libgit2 api are from stagit.
 
-The goal of the project is not to create the best possbile git web portal, instead
-gitgo is intended to be a learning excercise of git and golang.
+The goal of the project is not to create the best possbile git web portal,
+instead gitgo is intended to be a learning excercise of git and golang.
 
 Requirements:
 	- github.com/libgit2/git2go
+
+Usage:
+	1. Obtain a copy of this repo: git clone ..
+	2. Build the progman: make
+	3. When running the progman you have to give it two flags:
+		3.1 -destdir indicates where the static pages are going
+		    to be stored
+		3.2 -installdir indicates where the git repo is stored in
+		    the file system
+
+	If there is a logo.png file in the installation directory, the
+	program will detect it, and add it to every page.
 
 License:
 	Gitgo retains the MIT/X Consortium License of stagit.
