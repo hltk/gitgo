@@ -4,7 +4,6 @@
 {{range .Files -}}
 <tr>
 <th><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></th>
-<th>{{.Date.Format "2006-01-02 15:04:05" -}}</th>
 </tr>
 {{end -}}
 </table> 
