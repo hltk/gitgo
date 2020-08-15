@@ -367,9 +367,6 @@ func main() {
 		}
 	}
 
-	// var licensefiles = [...]string{"HEAD:LICENSE", "HEAD:COPYING", "HEAD:LICENSE.md"}
-	// TODO: make the LICENSE file easily accessible (the same way as README)
-
 	indexfile, err := os.Create(filepath.Join(Config.DestDir, "index.html"))
 	if err != nil {
 		log.Fatal(err)
@@ -380,8 +377,6 @@ func main() {
 	}
 	indexfile.Sync()
 	defer indexfile.Close()
-
-	// TODO: submodules are listed in .submodules
 
 	err = makedir(filepath.Join(Config.DestDir, "commit"))
 	if err != nil {
@@ -411,5 +406,4 @@ func main() {
 
 	indextree(repo, head)
 
-	// TODO: add refs.html for branches and tags
 }
