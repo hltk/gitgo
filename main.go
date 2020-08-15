@@ -233,7 +233,10 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 
 			newpath := filepath.Join(path, entry.Name)
 
-			makedir(filepath.Join(Config.DestDir, newpath))
+			err = makedir(filepath.Join(Config.DestDir, newpath))
+			if err != nil {
+				log.Fatal(err)
+			}
 
 			filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false, time.Now()})
 			indextreerecursive(repo, nexttree, newpath)
@@ -327,7 +330,10 @@ func main() {
 
 	Config.DestDir = filepath.Join(Config.DestDir, Config.RepoName)
 
-	makedir(Config.DestDir)
+	err = makedir(Config.DestDir)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	templ = template.New("")
 
@@ -377,9 +383,18 @@ func main() {
 
 	// TODO: submodules are listed in .submodules
 
-	makedir(filepath.Join(Config.DestDir, "commit"))
-	makedir(filepath.Join(Config.DestDir, "tree"))
-	makedir(filepath.Join(Config.DestDir, "log"))
+	err = makedir(filepath.Join(Config.DestDir, "commit"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = makedir(filepath.Join(Config.DestDir, "tree"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = makedir(filepath.Join(Config.DestDir, "log"))
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	commitlist := getcommitlog(repo, head)
 

@@ -4,10 +4,14 @@ import (
 	"os"
 )
 
-func makedir(dir string) {
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		os.Mkdir(dir, 0755)
+func makedir(dir string) error {
+	_, err := os.Stat(dir)
+	if !os.IsNotExist(err) {
+		return err
+	} else {
+		return os.Mkdir(dir, 0755)
 	}
+	return nil
 }
 
 func contentstolines(contents []byte, size int) []string {
