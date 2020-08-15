@@ -247,7 +247,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 				log.Fatal()
 			}
 
-			newpath := path + entry.Name
+			newpath := filepath.Join(path, entry.Name)
 			file, err := os.Create(filepath.Join(Config.DestDir, newpath+".html"))
 
 			if err != nil {
