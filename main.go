@@ -17,9 +17,10 @@ var (
 )
 
 type ConfigStruct struct {
+	// the following are configured below:
 	MaxSummaryLen int
 	GitUrl        string
-	// received from the command line arguments and flags:
+	// the following are received from the command line arguments and flags:
 	RepoName   string
 	InstallDir string
 	DestDir    string
