@@ -7,6 +7,7 @@ import (
 	"log"
 	"strings"
 	"time"
+	"os"
 
 	"github.com/libgit2/git2go/v30"
 )
@@ -118,9 +119,6 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			log.Fatal(err)
 		}
 
-		commitfile_name := Config.DestDir + "commit/" + commit.TreeId().String() + ".html"
-		commitfile := openfile(commitfile_name)
-
 		var parents []string
 
 		parentcount := int(commit.ParentCount())
@@ -184,6 +182,11 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			}
 		}
 
+		commitfilename := Config.DestDir + "commit/" + commit.TreeId().String() + ".html"
+		commitfile, err := os.Create(commitfilename)
+		if err != nil {
+			log.Fatal(err)
+		}
 		err = t.ExecuteTemplate(commitfile, "commit.html", CommitRenderData{GlobalData: &GlobalDataGlobal,
 			Author:        commit.Author().Name,
 			Mail:          commit.Author().Email,
@@ -197,8 +200,8 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 		if err != nil {
 			log.Print("execute:", err)
 		}
-
-		closefile(commitfile)
+		commitfile.Sync()
+		defer commitfile.Close()
 
 		link := "/commit/" + commit.TreeId().String() + ".html"
 		msg := capcommitsummary(commit.Summary())
@@ -239,7 +242,11 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			}
 
 			newpath := path + entry.Name
-			file := openfile(Config.DestDir + newpath + ".html")
+			file, err := os.Create(Config.DestDir + newpath + ".html")
+
+			if err != nil {
+				log.Fatal(err)
+			}
 
 			lines := contentstolines(blob.Contents(), int(blob.Size()))
 
@@ -247,7 +254,8 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			if err != nil {
 				log.Print("execute:", err)
 			}
-			closefile(file)
+			file.Sync()
+			defer file.Close()
 
 			filelist = append(filelist, FileListElem{entry.Name, "/" + newpath + ".html", true, time.Now()})
 		}
@@ -256,12 +264,16 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			log.Fatal()
 		}
 	}
-	treefile := openfile(Config.DestDir + path + "index.html")
-	err := t.ExecuteTemplate(treefile, "tree.html", TreeRenderData{GlobalData: &GlobalDataGlobal, Files: filelist})
+	treefile, err := os.Create(Config.DestDir + path + "index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = t.ExecuteTemplate(treefile, "tree.html", TreeRenderData{GlobalData: &GlobalDataGlobal, Files: filelist})
 	if err != nil {
 		log.Print("execute:", err)
 	}
-	closefile(treefile)
+	treefile.Sync()
+	defer treefile.Close()
 }
 
 func indextree(repo *git.Repository, head *git.Oid) {
@@ -351,12 +363,16 @@ func main() {
 	// var licensefiles = [...]string{"HEAD:LICENSE", "HEAD:COPYING", "HEAD:LICENSE.md"}
 	// TODO: make the LICENSE file easily accessible (the same way as README)
 
-	indexfile := openfile(Config.DestDir + "index.html")
+	indexfile, err := os.Create(Config.DestDir + "index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{&GlobalDataGlobal, readmefile, readmefound})
 	if err != nil {
 		log.Print("execute:", err)
 	}
-	closefile(indexfile)
+	indexfile.Sync()
+	defer indexfile.Close()
 
 	// TODO: submodules are listed in .submodules
 
@@ -366,12 +382,16 @@ func main() {
 
 	commitlist := getcommitlog(repo, head)
 
-	logfile := openfile(Config.DestDir + "log/index.html")
+	logfile, err := os.Create(Config.DestDir + "log/index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = t.ExecuteTemplate(logfile, "log.html", LogRenderData{GlobalData: &GlobalDataGlobal, Commits: commitlist})
 	if err != nil {
 		log.Print("execute:", err)
 	}
-	closefile(logfile)
+	logfile.Sync()
+	defer logfile.Close()
 
 	indextree(repo, head)
 

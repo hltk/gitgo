@@ -1,37 +1,9 @@
 package main
 
 import (
-	"io"
-	"log"
 	"os"
 	"strings"
 )
-
-func writetofile(file *os.File, str string) {
-	_, err := io.WriteString(file, str)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func openfile(str string) *os.File {
-	file, err := os.Create(str)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return file
-
-}
-
-func closefile(file *os.File) {
-	if err := file.Sync(); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := file.Close(); err != nil {
-		log.Fatal(err)
-	}
-}
 
 func fixpath(str *string) {
 	if (*str)[len(*str)-1] != '/' {
