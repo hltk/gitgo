@@ -8,3 +8,4 @@
 - submodules are listed in .submodules
 - add refs.html for branches and tags
 - add a time stamp indicating the page's creation time to every page
+- add a note "this page was generated using stagit" to the footer
