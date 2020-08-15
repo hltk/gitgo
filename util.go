@@ -2,25 +2,12 @@ package main
 
 import (
 	"os"
-	"strings"
 )
 
 func fixpath(str *string) {
 	if (*str)[len(*str)-1] != '/' {
 		(*str) += "/"
 	}
-}
-
-func cleanname(name string) string {
-	name = strings.TrimSuffix(name, ".git")
-
-	lastslash := strings.LastIndex(name, "/")
-
-	if lastslash != -1 {
-		name = name[lastslash+1:]
-	}
-
-	return name
 }
 
 func makedir(dir string) {

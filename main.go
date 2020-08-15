@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -325,7 +326,8 @@ func main() {
 
 	head := obj.Id()
 
-	Config.RepoName = cleanname(args[0])
+	// remove path and .git suffix from the repo's name
+	Config.RepoName = strings.TrimSuffix(filepath.Base(args[0]), ".git")
 
 	Config.DestDir += Config.RepoName + "/"
 
