@@ -1,12 +1,22 @@
-- add file size to tree.html
-- add file mode to tree.html
-- fix tab in fileview
-- add a link to parent folder in tree view
-- add a way of generating the index page (a new binary? like stagit has)
-- add better error handling
-- make the LICENSE file easily accessible (the same way as README)
-- submodules are listed in .submodules
-- add refs.html for branches and tags
-- add a time stamp indicating the page's creation time to every page
-- add a note "this page was generated using stagit" to the footer
-- have the program throw an error when the installation directory isn't empty
+- larger goals:
+	- add a way of generating the index page (a new binary? like stagit has)
+		- the list of repo's could have the last update date for every repo
+		  and it could sort the list by that date
+
+	- add better error handling
+	- submodules are listed in .submodules
+	- new file: add refs.html for branches and tags
+- tree.html:
+	- add file mode
+	- add last modification date
+	- add last commit
+	- add a link to parent folder
+- linenumberer.html:
+	- fix the tab character
+- index.html:
+	- make the LICENSE file easily accessible (the same way as README)
+- footer.html:
+	- add a time stamp indicating the page's creation time to every page
+	- add a note "this page was generated using stagit" to the footer
+- main.go
+	- have the program throw an error when the installation directory isn't empty
