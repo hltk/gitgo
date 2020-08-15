@@ -7,3 +7,4 @@
 - make the LICENSE file easily accessible (the same way as README)
 - submodules are listed in .submodules
 - add refs.html for branches and tags
+- add a time stamp indicating the page's creation time to every page
