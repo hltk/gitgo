@@ -27,11 +27,16 @@ a.filelink {
 table {
 	text-align: left;
 }
+.logo {
+	max-width: 1em;
+	max-height: 1em;
+	padding-right: 1ch;
+}
 </style>
 </head>
 <body>
 <header>
-<h1>{{.GlobalData.Config.RepoName}}</h1>
+<h1>{{if .GlobalData.LogoFound -}}<a href="/"><img class="logo" src="/logo.png" alt="logo"/></a>{{end -}}{{.GlobalData.Config.RepoName}}</h1>
 <p><small><pre>git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</pre></small><p>
 </header>
 <hr>

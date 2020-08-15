@@ -50,8 +50,9 @@ type FileListElem struct {
 }
 
 type GlobalRenderData struct {
-	Config *ConfigStruct
-	Links  []LinkListElem
+	Config    *ConfigStruct
+	Links     []LinkListElem
+	LogoFound bool
 }
 
 var GlobalDataGlobal = GlobalRenderData{Config: &Config,
@@ -270,7 +271,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			log.Fatal()
 		}
 	}
-	treefile, err := os.Create(filepath.Join(Config.DestDir, path+"index.html"))
+	treefile, err := os.Create(filepath.Join(Config.DestDir, path, "index.html"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -311,6 +312,20 @@ func main() {
 	if len(args) != 1 {
 		flag.Usage()
 		return
+	}
+
+	imageloc := filepath.Join(Config.InstallDir, "logo.png")
+
+	_, err := os.Stat(imageloc)
+	if err == nil {
+		// logo found
+		GlobalDataGlobal.LogoFound = true
+		err := os.Symlink(imageloc, filepath.Join(Config.DestDir, "logo.png"))
+		if err != nil && !os.IsExist(err) {
+			log.Fatal(err)
+		}
+	} else if !os.IsNotExist(err) {
+		log.Fatal(err)
 	}
 
 	repo, err := git.OpenRepositoryExtended(args[0], git.RepositoryOpenNoSearch, "")

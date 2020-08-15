@@ -2,7 +2,6 @@
 - add file mode to tree.html
 - fix tab in fileview
 - add a link to parent folder in tree view
-- add a link to gitgo index page to every site
 - add a way of generating the index page (a new binary? like stagit has)
 - add better error handling
 - make the LICENSE file easily accessible (the same way as README)
