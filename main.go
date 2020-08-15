@@ -183,7 +183,7 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			}
 		}
 
-		commitfilename := Config.DestDir + "commit/" + commit.TreeId().String() + ".html"
+		commitfilename := filepath.Join(Config.DestDir, "commit", commit.TreeId().String()+".html")
 		commitfile, err := os.Create(commitfilename)
 		if err != nil {
 			log.Fatal(err)
@@ -204,7 +204,7 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 		commitfile.Sync()
 		defer commitfile.Close()
 
-		link := "/commit/" + commit.TreeId().String() + ".html"
+		link := filepath.Join("/commit", commit.TreeId().String()+".html")
 		msg := commit.Summary()
 		if len(msg) > Config.MaxSummaryLen {
 			msg = msg[:Config.MaxSummaryLen-3] + "..."
@@ -231,12 +231,11 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 				log.Fatal()
 			}
 
-			newpath := path + entry.Name + "/"
+			newpath := filepath.Join(path, entry.Name)
 
-			makedir(Config.DestDir + newpath)
+			makedir(filepath.Join(Config.DestDir, newpath))
 
-			filelist = append(filelist, FileListElem{entry.Name + "/", "/" + newpath, false, time.Now()})
-
+			filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false, time.Now()})
 			indextreerecursive(repo, nexttree, newpath)
 		}
 		if entry.Type == git.ObjectBlob {
@@ -246,7 +245,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			}
 
 			newpath := path + entry.Name
-			file, err := os.Create(Config.DestDir + newpath + ".html")
+			file, err := os.Create(filepath.Join(Config.DestDir, newpath+".html"))
 
 			if err != nil {
 				log.Fatal(err)
@@ -261,14 +260,14 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			file.Sync()
 			defer file.Close()
 
-			filelist = append(filelist, FileListElem{entry.Name, "/" + newpath + ".html", true, time.Now()})
+			filelist = append(filelist, FileListElem{entry.Name, newpath + ".html", true, time.Now()})
 		}
 		if entry.Type == git.ObjectCommit {
 			log.Print("FATAL: submodules not implemented")
 			log.Fatal()
 		}
 	}
-	treefile, err := os.Create(Config.DestDir + path + "index.html")
+	treefile, err := os.Create(filepath.Join(Config.DestDir, path+"index.html"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -289,7 +288,7 @@ func indextree(repo *git.Repository, head *git.Oid) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	indextreerecursive(repo, tree, "tree/")
+	indextreerecursive(repo, tree, "/tree")
 }
 
 func main() {
@@ -311,9 +310,6 @@ func main() {
 		return
 	}
 
-	fixpath(&Config.DestDir)
-	fixpath(&Config.InstallDir)
-
 	repo, err := git.OpenRepositoryExtended(args[0], git.RepositoryOpenNoSearch, "")
 	if err != nil {
 		log.Fatal(err)
@@ -329,13 +325,13 @@ func main() {
 	// remove path and .git suffix from the repo's name
 	Config.RepoName = strings.TrimSuffix(filepath.Base(args[0]), ".git")
 
-	Config.DestDir += Config.RepoName + "/"
+	Config.DestDir = filepath.Join(Config.DestDir, Config.RepoName)
 
 	makedir(Config.DestDir)
 
 	templ = template.New("")
 
-	t, err = templ.ParseGlob(Config.InstallDir + "templates/*.html")
+	t, err = templ.ParseGlob(filepath.Join(Config.InstallDir, "templates/*.html"))
 
 	if err != nil {
 		log.Print("parse:", err)
@@ -368,7 +364,7 @@ func main() {
 	// var licensefiles = [...]string{"HEAD:LICENSE", "HEAD:COPYING", "HEAD:LICENSE.md"}
 	// TODO: make the LICENSE file easily accessible (the same way as README)
 
-	indexfile, err := os.Create(Config.DestDir + "index.html")
+	indexfile, err := os.Create(filepath.Join(Config.DestDir, "index.html"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -381,13 +377,13 @@ func main() {
 
 	// TODO: submodules are listed in .submodules
 
-	makedir(Config.DestDir + "commit")
-	makedir(Config.DestDir + "tree")
-	makedir(Config.DestDir + "log")
+	makedir(filepath.Join(Config.DestDir, "commit"))
+	makedir(filepath.Join(Config.DestDir, "tree"))
+	makedir(filepath.Join(Config.DestDir, "log"))
 
 	commitlist := getcommitlog(repo, head)
 
-	logfile, err := os.Create(Config.DestDir + "log/index.html")
+	logfile, err := os.Create(filepath.Join(Config.DestDir, "log/index.html"))
 	if err != nil {
 		log.Fatal(err)
 	}
