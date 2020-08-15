@@ -4,12 +4,6 @@ import (
 	"os"
 )
 
-func fixpath(str *string) {
-	if (*str)[len(*str)-1] != '/' {
-		(*str) += "/"
-	}
-}
-
 func makedir(dir string) {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		os.Mkdir(dir, 0755)
