@@ -43,10 +43,3 @@ func contentstolines(contents []byte, size int) []string {
 
 	return lines
 }
-
-func capcommitsummary(summary string) string {
-	if len(summary) > Config.MaxSummaryLen {
-		summary = summary[:Config.MaxSummaryLen-3] + "..."
-	}
-	return summary
-}

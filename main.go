@@ -204,7 +204,11 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 		defer commitfile.Close()
 
 		link := "/commit/" + commit.TreeId().String() + ".html"
-		msg := capcommitsummary(commit.Summary())
+		msg := commit.Summary()
+		if len(msg) > Config.MaxSummaryLen {
+			msg = msg[:Config.MaxSummaryLen-3] + "..."
+		}
+
 		name := commit.Author().Name
 		date := commit.Author().When
 
@@ -212,7 +216,6 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 	}
 
 	return commitlist
-
 }
 
 func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
