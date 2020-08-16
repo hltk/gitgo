@@ -14,6 +14,9 @@ import (
 )
 
 var (
+	funcmap = template.FuncMap{
+		"now": time.Now,
+	}
 	templ *template.Template
 	t     *template.Template
 )
@@ -376,7 +379,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	templ = template.New("")
+	templ = template.New("").Funcs(funcmap)
 
 	t, err = templ.ParseGlob(filepath.Join(Config.InstallDir, "templates/*.html"))
 
