@@ -60,9 +60,11 @@ var GlobalDataGlobal = GlobalRenderData{Config: &Config,
 	Links: []LinkListElem{{"summary", "/"}, {"tree", "/tree"}, {"log", "/log"}}}
 
 type IndexRenderData struct {
-	GlobalData  *GlobalRenderData
-	ReadmeFile  FileViewRenderData
-	ReadmeFound bool
+	GlobalData   *GlobalRenderData
+	ReadmeFile   FileViewRenderData
+	ReadmeFound  bool
+	LicenseFile  FileViewRenderData
+	LicenseFound bool
 }
 
 type LogRenderData struct {
@@ -383,9 +385,13 @@ func main() {
 	}
 
 	var (
-		readmefile  FileViewRenderData
 		readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
+		readmefile  FileViewRenderData
 		readmefound = false
+
+		licensefiles = [...]string{"HEAD:LICENSE", "HEAD:COPYING", "HEAD:LICENSE.md"}
+		licensefile  FileViewRenderData
+		licensefound = false
 	)
 
 	for _, file := range readmefiles {
@@ -406,11 +412,29 @@ func main() {
 		}
 	}
 
+	for _, file := range licensefiles {
+		fileobj, _, err := repo.RevparseExt(file)
+		if err == nil && fileobj.Type() == git.ObjectBlob {
+			blob, err := fileobj.AsBlob()
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			lines := contentstolines(blob.Contents(), int(blob.Size()))
+
+			licensefile.Name = strings.TrimPrefix(file, "HEAD:")
+			licensefile.Lines = lines
+			licensefound = true
+			break
+		}
+	}
+
 	indexfile, err := os.Create(filepath.Join(Config.DestDir, "index.html"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{&GlobalDataGlobal, readmefile, readmefound})
+	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{&GlobalDataGlobal, readmefile, readmefound, licensefile, licensefound})
 	if err != nil {
 		log.Print("execute:", err)
 	}

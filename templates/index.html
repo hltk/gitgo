@@ -3,4 +3,7 @@
 {{if .ReadmeFound -}}
 {{template "fileview.html" .ReadmeFile -}}
 {{end -}}
+{{if .LicenseFound -}}
+{{template "fileview.html" .LicenseFile -}}
+{{end -}}
 {{template "footer.html" . -}}
