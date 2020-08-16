@@ -10,8 +10,5 @@
 	- add last modification date
 	- add last commit
 	- add a link to parent folder
-- footer.html:
-	- add a time stamp indicating the page's creation time to every page
-	- add a note "this page was generated using stagit" to the footer
 - main.go
 	- have the program throw an error when the installation directory isn't empty
