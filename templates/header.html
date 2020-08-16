@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.GlobalData.Config.RepoName}}</title>
 <style>
 * {
@@ -53,8 +54,15 @@ table {
 	counter-reset: line;
 }
 .linenum {
-	border: 1px solid grey;
-	margin: 5px;
+	border: 1px solid black;
+}
+.fileinfo {
+	border-style: solid;
+	border-color: black;
+	border-width: 1px 1px 0px 1px;
+}
+.fileview, .diffstat {
+	padding: 5px;
 }
 </style>
 </head>

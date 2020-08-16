@@ -39,12 +39,12 @@ Date:
 </tr>
 </table>
 {{range .MsgLines -}}
-{{. -}}<br>
+<pre>
+{{. -}}
+</pre>
 {{end -}}
 <br>
-<div style="border: 1px">
-<pre>
+<div class="diffstat">
 {{template "linenumberer.html" .DiffStatLines -}}
-</pre>
 </div>
 {{template "footer.html" . -}}
