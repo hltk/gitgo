@@ -11,50 +11,30 @@
 }
 body {
 	background-color: ivory;
+	font-size: 14px;
+	font-family: serif;
+}
+#content {
+	max-width: 1200px;
+	margin: 0 auto;
 }
 a.filelink {
 	font-weight: normal;
-	color:inherit;
+	color: inherit;
 }
 table {
 	border-spacing: 0;
 	border-collapse: collapse;
+	width: 100%;
 }
-#headerlogo {
-	max-width: 1em;
-	max-height: 1em;
-	padding-right: 1ch;
+.left {
+	text-align: left;
 }
-.mode {
-	margin: 0px;
-	padding: 0px;
-}
-.size {
-	margin: 0px;
-	padding: 0px;
+.right  {
+	text-align: right;
 }
 .code-num::before {
 	content: counter(line);
-}
-.code-code {
-	white-space: pre;
-	font-family: Consolas, monospace;
-	font-size: 12px;
-	overflow: visible;
-	word-wrap: normal;
-	padding-right: 10px;
-	padding-left: 10px;
-	line-height: 20px;
-}
-.code-num {
-	font-family: Consolas, monospace;
-	font-size: 12px;
-	background-color: white;
-	padding-left: 10px;
-	padding-right: 10px;
-	-webkit-user-select: none;
-	user-select: none;
-	line-height: 20px;
 }
 .linenum table tr {
 	counter-increment: line;
@@ -62,29 +42,44 @@ table {
 .linenum table {
 	counter-reset: line;
 }
-.linenum {
+.code-code, .code-num {
+	font-family: Consolas, monospace;
+	font-size: 12px;
+	line-height: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	overflow: visible;
+	white-space: pre;
+	word-wrap: normal;
+}
+.code-num {
+	user-select: none;
+	-webkit-user-select: none;
+	background-color: white;
+}
+.linenum, #commitmsg {
 	overflow-x: auto;
 }
 .fileinfo {
-	border-style: solid;
-	border-color: black;
-	border-width: 0px 0px 1px 0px;
+	border-bottom: 1px solid black;
 }
 .fileview, #diffstat, #loglist, #treelist {
-	margin: 15px;
 	border: 1px solid black;
-}
-#content {
-	max-width: 1200px;
+	margin: 15px;
 }
 #commitinfo {
 	border: 1px solid black;
 	margin: 15px;
+	overflow-x: auto;
 }
 #commitmsg {
 	border: 1px solid grey;
 	margin: 0.25em;
 	padding: 0.25em;
+}
+#commitmsg pre {
+	font-size: 12px;
+	line-height: 20px;
 }
 td {
 	vertical-align: top;
@@ -92,14 +87,17 @@ td {
 #treeentries tr:nth-child(even), #logentries tr:nth-child(even) {
 	background-color: rgba(0, 0, 0, 0.05);
 }
-#loglist td, #loglist th, #treelist td, #treelist th {
-    padding: 0.125em 0.5em 0.25em 0.5em;
-    line-height: 1;
+#loglist td, #loglist th, #treelist td, #treelist th, #commitinfo td, #commitinfo th {
+	padding: 0.125em 0.5em 0.25em 0.5em;
+	line-height: 1;
 }
 #loglist, #treelist {
 	position : relative;
 	width : auto;
 	display : table;
+}
+.fileview, #loglist, #treelist {
+	width: 100%;
 }
 </style>
 </head>
