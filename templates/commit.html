@@ -1,5 +1,6 @@
 {{template "header.html" . -}}
 {{template "nav.html" . -}}
+<div id="commitinfo">
 <table>
 <tr>
 <td>
@@ -37,14 +38,23 @@ Date:
 {{.Date.Format "2006-01-02 15:04:05" -}}
 </td>
 </tr>
-</table>
+<tr>
+<td>
+Message:
+</td>
+<td>
+<div id="commitmsg">
 {{range .MsgLines -}}
 <pre>
 {{. -}}
 </pre>
 {{end -}}
-<br>
-<div class="diffstat">
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="diffstat">
 {{template "linenumberer.html" .DiffStatLines -}}
 </div>
 {{template "footer.html" . -}}

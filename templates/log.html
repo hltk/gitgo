@@ -1,6 +1,15 @@
 {{template "header.html" . -}}
 {{template "nav.html" . -}}
+<div id="loglist">
 <table>
+<thead>
+<tr>
+<th>Summary</th>
+<th>Author</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody id="logentries">
 {{range .Commits -}}
 <tr>
 <td><a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.Msg -}}</a></td>
@@ -8,5 +17,7 @@
 <td>{{.Date.Format "2006-01-02 15:04:05" -}}</td>
 </tr>
 {{end -}}
+</tbody>
 </table> 
+</div>
 {{template "footer.html" . -}}

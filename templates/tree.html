@@ -1,11 +1,15 @@
 {{template "header.html" . -}}
 {{template "nav.html" . -}}
+<div id="treelist">
 <table>
+<thead>
 <tr>
 <th>Mode</th>
 <th>Name</th>
 <th>Size</th>
 </tr>
+</thead>
+<tbody id="treeentries">
 {{range .Files -}}
 <tr>
 <td><pre class="mode">{{.Mode -}}</pre></td>
@@ -13,5 +17,7 @@
 <td><pre class="size">{{.Size -}}</pre></td>
 </tr>
 {{end -}}
+</tbody>
 </table> 
+</div>
 {{template "footer.html" . -}}
