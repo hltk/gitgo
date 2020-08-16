@@ -232,7 +232,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 		mode := os.FileMode(filemode).String()
 
 		if filemode == git.FilemodeTree {
-			mode = "m" + mode[1:]
+			mode = "d" + mode[1:]
 		}
 		if filemode == git.FilemodeLink {
 			mode = "l" + mode[1:]
