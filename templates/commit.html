@@ -3,19 +3,19 @@
 <div id="commitinfo">
 <table>
 <tr>
-<td>
+<td class="left">
 Commit:
 </td>
-<td>
+<td class="left">
 {{.Id -}}
 </td>
 </tr>
 <tr>
 {{if .HasAnyParents -}}
-<td>
+<td class="left">
 Parent(s):
 </td>
-<td>
+<td class="left">
 {{range .Parents -}}
 <a href="/{{$.GlobalData.Config.RepoName -}}/commit/{{. -}}.html">{{. -}}</a><br>
 {{end -}}
@@ -23,26 +23,26 @@ Parent(s):
 </tr>
 {{end -}}
 <tr>
-<td>
+<td class="left">
 Author:
 </td>
-<td>
+<td class="left">
 {{.Author -}} &lt;<a href="mailto:{{.Mail -}}">{{.Mail}}</a>&gt;
 </td>
 </tr>
 <tr>
-<td>
+<td class="left">
 Date:
 </td>
-<td>
+<td class="left">
 {{.Date.Format "2006-01-02 15:04:05" -}}
 </td>
 </tr>
 <tr>
-<td>
+<td class="left">
 Message:
 </td>
-<td>
+<td class="left">
 <div id="commitmsg">
 {{range .MsgLines -}}
 <pre>

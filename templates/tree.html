@@ -4,17 +4,17 @@
 <table>
 <thead>
 <tr>
-<th>Mode</th>
-<th>Name</th>
-<th>Size</th>
+<th class="left">Mode</th>
+<th class="left">Name</th>
+<th class="right">Size</th>
 </tr>
 </thead>
 <tbody id="treeentries">
 {{range .Files -}}
 <tr>
-<td><pre class="mode">{{.Mode -}}</pre></td>
-<td><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
-<td><pre class="size">{{.Size -}}</pre></td>
+<td class="left"><pre class="mode">{{.Mode -}}</pre></td>
+<td class="left"><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
+<td class="right"><pre class="size">{{.Size -}}</pre></td>
 </tr>
 {{end -}}
 </tbody>

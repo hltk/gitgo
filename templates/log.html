@@ -4,17 +4,17 @@
 <table>
 <thead>
 <tr>
-<th>Summary</th>
-<th>Author</th>
-<th>Date</th>
+<th class="left">Summary</th>
+<th class="left">Author</th>
+<th class="right">Date</th>
 </tr>
 </thead>
 <tbody id="logentries">
 {{range .Commits -}}
 <tr>
-<td><a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.Msg -}}</a></td>
-<td>{{.Name -}}</td>
-<td>{{.Date.Format "2006-01-02 15:04:05" -}}</td>
+<td class="left"><a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.Msg -}}</a></td>
+<td class="left">{{.Name -}}</td>
+<td class="right">{{.Date.Format "2006-01-02 15:04:05" -}}</td>
 </tr>
 {{end -}}
 </tbody>
