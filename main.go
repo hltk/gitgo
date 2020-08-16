@@ -46,6 +46,7 @@ type FileListElem struct {
 	Name   string
 	Link   string
 	IsFile bool
+	Mode   string
 }
 
 type GlobalRenderData struct {
@@ -224,6 +225,21 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 	count := int(tree.EntryCount())
 	for i := 0; i < count; i++ {
 		entry := tree.EntryByIndex(uint64(i))
+
+		filemode := entry.Filemode
+
+		mode := os.FileMode(filemode).String()
+
+		if filemode == git.FilemodeTree {
+			mode = "m" + mode[1:]
+		}
+		if filemode == git.FilemodeLink {
+			mode = "l" + mode[1:]
+		}
+		if filemode == git.FilemodeCommit {
+			mode = "m" + mode[1:]
+		}
+
 		if entry.Type == git.ObjectTree {
 			// possibly very slow?
 			nexttree, err := repo.LookupTree(entry.Id)
@@ -238,7 +254,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 				log.Fatal(err)
 			}
 
-			filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false})
+			filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false, mode})
 			indextreerecursive(repo, nexttree, newpath)
 		}
 		if entry.Type == git.ObjectBlob {
@@ -263,7 +279,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			file.Sync()
 			defer file.Close()
 
-			filelist = append(filelist, FileListElem{entry.Name, newpath + ".html", true})
+			filelist = append(filelist, FileListElem{entry.Name, newpath + ".html", true, mode})
 		}
 		if entry.Type == git.ObjectCommit {
 			log.Print("FATAL: submodules not implemented")

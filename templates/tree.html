@@ -3,6 +3,7 @@
 <table>
 {{range .Files -}}
 <tr>
+<th><pre class="mode">{{.Mode -}}</pre></th>
 <th><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></th>
 </tr>
 {{end -}}
