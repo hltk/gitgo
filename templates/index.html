@@ -1,5 +1,10 @@
 {{template "header.html" . -}}
 {{template "nav.html" . -}}
+<div id="repoinfo">
+<small>
+<pre>git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</pre>
+</small>
+</div>
 {{if .ReadmeFound -}}
 {{template "fileview.html" .ReadmeFile -}}
 {{end -}}
