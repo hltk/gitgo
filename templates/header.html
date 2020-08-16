@@ -3,25 +3,13 @@
 <head>
 <title>{{.GlobalData.Config.RepoName}}</title>
 <style>
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+}
 body {
 	background-color: ivory;
-}
-pre {
-	font-weight: normal;
-}
-pre.code code {
-	counter-increment: listing;
-}
-pre.code code::before {
-	content: counter(listing) ". ";
-	display: inline-block;
-	width: 8em;
-	text-align: right;
-	background-color: white;
-	border-style: none solid none none;
-	border-width: 2px;
-	margin-right: 0.5em;
-	border-color: gray;
 }
 a.filelink {
 	font-weight: normal;
@@ -42,6 +30,31 @@ table {
 .size {
 	margin: 0px;
 	padding: 0px;
+}
+.code-num::before {
+	content: counter(line);
+}
+.code-code {
+	white-space: pre;
+	font-family: Consolas, monospace;
+}
+.code-num {
+	font-family: Consolas, monospace;
+	background-color: white;
+	padding-left: 10px;
+	padding-right: 10px;
+	-webkit-user-select: none;
+	user-select: none;
+}
+.linenum table tr {
+	counter-increment: line;
+}
+.linenum table {
+	counter-reset: line;
+}
+.linenum {
+	border: 1px solid grey;
+	margin: 5px;
 }
 </style>
 </head>

@@ -2,40 +2,40 @@
 {{template "nav.html" . -}}
 <table>
 <tr>
-<th>
+<td>
 Commit:
-</th>
-<th>
+</td>
+<td>
 {{.Id -}}
-</th>
+</td>
 </tr>
 <tr>
 {{if .HasAnyParents -}}
-<th>
+<td>
 Parent(s):
-</th>
-<th>
+</td>
+<td>
 {{range .Parents -}}
 <a href="/{{$.GlobalData.Config.RepoName -}}/commit/{{. -}}.html">{{. -}}</a><br>
 {{end -}}
-</th>
+</td>
 </tr>
 {{end -}}
 <tr>
-<th>
+<td>
 Author:
-</th>
-<th>
+</td>
+<td>
 {{.Author -}} &lt;<a href="mailto:{{.Mail -}}">{{.Mail}}</a>&gt;
-</th>
+</td>
 </tr>
 <tr>
-<th>
+<td>
 Date:
-</th>
-<th>
+</td>
+<td>
 {{.Date.Format "2006-01-02 15:04:05" -}}
-</th>
+</td>
 </tr>
 </table>
 {{range .MsgLines -}}

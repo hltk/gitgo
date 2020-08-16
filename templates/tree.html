@@ -1,21 +1,17 @@
 {{template "header.html" . -}}
 {{template "nav.html" . -}}
 <table>
-<thead>
 <tr>
 <th>Mode</th>
 <th>Name</th>
 <th>Size</th>
 </tr>
-</thead>
-<tbody>
 {{range .Files -}}
 <tr>
-<th><pre class="mode">{{.Mode -}}</pre></th>
-<th><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></th>
-<th><pre class="size">{{.Size -}}</pre></th>
+<td><pre class="mode">{{.Mode -}}</pre></td>
+<td><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
+<td><pre class="size">{{.Size -}}</pre></td>
 </tr>
 {{end -}}
-</tbody>
 </table> 
 {{template "footer.html" . -}}

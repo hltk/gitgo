@@ -10,8 +10,6 @@
 	- add last modification date
 	- add last commit
 	- add a link to parent folder
-- linenumberer.html:
-	- fix the tab character
 - index.html:
 	- make the LICENSE file easily accessible (the same way as README)
 - footer.html:
