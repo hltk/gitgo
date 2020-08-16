@@ -249,8 +249,6 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 			size = int(blob.Size())
 		}
 
-		fmt.Println(entry.Name, size)
-
 		if entry.Type == git.ObjectTree {
 			// possibly very slow?
 			nexttree, err := repo.LookupTree(entry.Id)
