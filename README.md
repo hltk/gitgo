@@ -8,9 +8,16 @@ The goal of the project is not to create the best possible git web portal, inste
 
 ## Requirements
 
-- **Go**: You must have Go installed locally on your system
-- **libgit2**: You must have libgit2 installed locally on your system
-- Go package: `github.com/libgit2/git2go`
+- **Go**: You must have Go installed locally on your system (version 1.23 or later)
+- **libgit2**: You must have libgit2 v1.5.x installed locally on your system
+  - Note: git2go v34 specifically requires libgit2 v1.5.x
+  - If you have a different version, you may need to install libgit2 v1.5.x or downgrade:
+    ```bash
+    # On macOS with Homebrew
+    brew uninstall libgit2
+    brew install libgit2@1.5
+    ```
+- Go package: `github.com/libgit2/git2go/v34`
 
 ## Usage
 
@@ -30,4 +37,4 @@ Gitgo retains the MIT/X Consortium License of stagit.
 
 ## Authors
 
-- Henrik Aalto <hltk@hltk.fi>
+- Henrik Aalto
