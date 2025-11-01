@@ -25,5 +25,8 @@ else
 	$(GO) build -o gitgo
 endif
 
+serve:
+	$(GO) run server.go
+
 clean:
 	rm -f gitgo

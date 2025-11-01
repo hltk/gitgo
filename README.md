@@ -57,6 +57,15 @@ Custom installation directory (if templates are installed elsewhere):
 
 If there is a `logo.png` file in the installation directory, the program will detect it, and add it to every page.
 
+### Preview Generated Pages
+
+To preview the generated static pages locally:
+```bash
+make serve
+```
+
+This will start a web server on http://localhost:8000 serving the `build/` directory. Open that URL in your browser to view the generated pages.
+
 ## License
 
 Gitgo retains the MIT/X Consortium License of stagit.
