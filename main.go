@@ -126,7 +126,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		commit, commitErr := repo.LookupCommit(headRef.Target())
 		headRef.Free()
 		if commitErr == nil {
-			latestCommit.Link = "/commit/" + commit.Id().String() + ".html"
+			latestCommit.Link = "/commit/" + commit.TreeId().String() + ".html"
 			latestCommit.Msg = commit.Summary()
 			latestCommit.Name = commit.Author().Name
 			latestCommit.Date = commit.Author().When

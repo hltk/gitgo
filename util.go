@@ -92,20 +92,20 @@ func getRepoName(repoPath string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	
+
 	// Get the base name of the directory
 	repoName := filepath.Base(absPath)
-	
+
 	// Remove .git suffix if present
 	repoName = filepath.Clean(repoName)
 	if filepath.Ext(repoName) == ".git" {
 		repoName = repoName[:len(repoName)-4]
 	}
-	
+
 	// Ensure we have a valid name
 	if repoName == "" || repoName == "." || repoName == "/" {
 		repoName = "repo"
 	}
-	
+
 	return repoName, nil
 }

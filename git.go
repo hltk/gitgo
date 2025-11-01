@@ -286,6 +286,171 @@ func getLastModifiedDate(repo *git.Repository, repoPath string) time.Time {
 	return time.Time{}
 }
 
+// getLastCommitInfo returns the date, message, and link of the last commit that modified the given path
+func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string, string) {
+	head, err := repo.Head()
+	if err != nil {
+		return time.Time{}, "", ""
+	}
+	defer head.Free()
+
+	walk, err := repo.Walk()
+	if err != nil {
+		return time.Time{}, "", ""
+	}
+	defer walk.Free()
+
+	if err = walk.Push(head.Target()); err != nil {
+		return time.Time{}, "", ""
+	}
+
+	// Remove leading /tree from path for pathspec
+	cleanPath := strings.TrimPrefix(repoPath, "/tree/")
+	if cleanPath == "/tree" {
+		cleanPath = ""
+	}
+
+	walk.SimplifyFirstParent()
+
+	id := git.Oid{}
+	for {
+		if err = walk.Next(&id); err != nil {
+			break
+		}
+
+		commit, err := repo.LookupCommit(&id)
+		if err != nil {
+			continue
+		}
+
+		tree, err := commit.Tree()
+		if err != nil {
+			commit.Free()
+			continue
+		}
+
+		// For the root tree, return the commit info
+		if cleanPath == "" {
+			date := commit.Author().When
+			msg := commit.Summary()
+			link := "/commit/" + commit.TreeId().String() + ".html"
+			tree.Free()
+			commit.Free()
+			return date, msg, link
+		}
+
+		// Check if this path exists in this commit
+		_, err = tree.EntryByPath(cleanPath)
+		tree.Free()
+
+		if err == nil {
+			// Path exists in this commit, check if it was modified
+			if commit.ParentCount() == 0 {
+				// Initial commit
+				date := commit.Author().When
+				msg := commit.Summary()
+				link := "/commit/" + commit.TreeId().String() + ".html"
+				commit.Free()
+				return date, msg, link
+			}
+
+			parent := commit.Parent(0)
+			if parent == nil {
+				date := commit.Author().When
+				msg := commit.Summary()
+				link := "/commit/" + commit.TreeId().String() + ".html"
+				commit.Free()
+				return date, msg, link
+			}
+
+			parentTree, err := parent.Tree()
+			if err != nil {
+				parent.Free()
+				date := commit.Author().When
+				msg := commit.Summary()
+				link := "/commit/" + commit.TreeId().String() + ".html"
+				commit.Free()
+				return date, msg, link
+			}
+
+			// Check if path exists in parent
+			_, err = parentTree.EntryByPath(cleanPath)
+			parentTree.Free()
+			parent.Free()
+
+			if err != nil {
+				// Path didn't exist in parent, so it was added in this commit
+				date := commit.Author().When
+				msg := commit.Summary()
+				link := "/commit/" + commit.TreeId().String() + ".html"
+				commit.Free()
+				return date, msg, link
+			}
+
+			// For directories and files, we need to check if content changed
+			opts, err := git.DefaultDiffOptions()
+			if err != nil {
+				commit.Free()
+				continue
+			}
+
+			parentCommit := commit.Parent(0)
+			if parentCommit == nil {
+				date := commit.Author().When
+				msg := commit.Summary()
+				link := "/commit/" + commit.TreeId().String() + ".html"
+				commit.Free()
+				return date, msg, link
+			}
+
+			currentTree, _ := commit.Tree()
+			parentTree2, _ := parentCommit.Tree()
+
+			if currentTree != nil && parentTree2 != nil {
+				opts.Pathspec = []string{cleanPath}
+				diff, err := repo.DiffTreeToTree(parentTree2, currentTree, &opts)
+
+				if currentTree != nil {
+					currentTree.Free()
+				}
+				if parentTree2 != nil {
+					parentTree2.Free()
+				}
+				parentCommit.Free()
+
+				if err == nil {
+					numDeltas, _ := diff.NumDeltas()
+					diff.Free()
+
+					if numDeltas > 0 {
+						// This commit modified the path
+						date := commit.Author().When
+						msg := commit.Summary()
+						link := "/commit/" + commit.TreeId().String() + ".html"
+						commit.Free()
+						return date, msg, link
+					}
+				} else {
+					if diff != nil {
+						diff.Free()
+					}
+				}
+			} else {
+				if currentTree != nil {
+					currentTree.Free()
+				}
+				if parentTree2 != nil {
+					parentTree2.Free()
+				}
+				parentCommit.Free()
+			}
+		}
+		commit.Free()
+	}
+
+	return time.Time{}, "", ""
+}
+
 func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 	var filelist []FileListElem
 	count := int(tree.EntryCount())
@@ -328,8 +493,8 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 				log.Fatal(err)
 			}
 
-			lastModified := getLastModifiedDate(repo, filepath.Join(path, entry.Name))
-			filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false, mode, size, lastModified})
+			lastModified, commitMsg, commitLink := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
+			filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false, mode, size, lastModified, commitMsg, commitLink})
 			indexTreeRecursive(repo, nexttree, newpath)
 		}
 		if entry.Type == git.ObjectBlob {
@@ -354,8 +519,8 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 			file.Sync()
 			defer file.Close()
 
-			lastModified := getLastModifiedDate(repo, filepath.Join(path, entry.Name))
-			filelist = append(filelist, FileListElem{entry.Name, newpath + ".html", true, mode, size, lastModified})
+			lastModified, commitMsg, commitLink := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
+			filelist = append(filelist, FileListElem{entry.Name, newpath + ".html", true, mode, size, lastModified, commitMsg, commitLink})
 		}
 		if entry.Type == git.ObjectCommit {
 			log.Print("FATAL: submodules not implemented")
