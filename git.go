@@ -616,3 +616,50 @@ func indexTree(repo *git.Repository, head *git.Oid) {
 	}
 	indexTreeRecursive(repo, tree, "/tree")
 }
+
+// getContributors walks through the commit history and returns a list of unique contributors
+// based on their email addresses
+func getContributors(repo *git.Repository, head *git.Oid) []Contributor {
+	emailToContributor := make(map[string]Contributor)
+
+	walk, err := repo.Walk()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = walk.Push(head); err != nil {
+		log.Fatal(err)
+	}
+
+	id := git.Oid{}
+	for {
+		if err = walk.Next(&id); err != nil {
+			// at the end of the commit history
+			break
+		}
+
+		commit, err := repo.LookupCommit(&id)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		author := commit.Author()
+		email := author.Email
+
+		// Only add if we haven't seen this email before
+		if _, exists := emailToContributor[email]; !exists {
+			emailToContributor[email] = Contributor{
+				Name:  author.Name,
+				Email: email,
+			}
+		}
+		commit.Free()
+	}
+
+	// Convert map to slice
+	contributors := make([]Contributor, 0, len(emailToContributor))
+	for _, contributor := range emailToContributor {
+		contributors = append(contributors, contributor)
+	}
+
+	return contributors
+}

@@ -28,16 +28,23 @@ type FileListElem struct {
 	LastCommitLink string
 }
 
+type Contributor struct {
+	Name  string
+	Email string
+}
+
 type IndexRenderData struct {
-	GlobalData   *GlobalRenderData
-	ReadmeFile   FileViewRenderData
-	ReadmeFound  bool
-	LicenseFile  FileViewRenderData
-	LicenseFound bool
-	LatestCommit CommitListElem
-	CommitFound  bool
-	RootTree     []FileListElem
-	TreeFound    bool
+	GlobalData     *GlobalRenderData
+	ReadmeFile     FileViewRenderData
+	ReadmeFound    bool
+	LicenseFile    FileViewRenderData
+	LicenseFound   bool
+	LatestCommit   CommitListElem
+	CommitFound    bool
+	RootTree       []FileListElem
+	TreeFound      bool
+	Contributors   []Contributor
+	ContributorsCt int
 }
 
 type LogRenderData struct {

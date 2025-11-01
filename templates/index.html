@@ -14,6 +14,16 @@
 </p>
 </div>
 {{end -}}
+{{if gt .ContributorsCt 0 -}}
+<div id="contributors">
+<h3>Contributors ({{.ContributorsCt}})</h3>
+<ul>
+{{range .Contributors -}}
+<li>{{.Name}} &lt;{{.Email}}&gt;</li>
+{{end -}}
+</ul>
+</div>
+{{end -}}
 </div>
 {{if .TreeFound -}}
 <div id="treelist">

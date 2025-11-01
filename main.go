@@ -166,20 +166,25 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		}
 	}
 
+	// Get contributors
+	contributors := getContributors(repo, head)
+
 	indexfile, err := os.Create(filepath.Join(destDir, "index.html"))
 	if err != nil {
 		return err
 	}
 	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{
-		GlobalData:   &GlobalDataGlobal,
-		ReadmeFile:   readmefile,
-		ReadmeFound:  readmefound,
-		LicenseFile:  licensefile,
-		LicenseFound: licensefound,
-		LatestCommit: latestCommit,
-		CommitFound:  commitfound,
-		RootTree:     rootTree,
-		TreeFound:    treefound,
+		GlobalData:     &GlobalDataGlobal,
+		ReadmeFile:     readmefile,
+		ReadmeFound:    readmefound,
+		LicenseFile:    licensefile,
+		LicenseFound:   licensefound,
+		LatestCommit:   latestCommit,
+		CommitFound:    commitfound,
+		RootTree:       rootTree,
+		TreeFound:      treefound,
+		Contributors:   contributors,
+		ContributorsCt: len(contributors),
 	})
 	if err != nil {
 		return err
