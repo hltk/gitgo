@@ -1,9 +1,10 @@
 {{template "header.html" . -}}
 {{template "nav.html" . -}}
-<div id="repoinfo">
+<div id="cloneurl">
 <small>
 <pre>git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</pre>
 </small>
+</div>
 {{if .CommitFound -}}
 <div id="latestcommit">
 <h3>Latest commit</h3>
@@ -24,7 +25,6 @@
 </ul>
 </div>
 {{end -}}
-</div>
 {{if .TreeFound -}}
 <div id="treelist">
 <table>
