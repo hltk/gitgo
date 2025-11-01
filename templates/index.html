@@ -1,11 +1,18 @@
 {{template "header.html" . -}}
-{{template "nav.html" . -}}
+<div id="nav">
+{{range .GlobalData.Links -}}
+{{if and (ne .Pretty "tree") (ne .Pretty "log") -}}
+<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}}</a>
+{{end -}}
+{{end -}}
+</div>
 <div id="cloneurl">
 <small>
 <pre>git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</pre>
 </small>
 </div>
 {{if .CommitFound -}}
+<div id="commit-log-container">
 <div id="latestcommit">
 <h3>Latest commit</h3>
 <p>
@@ -13,6 +20,14 @@
 <br>
 <small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
 </p>
+</div>
+<div id="loglink">
+{{range .GlobalData.Links -}}
+{{if eq .Pretty "log" -}}
+<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">View all commits ({{$.GlobalData.CommitCount}})</a>
+{{end -}}
+{{end -}}
+</div>
 </div>
 {{end -}}
 {{if gt .ContributorsCt 0 -}}

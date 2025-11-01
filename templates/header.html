@@ -95,10 +95,14 @@ table {
 .commit-info a:hover {
 	text-decoration: underline;
 }
-.fileview, #diffstat, #loglist, #treelist, #nav, #commitinfo, #cloneurl, #latestcommit, #contributors {
+.fileview, #diffstat, #loglist, #treelist, #nav, #commitinfo, #cloneurl, #contributors {
 	border: 1px solid black;
 	margin-top: 15px;
 	margin-bottom: 15px;
+	overflow-x: auto;
+}
+ #latestcommit {
+	border: 1px solid black;
 	overflow-x: auto;
 }
 #commitmsg {
@@ -218,11 +222,44 @@ html {
 	margin-bottom: 1em;
 	color: #666;
 }
+#header a {
+	color: inherit;
+	text-decoration: none;
+}
+#header a:hover {
+	text-decoration: underline;
+}
+#commit-log-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 20px;
+	padding: 10px 0;
+}
+#latestcommit {
+	flex: 1;
+	margin-top: 0;
+}
+#loglink {
+	flex: 0 0 auto;
+	align-self: center;
+	border: 1px solid black;
+	padding: 1em;
+	background-color: white;
+}
+#loglink a {
+	color: inherit;
+	text-decoration: none;
+	font-weight: bold;
+}
+#loglink a:hover {
+	text-decoration: underline;
+}
 </style>
 </head>
 <body>
 <div id="content">
 <div id="headerdiv">
 {{if .GlobalData.LogoFound -}}<a href="/"><img id="headerlogo" src="/logo.png" alt="logo"/></a>{{end -}}
-<h1 id="header">{{.GlobalData.Config.RepoName}}	</h1>
+<h1 id="header"><a href="/{{.GlobalData.Config.RepoName}}/">{{.GlobalData.Config.RepoName}}</a>	</h1>
 </div>
