@@ -122,6 +122,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 			if strings.HasSuffix(strings.ToLower(filename), ".md") {
 				readmeIsMarkdown = true
 				readmeHTML = renderMarkdownToHTML(blob.Contents())
+				readmefile.Name = filename
 			} else {
 				lines := highlightFileContents(filename, blob.Contents())
 				readmefile.Name = filename

@@ -53,8 +53,13 @@
 {{end -}}
 {{if .ReadmeFound -}}
 {{if .ReadmeIsMarkdown -}}
+<div class="fileview">
+<div class="fileinfo">
+<p>{{.ReadmeFile.Name -}}</p>
+</div>
 <div class="readme-markdown">
 {{.ReadmeHTML}}
+</div>
 </div>
 {{else -}}
 {{template "fileview.html" .ReadmeFile -}}
