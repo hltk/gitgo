@@ -4,7 +4,6 @@
 	
 - index.html:
  - gather contributors (unique by email) and show their names
- - include the tree list above the readme
 
 - branches.html
 - tags.html

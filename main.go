@@ -137,7 +137,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	// Get commit list for commit count and latest commit
 	commitlist := getCommitLog(repo, head)
 	GlobalDataGlobal.CommitCount = len(commitlist)
-	
+
 	// Get latest commit
 	headRef, headErr := repo.Head()
 	if headErr == nil {
@@ -154,11 +154,33 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		}
 	}
 
+	// Get root tree file list for index page
+	var rootTree []FileListElem
+	treefound := false
+	commit, err := repo.LookupCommit(head)
+	if err == nil {
+		tree, treeErr := commit.Tree()
+		if treeErr == nil {
+			rootTree = getRootTreeFileList(repo, tree)
+			treefound = true
+		}
+	}
+
 	indexfile, err := os.Create(filepath.Join(destDir, "index.html"))
 	if err != nil {
 		return err
 	}
-	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{&GlobalDataGlobal, readmefile, readmefound, licensefile, licensefound, latestCommit, commitfound})
+	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{
+		GlobalData:   &GlobalDataGlobal,
+		ReadmeFile:   readmefile,
+		ReadmeFound:  readmefound,
+		LicenseFile:  licensefile,
+		LicenseFound: licensefound,
+		LatestCommit: latestCommit,
+		CommitFound:  commitfound,
+		RootTree:     rootTree,
+		TreeFound:    treefound,
+	})
 	if err != nil {
 		return err
 	}

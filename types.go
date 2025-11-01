@@ -36,6 +36,8 @@ type IndexRenderData struct {
 	LicenseFound bool
 	LatestCommit CommitListElem
 	CommitFound  bool
+	RootTree     []FileListElem
+	TreeFound    bool
 }
 
 type LogRenderData struct {

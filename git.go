@@ -458,6 +458,44 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 	return time.Time{}, "", ""
 }
 
+// getRootTreeFileList returns the file list for the root tree (non-recursive)
+func getRootTreeFileList(repo *git.Repository, tree *git.Tree) []FileListElem {
+	var filelist []FileListElem
+	count := int(tree.EntryCount())
+	for i := 0; i < count; i++ {
+		entry := tree.EntryByIndex(uint64(i))
+
+		filemode := entry.Filemode
+		mode := os.FileMode(filemode).String()
+
+		if filemode == git.FilemodeTree {
+			mode = "d" + mode[1:]
+		}
+		if filemode == git.FilemodeLink {
+			mode = "l" + mode[1:]
+		}
+		if filemode == git.FilemodeCommit {
+			mode = "m" + mode[1:]
+		}
+
+		size := 0
+		blob, err := repo.LookupBlob(entry.Id)
+		if err == nil {
+			size = int(blob.Size())
+		}
+
+		if entry.Type == git.ObjectTree {
+			lastModified, commitMsg, commitLink := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
+			filelist = append(filelist, FileListElem{entry.Name + "/", filepath.Join("/tree", entry.Name), false, mode, size, lastModified, commitMsg, commitLink})
+		}
+		if entry.Type == git.ObjectBlob {
+			lastModified, commitMsg, commitLink := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
+			filelist = append(filelist, FileListElem{entry.Name, filepath.Join("/tree", entry.Name) + ".html", true, mode, size, lastModified, commitMsg, commitLink})
+		}
+	}
+	return filelist
+}
+
 func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 	var filelist []FileListElem
 	count := int(tree.EntryCount())
@@ -550,11 +588,8 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 			parentPath = parentPath + "/"
 		}
 		hasParent = true
-	} else {
-		// For "/tree", parent is the index page
-		parentPath = "/"
-		hasParent = true
 	}
+	// For root "/tree", no parent link
 
 	err = t.ExecuteTemplate(treefile, "tree.html", TreeRenderData{
 		GlobalData:  &GlobalDataGlobal,

@@ -15,6 +15,32 @@
 </div>
 {{end -}}
 </div>
+{{if .TreeFound -}}
+<div id="treelist">
+<table>
+<thead>
+<tr>
+<th class="left">Mode</th>
+<th class="left">Name</th>
+<th class="right">Size</th>
+<th class="right">Last Modified</th>
+<th class="left">Last Commit</th>
+</tr>
+</thead>
+<tbody id="treeentries">
+{{range .RootTree -}}
+<tr>
+<td class="left"><pre class="mode">{{.Mode -}}</pre></td>
+<td class="left"><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
+<td class="right"><pre class="size">{{.Size -}}</pre></td>
+<td class="right"><pre class="date">{{formatDate .LastModified -}}</pre></td>
+<td class="left">{{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}</td>
+</tr>
+{{end -}}
+</tbody>
+</table> 
+</div>
+{{end -}}
 {{if .ReadmeFound -}}
 {{template "fileview.html" .ReadmeFile -}}
 {{end -}}
