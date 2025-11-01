@@ -517,3 +517,165 @@ func TestIndexTreeRecursive(t *testing.T) {
 		}
 	})
 }
+
+func TestGetImageFileContents(t *testing.T) {
+	t.Run("reads image file from working directory", func(t *testing.T) {
+		repo, repoPath := createTestRepo(t)
+		defer repo.Free()
+
+		// Create a fake PNG file (just some binary data for testing)
+		pngData := []byte{0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A} // PNG header
+		filename := "test.png"
+		err := os.WriteFile(filepath.Join(repoPath, filename), pngData, 0644)
+		if err != nil {
+			t.Fatalf("failed to write image file: %v", err)
+		}
+
+		// Read the image using the function
+		contents, err := getImageFileContents(repo, "/tree", filename)
+		if err != nil {
+			t.Fatalf("getImageFileContents() failed: %v", err)
+		}
+
+		// Verify contents match
+		if len(contents) != len(pngData) {
+			t.Errorf("expected %d bytes, got %d", len(pngData), len(contents))
+		}
+
+		for i, b := range pngData {
+			if contents[i] != b {
+				t.Errorf("byte %d: expected 0x%02x, got 0x%02x", i, b, contents[i])
+			}
+		}
+	})
+
+	t.Run("reads image from subdirectory", func(t *testing.T) {
+		repo, repoPath := createTestRepo(t)
+		defer repo.Free()
+
+		// Create subdirectory
+		subdir := filepath.Join(repoPath, "images")
+		err := os.MkdirAll(subdir, 0755)
+		if err != nil {
+			t.Fatalf("failed to create subdirectory: %v", err)
+		}
+
+		// Create image in subdirectory
+		jpgData := []byte{0xFF, 0xD8, 0xFF, 0xE0} // JPEG header
+		filename := "photo.jpg"
+		err = os.WriteFile(filepath.Join(subdir, filename), jpgData, 0644)
+		if err != nil {
+			t.Fatalf("failed to write image file: %v", err)
+		}
+
+		// Read the image
+		contents, err := getImageFileContents(repo, "/tree/images", filename)
+		if err != nil {
+			t.Fatalf("getImageFileContents() failed: %v", err)
+		}
+
+		// Verify contents
+		if len(contents) != len(jpgData) {
+			t.Errorf("expected %d bytes, got %d", len(jpgData), len(contents))
+		}
+	})
+
+	t.Run("handles non-existent file", func(t *testing.T) {
+		repo, _ := createTestRepo(t)
+		defer repo.Free()
+
+		// Try to read non-existent file
+		_, err := getImageFileContents(repo, "/tree", "nonexistent.png")
+		if err == nil {
+			t.Error("expected error for non-existent file, got nil")
+		}
+	})
+
+	t.Run("handles root directory path", func(t *testing.T) {
+		repo, repoPath := createTestRepo(t)
+		defer repo.Free()
+
+		// Create image in root
+		gifData := []byte{0x47, 0x49, 0x46, 0x38, 0x39, 0x61} // GIF89a header
+		filename := "animation.gif"
+		err := os.WriteFile(filepath.Join(repoPath, filename), gifData, 0644)
+		if err != nil {
+			t.Fatalf("failed to write image file: %v", err)
+		}
+
+		// Read the image from root tree path
+		contents, err := getImageFileContents(repo, "/tree", filename)
+		if err != nil {
+			t.Fatalf("getImageFileContents() failed: %v", err)
+		}
+
+		// Verify contents
+		if len(contents) != len(gifData) {
+			t.Errorf("expected %d bytes, got %d", len(gifData), len(contents))
+		}
+	})
+
+	t.Run("handles deeply nested path", func(t *testing.T) {
+		repo, repoPath := createTestRepo(t)
+		defer repo.Free()
+
+		// Create deeply nested directory structure
+		deepPath := filepath.Join(repoPath, "assets", "images", "icons")
+		err := os.MkdirAll(deepPath, 0755)
+		if err != nil {
+			t.Fatalf("failed to create deep directory: %v", err)
+		}
+
+		// Create image in deep path
+		svgData := []byte("<svg></svg>")
+		filename := "icon.svg"
+		err = os.WriteFile(filepath.Join(deepPath, filename), svgData, 0644)
+		if err != nil {
+			t.Fatalf("failed to write image file: %v", err)
+		}
+
+		// Read the image
+		contents, err := getImageFileContents(repo, "/tree/assets/images/icons", filename)
+		if err != nil {
+			t.Fatalf("getImageFileContents() failed: %v", err)
+		}
+
+		// Verify contents
+		if string(contents) != string(svgData) {
+			t.Errorf("expected %q, got %q", string(svgData), string(contents))
+		}
+	})
+
+	t.Run("reads large image file", func(t *testing.T) {
+		repo, repoPath := createTestRepo(t)
+		defer repo.Free()
+
+		// Create a larger fake image file (1MB)
+		largeData := make([]byte, 1024*1024)
+		for i := range largeData {
+			largeData[i] = byte(i % 256)
+		}
+
+		filename := "large.png"
+		err := os.WriteFile(filepath.Join(repoPath, filename), largeData, 0644)
+		if err != nil {
+			t.Fatalf("failed to write large image file: %v", err)
+		}
+
+		// Read the image
+		contents, err := getImageFileContents(repo, "/tree", filename)
+		if err != nil {
+			t.Fatalf("getImageFileContents() failed: %v", err)
+		}
+
+		// Verify size
+		if len(contents) != len(largeData) {
+			t.Errorf("expected %d bytes, got %d", len(largeData), len(contents))
+		}
+
+		// Spot check a few bytes
+		if contents[0] != largeData[0] || contents[1000] != largeData[1000] || contents[len(contents)-1] != largeData[len(largeData)-1] {
+			t.Error("large file contents don't match")
+		}
+	})
+}

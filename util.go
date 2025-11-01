@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"html"
+	htmlpkg "html"
 	"html/template"
 	"io"
 	"os"
@@ -15,6 +15,8 @@ import (
 	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/alecthomas/chroma/v2/styles"
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 func makeDir(dir string) error {
@@ -175,7 +177,7 @@ func highlightDiffLines(diffText string) []template.HTML {
 
 	for i, line := range lines {
 		// Escape HTML in the line first
-		escapedLine := html.EscapeString(line)
+		escapedLine := htmlpkg.EscapeString(line)
 
 		if len(line) > 0 {
 			if line[0] == '+' {
@@ -199,7 +201,7 @@ func contentsToLinesHTML(contents []byte, size int) []template.HTML {
 	lines := contentsToLines(contents, size)
 	result := make([]template.HTML, len(lines))
 	for i, line := range lines {
-		result[i] = template.HTML(html.EscapeString(line))
+		result[i] = template.HTML(htmlpkg.EscapeString(line))
 	}
 	return result
 }
@@ -236,13 +238,80 @@ func generateChromaCSS() (string, error) {
 	return buf.String() + customCSS, nil
 }
 
+// isImageFile checks if a filename has an image extension
+func isImageFile(filename string) bool {
+	ext := strings.ToLower(filepath.Ext(filename))
+	switch ext {
+	case ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".bmp", ".ico":
+		return true
+	}
+	return false
+}
+
 // renderMarkdownToHTML converts markdown bytes to HTML using goldmark
 // Returns the HTML as template.HTML to prevent escaping
+// Also rewrites relative image URLs to point to the assets directory
 func renderMarkdownToHTML(contents []byte) template.HTML {
+	// Configure goldmark to allow unsafe HTML (so img tags in markdown are preserved)
+	md := goldmark.New(
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+		),
+		goldmark.WithRendererOptions(
+			html.WithUnsafe(), // Allow raw HTML in markdown
+		),
+	)
+
 	var buf bytes.Buffer
-	if err := goldmark.Convert(contents, &buf); err != nil {
+	if err := md.Convert(contents, &buf); err != nil {
 		// If conversion fails, return plain text (escaped)
-		return template.HTML("<pre>" + html.EscapeString(string(contents)) + "</pre>")
+		return template.HTML("<pre>" + htmlpkg.EscapeString(string(contents)) + "</pre>")
 	}
-	return template.HTML(buf.String())
+
+	// Rewrite relative image URLs to point to the assets directory
+	htmlStr := buf.String()
+
+	// Find and replace all img src attributes
+	// We look for patterns like: <img src="filename.ext" where filename doesn't start with / or http
+	lines := strings.Split(htmlStr, "\n")
+	for i, line := range lines {
+		if !strings.Contains(line, "<img") || !strings.Contains(line, "src=") {
+			continue
+		}
+
+		// Find src=" and extract the value
+		for {
+			start := strings.Index(line, `src="`)
+			if start == -1 {
+				break
+			}
+
+			end := strings.Index(line[start+5:], `"`)
+			if end == -1 {
+				break
+			}
+
+			srcValue := line[start+5 : start+5+end]
+
+			// Only rewrite if it's a relative image path
+			if !strings.HasPrefix(srcValue, "/") &&
+				!strings.HasPrefix(srcValue, "http://") &&
+				!strings.HasPrefix(srcValue, "https://") &&
+				isImageFile(srcValue) {
+				newSrc := "/" + Config.RepoName + "/assets/" + filepath.Base(srcValue)
+				line = line[:start+5] + newSrc + line[start+5+end:]
+				lines[i] = line
+			}
+
+			// Move past this occurrence to find the next one
+			if start+5+end+1 < len(line) {
+				line = line[start+5+end+1:]
+			} else {
+				break
+			}
+		}
+	}
+	htmlStr = strings.Join(lines, "\n")
+
+	return template.HTML(htmlStr)
 }

@@ -190,6 +190,11 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	if err != nil {
 		return err
 	}
+	// Create assets directory for images
+	err = makeDir(filepath.Join(destDir, "assets"))
+	if err != nil {
+		return err
+	}
 
 	// Get commit list for commit count and latest commit
 	commitlist := getCommitLog(repo, head)

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -430,6 +431,180 @@ func TestContentsToLines(t *testing.T) {
 			if line != expected[i] {
 				t.Errorf("line %d: expected '%s', got '%s'", i, expected[i], line)
 			}
+		}
+	})
+}
+
+func TestIsImageFile(t *testing.T) {
+	tests := []struct {
+		name     string
+		filename string
+		expected bool
+	}{
+		{"PNG file", "image.png", true},
+		{"JPG file", "photo.jpg", true},
+		{"JPEG file", "photo.jpeg", true},
+		{"GIF file", "animation.gif", true},
+		{"SVG file", "vector.svg", true},
+		{"WEBP file", "modern.webp", true},
+		{"BMP file", "bitmap.bmp", true},
+		{"ICO file", "favicon.ico", true},
+		{"uppercase PNG", "IMAGE.PNG", true},
+		{"mixed case JPEG", "Photo.JpEg", true},
+		{"text file", "readme.txt", false},
+		{"markdown file", "README.md", false},
+		{"go file", "main.go", false},
+		{"no extension", "noextension", false},
+		{"hidden image", ".hidden.png", true},
+		{"multiple dots", "my.image.file.jpg", true},
+		{"similar but not image", "image.pngx", false},
+		{"similar but not image 2", "ximage.png.txt", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := isImageFile(tt.filename)
+			if result != tt.expected {
+				t.Errorf("isImageFile(%q) = %v, expected %v", tt.filename, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestRenderMarkdownToHTML(t *testing.T) {
+	// Save and restore original config
+	origRepoName := Config.RepoName
+	defer func() { Config.RepoName = origRepoName }()
+	Config.RepoName = "testrepo"
+
+	t.Run("rewrites relative image URLs", func(t *testing.T) {
+		markdown := []byte("# Test\n\n![alt text](image.png)\n\nSome text.")
+		html := renderMarkdownToHTML(markdown)
+		
+		htmlStr := string(html)
+		if !strings.Contains(htmlStr, `src="/testrepo/assets/image.png"`) {
+			t.Errorf("expected image URL to be rewritten to /testrepo/assets/image.png, got: %s", htmlStr)
+		}
+	})
+
+	t.Run("rewrites multiple image URLs", func(t *testing.T) {
+		markdown := []byte("![first](image1.png)\n\n![second](image2.jpg)")
+		html := renderMarkdownToHTML(markdown)
+		
+		htmlStr := string(html)
+		if !strings.Contains(htmlStr, `src="/testrepo/assets/image1.png"`) {
+			t.Errorf("expected first image URL to be rewritten, got: %s", htmlStr)
+		}
+		if !strings.Contains(htmlStr, `src="/testrepo/assets/image2.jpg"`) {
+			t.Errorf("expected second image URL to be rewritten, got: %s", htmlStr)
+		}
+	})
+
+	t.Run("does not rewrite absolute URLs", func(t *testing.T) {
+		markdown := []byte("![external](https://example.com/image.png)")
+		html := renderMarkdownToHTML(markdown)
+		
+		htmlStr := string(html)
+		if !strings.Contains(htmlStr, `src="https://example.com/image.png"`) {
+			t.Errorf("expected absolute URL to remain unchanged, got: %s", htmlStr)
+		}
+		if strings.Contains(htmlStr, "/testrepo/assets/") {
+			t.Errorf("absolute URL should not be rewritten to assets folder: %s", htmlStr)
+		}
+	})
+
+	t.Run("does not rewrite root-relative URLs", func(t *testing.T) {
+		markdown := []byte("![root](/images/photo.png)")
+		html := renderMarkdownToHTML(markdown)
+		
+		htmlStr := string(html)
+		if !strings.Contains(htmlStr, `src="/images/photo.png"`) {
+			t.Errorf("expected root-relative URL to remain unchanged, got: %s", htmlStr)
+		}
+	})
+
+	t.Run("handles HTML img tags in markdown", func(t *testing.T) {
+		markdown := []byte(`<img src="photo.jpg" alt="test" width="400">`)
+		html := renderMarkdownToHTML(markdown)
+		
+		htmlStr := string(html)
+		if !strings.Contains(htmlStr, `src="/testrepo/assets/photo.jpg"`) {
+			t.Errorf("expected HTML img tag to be rewritten, got: %s", htmlStr)
+		}
+	})
+
+	t.Run("handles mixed markdown and HTML images", func(t *testing.T) {
+		markdown := []byte("![markdown](md.png)\n\n<img src=\"html.jpg\" alt=\"html\">")
+		html := renderMarkdownToHTML(markdown)
+		
+		htmlStr := string(html)
+		if !strings.Contains(htmlStr, `src="/testrepo/assets/md.png"`) {
+			t.Errorf("expected markdown image to be rewritten: %s", htmlStr)
+		}
+		if !strings.Contains(htmlStr, `src="/testrepo/assets/html.jpg"`) {
+			t.Errorf("expected HTML image to be rewritten: %s", htmlStr)
+		}
+	})
+
+	t.Run("preserves other markdown formatting", func(t *testing.T) {
+		markdown := []byte("# Header\n\n**bold** and *italic*\n\n![image](test.png)\n\n- list item")
+		html := renderMarkdownToHTML(markdown)
+		
+		htmlStr := string(html)
+		if !strings.Contains(htmlStr, "<h1") {
+			t.Error("expected header to be rendered")
+		}
+		if !strings.Contains(htmlStr, "<strong>bold</strong>") {
+			t.Error("expected bold text to be rendered")
+		}
+		if !strings.Contains(htmlStr, "<em>italic</em>") {
+			t.Error("expected italic text to be rendered")
+		}
+		if !strings.Contains(htmlStr, "<li>list item</li>") {
+			t.Error("expected list to be rendered")
+		}
+	})
+
+	t.Run("handles images with various extensions", func(t *testing.T) {
+		extensions := []string{".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}
+		for _, ext := range extensions {
+			markdown := []byte("![test](image" + ext + ")")
+			html := renderMarkdownToHTML(markdown)
+			
+			htmlStr := string(html)
+			expected := `/testrepo/assets/image` + ext
+			if !strings.Contains(htmlStr, expected) {
+				t.Errorf("expected %s extension to be handled, got: %s", ext, htmlStr)
+			}
+		}
+	})
+
+	t.Run("does not modify non-image links", func(t *testing.T) {
+		markdown := []byte("[link](page.html)")
+		html := renderMarkdownToHTML(markdown)
+		
+		htmlStr := string(html)
+		if strings.Contains(htmlStr, "/testrepo/assets/") {
+			t.Errorf("non-image link should not be modified: %s", htmlStr)
+		}
+	})
+
+	t.Run("handles empty markdown", func(t *testing.T) {
+		markdown := []byte("")
+		html := renderMarkdownToHTML(markdown)
+		
+		// Empty markdown should return empty HTML or minimal HTML
+		// This is valid behavior - just verify it doesn't crash
+		_ = html
+	})
+
+	t.Run("handles markdown with no images", func(t *testing.T) {
+		markdown := []byte("# Just text\n\nNo images here.")
+		html := renderMarkdownToHTML(markdown)
+		
+		htmlStr := string(html)
+		if strings.Contains(htmlStr, "/assets/") {
+			t.Error("markdown with no images should not have asset URLs")
 		}
 	})
 }

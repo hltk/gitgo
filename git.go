@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -503,6 +504,33 @@ func getRootTreeFileList(repo *git.Repository, tree *git.Tree) []FileListElem {
 	return filelist
 }
 
+// getImageFileContents reads image file from the working directory if possible
+// This handles Git LFS files which are stored as pointers in the git blob
+func getImageFileContents(repo *git.Repository, treePath, filename string) ([]byte, error) {
+	// Get the repository's working directory
+	workdir := repo.Workdir()
+	if workdir == "" {
+		return nil, fmt.Errorf("repository has no working directory")
+	}
+
+	// Construct the file path relative to the working directory
+	// treePath is like "/tree/subdir", we need to strip "/tree" prefix
+	relPath := strings.TrimPrefix(treePath, "/tree")
+	if relPath != "" && relPath[0] == '/' {
+		relPath = relPath[1:]
+	}
+
+	filePath := filepath.Join(workdir, relPath, filename)
+
+	// Read the actual file from the working directory
+	contents, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	return contents, nil
+}
+
 func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 	var filelist []FileListElem
 	count := int(tree.EntryCount())
@@ -580,6 +608,22 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 			}
 			file.Sync()
 			defer file.Close()
+
+			// If this is an image file, also write it to the assets directory
+			// Read from working directory to handle Git LFS properly
+			if isImageFile(entry.Name) {
+				imagePath := filepath.Join(Config.DestDir, "assets", entry.Name)
+				imageContents, err := getImageFileContents(repo, path, entry.Name)
+				if err != nil {
+					// Fallback to blob contents if reading from working directory fails
+					log.Print("warning: failed to read image from working directory, using blob contents:", err)
+					imageContents = blob.Contents()
+				}
+				err = os.WriteFile(imagePath, imageContents, 0644)
+				if err != nil {
+					log.Print("write image:", err)
+				}
+			}
 
 			filelist = append(filelist, FileListElem{entry.Name, newpath + ".html", true, mode, size, lastModified, commitMsg, commitLink})
 		}
