@@ -1,7 +1,7 @@
 /* Markdown Content Styles - README Rendering */
 
 .readme-markdown {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-primary);
   padding: var(--spacing-xl);
   overflow-x: auto;
   display: flex;

@@ -2,8 +2,8 @@
 
 :root {
   /* Colors - Modern Neutral Palette */
-  --color-bg-primary: #f8f9fa;
-  --color-bg-secondary: #ffffff;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f9fa;
   --color-bg-code: #f6f8fa;
   --color-bg-hover: #e9ecef;
   --color-bg-stripe: rgba(0, 0, 0, 0.02);

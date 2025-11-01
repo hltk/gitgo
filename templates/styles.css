@@ -2,8 +2,8 @@
 
 :root {
   /* Colors - Modern Neutral Palette */
-  --color-bg-primary: #f8f9fa;
-  --color-bg-secondary: #ffffff;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f9fa;
   --color-bg-code: #f6f8fa;
   --color-bg-hover: #e9ecef;
   --color-bg-stripe: rgba(0, 0, 0, 0.02);
@@ -262,20 +262,24 @@ small {
 .fileview,
 #diffstat,
 #loglist,
-#treelist,
 #nav,
 #commitinfo,
 #cloneurl,
 #contributors,
-#refs {
+#refs,
+.commit-tree-container
+ {
   border: var(--border-width) var(--border-style) var(--color-border-primary);
   border-radius: var(--border-radius);
   overflow-x: auto;
 }
 
+.latest-commit-header {
+  border-bottom: var(--border-width) var(--border-style) var(--color-border-primary);
+  background-color: var(--color-bg-secondary);
+}
+
 #latestcommit {
-  border: var(--border-width) var(--border-style) var(--color-border-primary);
-  border-radius: var(--border-radius);
   overflow-x: auto;
 }
 
@@ -294,6 +298,7 @@ a.filelink {
   gap: var(--spacing-lg);
   padding: var(--spacing-md) var(--spacing-lg);
   min-height: 3em;
+  background-color: var(--color-bg-secondary);
 }
 
 .fileinfo-left {
@@ -489,7 +494,7 @@ a.filelink {
 /* Markdown Content Styles - README Rendering */
 
 .readme-markdown {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-primary);
   padding: var(--spacing-xl);
   overflow-x: auto;
   display: flex;

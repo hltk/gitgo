@@ -4,20 +4,24 @@
 .fileview,
 #diffstat,
 #loglist,
-#treelist,
 #nav,
 #commitinfo,
 #cloneurl,
 #contributors,
-#refs {
+#refs,
+.commit-tree-container
+ {
   border: var(--border-width) var(--border-style) var(--color-border-primary);
   border-radius: var(--border-radius);
   overflow-x: auto;
 }
 
+.latest-commit-header {
+  border-bottom: var(--border-width) var(--border-style) var(--color-border-primary);
+  background-color: var(--color-bg-secondary);
+}
+
 #latestcommit {
-  border: var(--border-width) var(--border-style) var(--color-border-primary);
-  border-radius: var(--border-radius);
   overflow-x: auto;
 }
 
@@ -36,6 +40,7 @@ a.filelink {
   gap: var(--spacing-lg);
   padding: var(--spacing-md) var(--spacing-lg);
   min-height: 3em;
+  background-color: var(--color-bg-secondary);
 }
 
 .fileinfo-left {

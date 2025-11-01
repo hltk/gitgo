@@ -21,11 +21,12 @@
 <button class="copy-btn" data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}" onclick="copyCloneUrl(this)">Copy</button>
 </div>
 </div>
+{{if or .CommitFound .TreeFound -}}
+<div class="commit-tree-container">
 {{if .CommitFound -}}
 <div id="latestcommit">
 <div class="latest-commit-header">
 <div>
-<h3>Latest commit</h3>
 <p>
 <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
 <br>
@@ -66,6 +67,8 @@
 {{end -}}
 </tbody>
 </table> 
+</div>
+{{end -}}
 </div>
 {{end -}}
 {{if .ReadmeFound -}}
