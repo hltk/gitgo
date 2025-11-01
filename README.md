@@ -2,9 +2,9 @@
 
 Go program for creating static web pages of git repositories.
 
-This project started as a fork of [stagit](https://git.codemadness.org/stagit/). The basic structure of the code and the interaction with the libgit2 api are from stagit.
+This project is inspired by [stagit](https://git.codemadness.org/stagit/) (written in C). The basic structure and approach to interacting with the libgit2 API are based on stagit's design.
 
-The goal of the project is not to create the best possible git web portal, instead gitgo is intended to be a learning exercise of git and golang.
+This project is primarily a learning exercise for exploring Git and Go, rather than aiming to be a production-ready git web portal.
 
 ## Requirements
 
