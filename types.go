@@ -70,6 +70,7 @@ type FileViewRenderData struct {
 	LastCommitLink   string
 	LastCommitDate   time.Time
 	LastCommitAuthor string
+	RepoName         string
 }
 
 type FileRenderData struct {

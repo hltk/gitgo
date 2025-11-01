@@ -12,9 +12,11 @@ endif
 endif
 endif
 
+.PHONY: all clean serve
+
 all: gitgo
 
-gitgo: go.mod main.go config.go types.go git.go util.go
+gitgo: go.mod main.go config.go types.go git.go util.go cmd/serve/server.go
 ifneq ($(LIBGIT2_PATH),)
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	CGO_CFLAGS="-I$(LIBGIT2_PATH)/include" \

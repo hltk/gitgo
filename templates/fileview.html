@@ -6,7 +6,7 @@
 <div class="fileinfo-right">
 {{if .LastCommitMsg -}}
 <p class="commit-info">
-<a href="{{.LastCommitLink}}">{{.LastCommitMsg}}</a>
+<a href="/{{.RepoName}}{{.LastCommitLink}}">{{.LastCommitMsg}}</a>
 <small> · {{.LastCommitAuthor}} · {{timeAgo .LastCommitDate}}</small>
 </p>
 {{- end}}

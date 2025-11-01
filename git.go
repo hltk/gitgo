@@ -573,6 +573,7 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 				LastCommitLink:   commitLink,
 				LastCommitDate:   lastModified,
 				LastCommitAuthor: commitAuthor,
+				RepoName:         Config.RepoName,
 			}})
 			if err != nil {
 				log.Print("execute:", err)

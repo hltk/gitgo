@@ -137,6 +137,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 			readmefile.LastCommitLink = commitLink
 			readmefile.LastCommitDate = lastModified
 			readmefile.LastCommitAuthor = commitAuthor
+			readmefile.RepoName = Config.RepoName
 
 			readmefound = true
 			break
@@ -164,6 +165,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 			licensefile.LastCommitLink = commitLink
 			licensefile.LastCommitDate = lastModified
 			licensefile.LastCommitAuthor = commitAuthor
+			licensefile.RepoName = Config.RepoName
 
 			licensefound = true
 			break
