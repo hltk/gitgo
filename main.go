@@ -17,6 +17,7 @@ func main() {
 
 	flag.StringVar(&Config.DestDir, "destdir", "build", "target directory")
 	flag.StringVar(&Config.InstallDir, "installdir", ".", "install directory containing templates")
+	flag.BoolVar(&Config.Force, "force", false, "force overwrite by clearing destination directory if not empty")
 
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "usage: gitgo [options] <git repo>\n")
@@ -69,7 +70,7 @@ func main() {
 	Config.DestDir = filepath.Join(Config.DestDir, Config.RepoName)
 
 	// validate that destination directory doesn't exist or is empty
-	err = validateDestDir(Config.DestDir)
+	err = validateDestDir(Config.DestDir, Config.Force)
 	if err != nil {
 		log.Fatal(err)
 	}

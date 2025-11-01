@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 )
 
 func makedir(dir string) error {
@@ -32,13 +33,37 @@ func isDirEmpty(dir string) (bool, error) {
 	return false, err // directory has contents or error occurred
 }
 
+// clearDir removes all contents of a directory
+func clearDir(dir string) error {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil // directory doesn't exist, nothing to clear
+		}
+		return err
+	}
+
+	for _, entry := range entries {
+		path := filepath.Join(dir, entry.Name())
+		err = os.RemoveAll(path)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // validateDestDir checks that the destination directory doesn't exist or is empty
-func validateDestDir(dir string) error {
+func validateDestDir(dir string, force bool) error {
 	empty, err := isDirEmpty(dir)
 	if err != nil {
 		return err
 	}
 	if !empty {
+		if force {
+			// clear the directory contents
+			return clearDir(dir)
+		}
 		return fmt.Errorf("destination directory %q already exists and is not empty", dir)
 	}
 	return nil

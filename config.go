@@ -21,6 +21,7 @@ type ConfigStruct struct {
 	RepoName   string
 	InstallDir string
 	DestDir    string
+	Force      bool
 }
 
 var Config = ConfigStruct{MaxSummaryLen: 20, GitUrl: "github.com/hltk"}
