@@ -70,6 +70,12 @@
   /* Transitions */
   --transition-fast: 0.2s ease;
   
+  /* Table-specific spacing */
+  --table-cell-padding-vertical: var(--spacing-sm);
+  --table-cell-padding-horizontal: var(--spacing-md);
+  --table-header-padding-vertical: var(--spacing-md);
+  --table-row-border-color: var(--color-border-lighter);
+  
   /* Sizing */
   --logo-size: 50px;
 }
