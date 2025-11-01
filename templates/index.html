@@ -7,9 +7,24 @@
 {{end -}}
 </div>
 <div id="cloneurl">
-<small>
-<pre>git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</pre>
-</small>
+<h3>Clone</h3>
+<div class="clone-box">
+<code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
+<button class="copy-btn" onclick="copyCloneUrl(this)">Copy</button>
+</div>
+<script>
+function copyCloneUrl(btn) {
+    const url = "git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}";
+    navigator.clipboard.writeText(url).then(() => {
+        btn.textContent = 'Copied!';
+        btn.style.color = '#28a745';
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.style.color = '';
+        }, 2000);
+    });
+}
+</script>
 </div>
 {{if .CommitFound -}}
 <div id="commit-log-container">
