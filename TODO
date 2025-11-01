@@ -7,7 +7,6 @@
 	- submodules are listed in .submodules
 	- new file: add refs.html for branches and tags
 - tree.html:
-	- add last modification date
 	- add last commit
 	- add a link to parent folder
 - main.go

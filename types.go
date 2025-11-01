@@ -17,11 +17,12 @@ type CommitListElem struct {
 }
 
 type FileListElem struct {
-	Name   string
-	Link   string
-	IsFile bool
-	Mode   string
-	Size   int
+	Name         string
+	Link         string
+	IsFile       bool
+	Mode         string
+	Size         int
+	LastModified time.Time
 }
 
 type IndexRenderData struct {

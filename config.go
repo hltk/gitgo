@@ -8,6 +8,12 @@ import (
 var (
 	funcmap = template.FuncMap{
 		"now": time.Now,
+		"formatDate": func(t time.Time) string {
+			if t.IsZero() {
+				return ""
+			}
+			return t.Format("2006-01-02 15:04")
+		},
 	}
 	templ *template.Template
 	t     *template.Template
