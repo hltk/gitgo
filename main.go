@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/libgit2/git2go/v34"
+	git "github.com/libgit2/git2go/v34"
 )
 
 var (
