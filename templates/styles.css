@@ -656,43 +656,52 @@ a.filelink {
 
 /* Line Numbering */
 .code-num::before {
-  content: counter(line);
+    content: counter(line);
 }
 
 .linenum table tr {
-  counter-increment: line;
+    counter-increment: line;
 }
 
 .linenum table {
-  counter-reset: line;
+    counter-reset: line;
+}
+
+.linenum table tr:first-of-type td {
+    padding-top: var(--spacing-px-xs);
+}
+
+.linenum table tr:last-of-type td {
+    padding-bottom: var(--spacing-px-xs);
 }
 
 /* Code Cells */
 .code-code,
 .code-num {
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-code);
-  font-optical-sizing: auto;
-  line-height: var(--line-height-code);
-  padding-left: var(--spacing-px-xs);
-  padding-right: var(--spacing-px-xs);
-  overflow: visible;
-  white-space: pre;
-  word-wrap: normal;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-code);
+    font-optical-sizing: auto;
+    line-height: var(--line-height-code);
+    padding-left: var(--spacing-px-xs);
+    padding-right: var(--spacing-px-xs);
+    overflow: visible;
+    white-space: pre;
+    word-wrap: normal;
 }
 
 .code-num {
-  user-select: none;
-  -webkit-user-select: none;
-  background-color: var(--color-bg-secondary);
+    user-select: none;
+    -webkit-user-select: none;
+    background-color: var(--color-bg-secondary);
+    text-align: end;
+    color: var(--color-text-muted);
 }
 
 /* Line Number Container */
 .linenum,
 .commit-msg {
-  overflow-x: auto;
+    overflow-x: auto;
 }
-
 /* Markdown Content Styles - README Rendering */
 
 .readme-markdown {
