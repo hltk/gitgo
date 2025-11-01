@@ -369,9 +369,13 @@ func TestRunIntegration(t *testing.T) {
 
 		// Verify outputs were created
 		repoName := filepath.Base(repoPath)
+
+		// Get branch name for log path verification
+		branchName := getBranchName(repo)
+
 		expectedFiles := []string{
 			filepath.Join(destDir, repoName, "index.html"),
-			filepath.Join(destDir, repoName, "log", "index.html"),
+			filepath.Join(destDir, repoName, "log", branchName, "index.html"),
 			filepath.Join(destDir, repoName, "tree", "index.html"),
 		}
 

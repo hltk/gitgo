@@ -48,6 +48,17 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	}
 	Config.RepoName = repoName
 
+	// Get the current branch name and update log link
+	branchName := getBranchName(repo)
+	GlobalDataGlobal.BranchName = branchName
+	// Update the log link to be branch-specific
+	for i, link := range GlobalDataGlobal.Links {
+		if link.Pretty == "log" {
+			GlobalDataGlobal.Links[i].Link = "/log/" + branchName
+			break
+		}
+	}
+
 	// Update destination directory to include repo name
 	destDir = filepath.Join(destDir, repoName)
 	Config.DestDir = destDir
@@ -133,6 +144,11 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	if err != nil {
 		return err
 	}
+	// Create branch-specific log directory
+	err = makeDir(filepath.Join(destDir, "log", branchName))
+	if err != nil {
+		return err
+	}
 
 	// Get commit list for commit count and latest commit
 	commitlist := getCommitLog(repo, head)
@@ -192,7 +208,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	indexfile.Sync()
 	defer indexfile.Close()
 
-	logfile, err := os.Create(filepath.Join(destDir, "log/index.html"))
+	logfile, err := os.Create(filepath.Join(destDir, "log", branchName, "index.html"))
 	if err != nil {
 		return err
 	}

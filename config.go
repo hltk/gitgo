@@ -37,6 +37,7 @@ type GlobalRenderData struct {
 	Links       []LinkListElem
 	LogoFound   bool
 	CommitCount int
+	BranchName  string
 }
 
 var GlobalDataGlobal = GlobalRenderData{Config: &Config,

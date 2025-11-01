@@ -663,3 +663,24 @@ func getContributors(repo *git.Repository, head *git.Oid) []Contributor {
 
 	return contributors
 }
+
+// getBranchName returns the name of the current branch that HEAD points to
+// Returns the shorthand branch name (e.g., "main" instead of "refs/heads/main")
+// If HEAD is detached or there's an error, returns "HEAD"
+func getBranchName(repo *git.Repository) string {
+	head, err := repo.Head()
+	if err != nil {
+		return "HEAD"
+	}
+	defer head.Free()
+
+	if head.IsBranch() {
+		branchName, err := head.Branch().Name()
+		if err != nil {
+			return "HEAD"
+		}
+		return branchName
+	}
+
+	return "HEAD"
+}
