@@ -1,24 +1,24 @@
 {{template "header.html" . -}}
 <div class="two-column-container">
 <div class="main-content">
-<div id="nav-clone-container" style="display: flex; align-items: center; justify-content: space-between; gap: 2rem; margin-bottom: 1rem;">
+<div id="nav-clone-container" style="display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1rem; border: 1px solid var(--border-color, #d0d7de); border-radius: 6px; margin-bottom: 1rem;">
 <div id="nav" style="display: flex; gap: 1rem; align-items: center;">
 {{range .GlobalData.Links -}}
 {{if and (ne .Pretty "tree") (ne .Pretty "log") -}}
 {{if eq .Pretty "branches" -}}
-<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.BranchCount}})</a>
+<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}" style="border: none;">{{.Pretty}} ({{$.GlobalData.BranchCount}})</a>
 {{else if eq .Pretty "tags" -}}
-<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.TagCount}})</a>
+<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}" style="border: none;">{{.Pretty}} ({{$.GlobalData.TagCount}})</a>
 {{else -}}
-<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}}</a>
+<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}" style="border: none;">{{.Pretty}}</a>
 {{end -}}
 {{end -}}
 {{end -}}
 </div>
-<div id="cloneurl" style="display: flex; align-items: center; gap: 0.5rem;">
+<div id="cloneurl" style="display: flex; align-items: center; gap: 0.5rem; border: none;">
 <span style="font-weight: 600; margin-right: 0.5rem;">Clone:</span>
 <code class="clone-url" style="border: none; background: none;">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
-<button class="copy-btn" onclick="copyCloneUrl(this)">Copy</button>
+<button class="copy-btn" onclick="copyCloneUrl(this)" style="border: 1px solid var(--border-color, #d0d7de);">Copy</button>
 </div>
 </div>
 <script>
@@ -35,10 +35,11 @@ function copyCloneUrl(btn) {
 }
 </script>
 {{if .CommitFound -}}
-<div id="commit-log-container">
 <div id="latestcommit">
-<h3>Latest commit</h3>
-<p>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 1em;">
+<div>
+<h3 style="margin-bottom: 0.5em;">Latest commit</h3>
+<p style="margin: 0;">
 <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
 <br>
 <small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
@@ -50,6 +51,7 @@ function copyCloneUrl(btn) {
 <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">View all commits ({{$.GlobalData.CommitCount}})</a>
 {{end -}}
 {{end -}}
+</div>
 </div>
 </div>
 {{end -}}
