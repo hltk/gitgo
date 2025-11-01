@@ -11,11 +11,13 @@
 #contributors,
 #refs {
   border: var(--border-width) var(--border-style) var(--color-border-primary);
+  border-radius: var(--border-radius);
   overflow-x: auto;
 }
 
 #latestcommit {
   border: var(--border-width) var(--border-style) var(--color-border-primary);
+  border-radius: var(--border-radius);
   overflow-x: auto;
 }
 
@@ -107,6 +109,7 @@ a.filelink {
 /* Commit Message Box */
 #commitmsg {
   border: var(--border-width) var(--border-style) var(--color-border-secondary);
+  border-radius: var(--border-radius);
   padding: var(--spacing-sm);
   margin: var(--spacing-xs);
 }

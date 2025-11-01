@@ -52,7 +52,7 @@
 .readme-markdown code {
   background-color: var(--color-bg-code);
   padding: 0.2em 0.4em;
-  border-radius: var(--border-radius);
+  border-radius: 3px;
   font-family: var(--font-family-mono);
   font-size: var(--font-size-tiny);
 }
@@ -60,6 +60,7 @@
 .readme-markdown pre code {
   background-color: transparent;
   padding: 0;
+  border-radius: 0;
 }
 
 .readme-markdown a {

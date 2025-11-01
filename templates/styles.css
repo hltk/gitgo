@@ -269,11 +269,13 @@ small {
 #contributors,
 #refs {
   border: var(--border-width) var(--border-style) var(--color-border-primary);
+  border-radius: var(--border-radius);
   overflow-x: auto;
 }
 
 #latestcommit {
   border: var(--border-width) var(--border-style) var(--color-border-primary);
+  border-radius: var(--border-radius);
   overflow-x: auto;
 }
 
@@ -365,6 +367,7 @@ a.filelink {
 /* Commit Message Box */
 #commitmsg {
   border: var(--border-width) var(--border-style) var(--color-border-secondary);
+  border-radius: var(--border-radius);
   padding: var(--spacing-sm);
   margin: var(--spacing-xs);
 }
@@ -537,7 +540,7 @@ a.filelink {
 .readme-markdown code {
   background-color: var(--color-bg-code);
   padding: 0.2em 0.4em;
-  border-radius: var(--border-radius);
+  border-radius: 3px;
   font-family: var(--font-family-mono);
   font-size: var(--font-size-tiny);
 }
@@ -545,6 +548,7 @@ a.filelink {
 .readme-markdown pre code {
   background-color: transparent;
   padding: 0;
+  border-radius: 0;
 }
 
 .readme-markdown a {
