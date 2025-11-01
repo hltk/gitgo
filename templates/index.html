@@ -1,4 +1,6 @@
 {{template "header.html" . -}}
+<div class="two-column-container">
+<div class="main-content">
 <div id="nav">
 {{range .GlobalData.Links -}}
 {{if and (ne .Pretty "tree") (ne .Pretty "log") -}}
@@ -49,16 +51,6 @@ function copyCloneUrl(btn) {
 {{end -}}
 {{end -}}
 </div>
-</div>
-{{end -}}
-{{if gt .ContributorsCt 0 -}}
-<div id="contributors">
-<h3>Contributors ({{.ContributorsCt}})</h3>
-<ul>
-{{range .Contributors -}}
-<li>{{.Name}} &lt;{{.Email}}&gt;</li>
-{{end -}}
-</ul>
 </div>
 {{end -}}
 {{if .TreeFound -}}
@@ -114,4 +106,18 @@ function copyCloneUrl(btn) {
 {{if .LicenseFound -}}
 {{template "fileview.html" .LicenseFile -}}
 {{end -}}
+</div>
+<div class="sidebar">
+{{if gt .ContributorsCt 0 -}}
+<div id="contributors">
+<h3>Contributors ({{.ContributorsCt}})</h3>
+<ul>
+{{range .Contributors -}}
+<li>{{.Name}} &lt;{{.Email}}&gt;</li>
+{{end -}}
+</ul>
+</div>
+{{end -}}
+</div>
+</div>
 {{template "footer.html" . -}}
