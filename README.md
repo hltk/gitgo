@@ -48,6 +48,7 @@ PKG_CONFIG_PATH=/path/to/libgit2/build make
 ```
 
 For example:
+
 ```bash
 PKG_CONFIG_PATH=/Users/henrik/personal/libgit2/build make
 ```

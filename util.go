@@ -8,10 +8,8 @@ func makedir(dir string) error {
 	_, err := os.Stat(dir)
 	if !os.IsNotExist(err) {
 		return err
-	} else {
-		return os.Mkdir(dir, 0755)
 	}
-	return nil
+	return os.Mkdir(dir, 0755)
 }
 
 func contentstolines(contents []byte, size int) []string {
