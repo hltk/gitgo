@@ -41,4 +41,4 @@ type GlobalRenderData struct {
 }
 
 var GlobalDataGlobal = GlobalRenderData{Config: &Config,
-	Links: []LinkListElem{{"summary", "/"}, {"tree", "/tree"}, {"log", "/log"}}}
+	Links: []LinkListElem{{"summary", "/"}, {"refs", "/refs.html"}, {"tree", "/tree"}, {"log", "/log"}}}

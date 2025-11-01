@@ -684,3 +684,98 @@ func getBranchName(repo *git.Repository) string {
 
 	return "HEAD"
 }
+
+// getBranches returns a list of all branches in the repository
+func getBranches(repo *git.Repository) []RefListElem {
+	var branches []RefListElem
+
+	iter, err := repo.NewBranchIterator(git.BranchAll)
+	if err != nil {
+		log.Print("failed to create branch iterator:", err)
+		return branches
+	}
+	defer iter.Free()
+
+	err = iter.ForEach(func(branch *git.Branch, branchType git.BranchType) error {
+		name, err := branch.Name()
+		if err != nil {
+			return nil
+		}
+
+		ref, err := branch.Resolve()
+		if err != nil {
+			return nil
+		}
+		defer ref.Free()
+
+		commitHash := ref.Target().String()
+		logLink := "/log/" + name
+
+		branches = append(branches, RefListElem{
+			Name:       name,
+			Type:       "branch",
+			CommitHash: commitHash[:8],
+			LogLink:    logLink,
+		})
+
+		return nil
+	})
+
+	if err != nil {
+		log.Print("error iterating branches:", err)
+	}
+
+	return branches
+}
+
+// getTags returns a list of all tags in the repository
+func getTags(repo *git.Repository) []RefListElem {
+	var tags []RefListElem
+
+	err := repo.Tags.Foreach(func(name string, oid *git.Oid) error {
+		// Remove refs/tags/ prefix
+		tagName := name
+		if len(name) > 10 && name[:10] == "refs/tags/" {
+			tagName = name[10:]
+		}
+
+		// Try to peel the tag to get the commit it points to
+		obj, err := repo.Lookup(oid)
+		if err != nil {
+			return nil
+		}
+		defer obj.Free()
+
+		var commitHash string
+		if obj.Type() == git.ObjectTag {
+			tag, err := obj.AsTag()
+			if err != nil {
+				return nil
+			}
+			target := tag.Target()
+			if target != nil {
+				commitHash = target.Id().String()
+				target.Free()
+			}
+		} else if obj.Type() == git.ObjectCommit {
+			commitHash = oid.String()
+		}
+
+		if commitHash != "" {
+			tags = append(tags, RefListElem{
+				Name:       tagName,
+				Type:       "tag",
+				CommitHash: commitHash[:8],
+				LogLink:    "", // Tags don't have log links
+			})
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Print("error iterating tags:", err)
+	}
+
+	return tags
+}

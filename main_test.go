@@ -175,8 +175,8 @@ func TestDestDirConstruction(t *testing.T) {
 
 func TestGlobalDataStructure(t *testing.T) {
 	t.Run("GlobalDataGlobal has correct links", func(t *testing.T) {
-		if len(GlobalDataGlobal.Links) != 3 {
-			t.Errorf("expected 3 links, got %d", len(GlobalDataGlobal.Links))
+		if len(GlobalDataGlobal.Links) != 4 {
+			t.Errorf("expected 4 links, got %d", len(GlobalDataGlobal.Links))
 		}
 
 		expectedLinks := []struct {
@@ -184,6 +184,7 @@ func TestGlobalDataStructure(t *testing.T) {
 			link   string
 		}{
 			{"summary", "/"},
+			{"refs", "/refs.html"},
 			{"tree", "/tree"},
 			{"log", "/log"},
 		}
@@ -349,6 +350,7 @@ func TestRunIntegration(t *testing.T) {
 			"tree.html":         `{{define "tree.html"}}{{template "header.html" .GlobalData}}{{template "nav.html" .GlobalData}}<h1>Tree</h1>{{template "footer.html" .GlobalData}}{{end}}`,
 			"file.html":         `{{define "file.html"}}{{template "header.html" .GlobalData}}{{template "nav.html" .GlobalData}}<h1>File</h1>{{template "footer.html" .GlobalData}}{{end}}`,
 			"log.html":          `{{define "log.html"}}{{template "header.html" .GlobalData}}{{template "nav.html" .GlobalData}}<h1>Log</h1>{{template "footer.html" .GlobalData}}{{end}}`,
+			"refs.html":         `{{define "refs.html"}}{{template "header.html" .GlobalData}}{{template "nav.html" .GlobalData}}<h1>Refs</h1>{{template "footer.html" .GlobalData}}{{end}}`,
 			"commit.html":       `{{define "commit.html"}}{{template "header.html" .GlobalData}}{{template "nav.html" .GlobalData}}<h1>Commit</h1>{{template "footer.html" .GlobalData}}{{end}}`,
 			"fileview.html":     `{{define "fileview.html"}}<pre>{{range .Lines}}{{.}}\n{{end}}</pre>{{end}}`,
 			"linenumberer.html": `{{define "linenumberer.html"}}{{end}}`,
@@ -485,6 +487,7 @@ func TestRunIntegration(t *testing.T) {
 			"tree.html":         `{{define "tree.html"}}{{template "header.html" .}}{{template "nav.html" .}}<h1>Tree</h1>{{template "footer.html" .}}{{end}}`,
 			"file.html":         `{{define "file.html"}}{{template "header.html" .}}{{template "nav.html" .}}<h1>File</h1>{{template "footer.html" .}}{{end}}`,
 			"log.html":          `{{define "log.html"}}{{template "header.html" .}}{{template "nav.html" .}}<h1>Log</h1>{{template "footer.html" .}}{{end}}`,
+			"refs.html":         `{{define "refs.html"}}{{template "header.html" .}}{{template "nav.html" .}}<h1>Refs</h1>{{template "footer.html" .}}{{end}}`,
 			"commit.html":       `{{define "commit.html"}}{{template "header.html" .}}{{template "nav.html" .}}<h1>Commit</h1>{{template "footer.html" .}}{{end}}`,
 			"fileview.html":     `{{define "fileview.html"}}<pre>{{range .Lines}}{{.}}\n{{end}}</pre>{{end}}`,
 			"linenumberer.html": `{{define "linenumberer.html"}}{{end}}`,

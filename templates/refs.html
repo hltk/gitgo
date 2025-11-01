@@ -1,0 +1,51 @@
+{{template "header.html" . -}}
+{{template "nav.html" . -}}
+<div id="refs">
+<h2>Branches</h2>
+{{if .Branches -}}
+<table>
+<thead>
+<tr>
+<th class="left">Name</th>
+<th class="left">Commit</th>
+<th class="left">Log</th>
+</tr>
+</thead>
+<tbody>
+{{range .Branches -}}
+<tr>
+<td class="left">{{.Name -}}</td>
+<td class="left"><code>{{.CommitHash -}}</code></td>
+<td class="left"><a href="/{{$.GlobalData.Config.RepoName -}}{{.LogLink -}}">log</a></td>
+</tr>
+{{end -}}
+</tbody>
+</table>
+{{else -}}
+<p>No branches found.</p>
+{{end -}}
+
+<h2>Tags</h2>
+{{if .Tags -}}
+<table>
+<thead>
+<tr>
+<th class="left">Name</th>
+<th class="left">Commit</th>
+</tr>
+</thead>
+<tbody>
+{{range .Tags -}}
+<tr>
+<td class="left">{{.Name -}}</td>
+<td class="left"><code>{{.CommitHash -}}</code></td>
+</tr>
+{{end -}}
+</tbody>
+</table>
+{{else -}}
+<p>No tags found.</p>
+{{end -}}
+</div>
+{{template "footer.html" . -}}
+

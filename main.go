@@ -219,6 +219,25 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	logfile.Sync()
 	defer logfile.Close()
 
+	// Generate refs page
+	branches := getBranches(repo)
+	tags := getTags(repo)
+
+	refsfile, err := os.Create(filepath.Join(destDir, "refs.html"))
+	if err != nil {
+		return err
+	}
+	err = t.ExecuteTemplate(refsfile, "refs.html", RefsRenderData{
+		GlobalData: &GlobalDataGlobal,
+		Branches:   branches,
+		Tags:       tags,
+	})
+	if err != nil {
+		return err
+	}
+	refsfile.Sync()
+	defer refsfile.Close()
+
 	indexTree(repo, head)
 
 	return nil

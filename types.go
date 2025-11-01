@@ -81,3 +81,16 @@ type CommitRenderData struct {
 	MsgLines      []string
 	DiffStatLines []string
 }
+
+type RefListElem struct {
+	Name       string
+	Type       string // "branch" or "tag"
+	CommitHash string
+	LogLink    string
+}
+
+type RefsRenderData struct {
+	GlobalData *GlobalRenderData
+	Branches   []RefListElem
+	Tags       []RefListElem
+}
