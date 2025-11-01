@@ -12,9 +12,12 @@ endif
 endif
 endif
 
-.PHONY: all clean serve
+.PHONY: all clean serve css
 
-all: gitgo
+all: css gitgo
+
+css: $(wildcard templates/css/*.css)
+	cat $(sort $(wildcard templates/css/*.css)) > templates/styles.css
 
 gitgo: go.mod main.go config.go types.go git.go util.go cmd/serve/server.go
 ifneq ($(LIBGIT2_PATH),)
@@ -31,4 +34,4 @@ serve:
 	$(GO) run cmd/serve/server.go
 
 clean:
-	rm -f gitgo
+	rm -f gitgo templates/styles.css

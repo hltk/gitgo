@@ -1,0 +1,40 @@
+/* Code Display Styles - Syntax Highlighting and Line Numbers */
+
+/* Line Numbering */
+.code-num::before {
+  content: counter(line);
+}
+
+.linenum table tr {
+  counter-increment: line;
+}
+
+.linenum table {
+  counter-reset: line;
+}
+
+/* Code Cells */
+.code-code,
+.code-num {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-code);
+  line-height: var(--line-height-code);
+  padding-left: var(--spacing-px-xs);
+  padding-right: var(--spacing-px-xs);
+  overflow: visible;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+.code-num {
+  user-select: none;
+  -webkit-user-select: none;
+  background-color: var(--color-bg-secondary);
+}
+
+/* Line Number Container */
+.linenum,
+#commitmsg {
+  overflow-x: auto;
+}
+

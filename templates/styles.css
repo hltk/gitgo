@@ -1,0 +1,574 @@
+/* CSS Custom Properties - Design Tokens */
+
+:root {
+  /* Colors - Modern Neutral Palette */
+  --color-bg-primary: #f8f9fa;
+  --color-bg-secondary: #ffffff;
+  --color-bg-code: #f6f8fa;
+  --color-bg-hover: #e9ecef;
+  --color-bg-stripe: rgba(0, 0, 0, 0.02);
+  
+  --color-text-primary: #1a202c;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
+  --color-text-success: #38a169;
+  
+  --color-border-primary: #e2e8f0;
+  --color-border-secondary: #cbd5e0;
+  --color-border-light: #e2e8f0;
+  --color-border-lighter: #edf2f7;
+  --color-border-lightest: #f7fafc;
+  
+  --color-link-primary: #3182ce;
+  --color-link-inherit: inherit;
+  
+  /* Spacing */
+  --spacing-xs: 0.25em;
+  --spacing-sm: 0.5em;
+  --spacing-md: 0.75em;
+  --spacing-lg: 1em;
+  --spacing-xl: 2em;
+  
+  --spacing-px-xs: 10px;
+  --spacing-px-sm: 15px;
+  --spacing-px-md: 20px;
+  
+  /* Typography */
+  --font-family-body: serif;
+  --font-family-mono: Consolas, monospace;
+  
+  --font-size-body: 16px;
+  --font-size-code: 14px;
+  --font-size-small: 12px;
+  --font-size-tiny: 0.9em;
+  
+  --font-weight-normal: normal;
+  --font-weight-semibold: 600;
+  --font-weight-bold: bold;
+  
+  --line-height-body: 1.6;
+  --line-height-code: 20px;
+  --line-height-tight: 1;
+  
+  /* Layout */
+  --container-width: 80%;
+  --container-max-width: 1200px;
+  
+  --content-width-main: 80%;
+  --content-width-sidebar: calc(20% - 20px);
+  --content-gap: 20px;
+  
+  /* Borders */
+  --border-width: 1px;
+  --border-style: solid;
+  --border-radius: 6px;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  
+  /* Sizing */
+  --logo-size: 50px;
+}
+
+/* Base Styles - Resets and Foundational Elements */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  font-size: var(--font-size-body);
+  font-family: var(--font-family-body);
+  color: var(--color-text-primary);
+}
+
+a {
+  color: var(--color-link-inherit);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  vertical-align: top;
+}
+
+small {
+  color: var(--color-text-muted);
+}
+
+/* Layout Styles - Containers and Structure */
+
+#content {
+  width: var(--container-width);
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-px-sm);
+}
+
+#headerdiv {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-px-sm);
+  padding-bottom: var(--spacing-px-sm);
+}
+
+#headerlogo,
+#header {
+  vertical-align: middle;
+}
+
+#headerlogo {
+  max-width: var(--logo-size);
+  max-height: var(--logo-size);
+}
+
+#header a {
+  color: var(--color-link-inherit);
+  text-decoration: none;
+}
+
+#header a:hover {
+  text-decoration: underline;
+}
+
+/* Two Column Layout */
+.two-column-container {
+  display: flex;
+  gap: var(--content-gap);
+  align-items: flex-start;
+}
+
+.main-content {
+  flex: 0 0 var(--content-width-main);
+  width: var(--content-width-main);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-px-sm);
+}
+
+.sidebar {
+  flex: 0 0 var(--content-width-sidebar);
+  width: var(--content-width-sidebar);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-px-sm);
+}
+
+/* Navigation and Clone Container */
+.nav-clone-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  border: var(--border-width) var(--border-style) var(--color-border-primary);
+  border-radius: var(--border-radius);
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.clone-inline {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.clone-inline span {
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Latest Commit Header */
+.latest-commit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+}
+
+.latest-commit-header > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+#loglink {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+#loglink a {
+  color: var(--color-link-inherit);
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+}
+
+#loglink a:hover {
+  text-decoration: underline;
+}
+
+/* Refs Layout */
+#refs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+}
+
+.refs-container {
+  display: flex;
+  gap: var(--spacing-xl);
+  align-items: flex-start;
+}
+
+.refs-column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.clone-sidebar {
+  flex-shrink: 0;
+  width: 400px;
+}
+
+/* Component Styles - Reusable UI Components */
+
+/* Bordered Sections */
+.fileview,
+#diffstat,
+#loglist,
+#treelist,
+#nav,
+#commitinfo,
+#cloneurl,
+#contributors,
+#refs {
+  border: var(--border-width) var(--border-style) var(--color-border-primary);
+  overflow-x: auto;
+}
+
+#latestcommit {
+  border: var(--border-width) var(--border-style) var(--color-border-primary);
+  overflow-x: auto;
+}
+
+/* File Links */
+a.filelink {
+  font-weight: var(--font-weight-normal);
+  color: var(--color-link-inherit);
+}
+
+/* File Header/Info */
+.fileinfo {
+  border-bottom: var(--border-width) var(--border-style) var(--color-border-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  min-height: 3em;
+}
+
+.fileinfo-left {
+  flex: 0 0 auto;
+}
+
+.fileinfo-right {
+  flex: 1 1 auto;
+  text-align: right;
+}
+
+.filename {
+  font-weight: var(--font-weight-bold);
+}
+
+.commit-info {
+  font-size: var(--font-size-tiny);
+}
+
+.commit-info a {
+  color: var(--color-link-inherit);
+  text-decoration: none;
+}
+
+.commit-info a:hover {
+  text-decoration: underline;
+}
+
+/* Commit Info */
+#commitinfo {
+  padding: var(--spacing-lg);
+}
+
+/* Tables */
+#treelist table,
+#loglist table,
+#commitinfo table {
+  width: 100%;
+  border-spacing: 0 var(--spacing-xs);
+}
+
+#loglist td,
+#loglist th,
+#treelist td,
+#treelist th,
+#commitinfo td,
+#commitinfo th {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  line-height: var(--line-height-tight);
+}
+
+#loglist,
+#treelist {
+  position: relative;
+  width: auto;
+  display: table;
+}
+
+.fileview,
+#loglist,
+#treelist {
+  width: 100%;
+}
+
+/* Striped Table Rows */
+#treeentries tr:nth-child(even),
+#logentries tr:nth-child(even) {
+  background-color: var(--color-bg-stripe);
+}
+
+/* Commit Message Box */
+#commitmsg {
+  border: var(--border-width) var(--border-style) var(--color-border-secondary);
+  padding: var(--spacing-sm);
+  margin: var(--spacing-xs);
+}
+
+#commitmsg pre {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-code);
+}
+
+/* Clone URL Widget */
+#cloneurl {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+}
+
+.clone-box {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-md);
+  border: var(--border-width) var(--border-style) var(--color-border-light);
+  border-radius: var(--border-radius);
+  gap: var(--spacing-sm);
+}
+
+.clone-url {
+  flex: 1;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-code);
+  padding: var(--spacing-sm);
+  background-color: var(--color-bg-code);
+  border-radius: var(--border-radius);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* Copy Button */
+.copy-btn {
+  flex-shrink: 0;
+  background-color: transparent;
+  border: var(--border-width) var(--border-style) var(--color-border-light);
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  color: var(--color-text-secondary);
+}
+
+.copy-btn:hover {
+  background-color: var(--color-bg-code);
+  border-color: #999;
+  color: #333;
+}
+
+.copy-btn:active {
+  background-color: var(--color-bg-hover);
+}
+
+/* Contributors */
+#contributors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+}
+
+#contributors ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  list-style-position: inside;
+}
+
+/* Code Display Styles - Syntax Highlighting and Line Numbers */
+
+/* Line Numbering */
+.code-num::before {
+  content: counter(line);
+}
+
+.linenum table tr {
+  counter-increment: line;
+}
+
+.linenum table {
+  counter-reset: line;
+}
+
+/* Code Cells */
+.code-code,
+.code-num {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-code);
+  line-height: var(--line-height-code);
+  padding-left: var(--spacing-px-xs);
+  padding-right: var(--spacing-px-xs);
+  overflow: visible;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+.code-num {
+  user-select: none;
+  -webkit-user-select: none;
+  background-color: var(--color-bg-secondary);
+}
+
+/* Line Number Container */
+.linenum,
+#commitmsg {
+  overflow-x: auto;
+}
+
+/* Markdown Content Styles - README Rendering */
+
+.readme-markdown {
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-xl);
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.readme-markdown h1 {
+  font-size: 2em;
+  border-bottom: var(--border-width) var(--border-style) var(--color-border-lighter);
+  padding-bottom: 0.3em;
+}
+
+.readme-markdown h2 {
+  font-size: 1.5em;
+  border-bottom: var(--border-width) var(--border-style) var(--color-border-lightest);
+  padding-bottom: 0.3em;
+}
+
+.readme-markdown h3 {
+  font-size: 1.25em;
+}
+
+.readme-markdown p {
+  line-height: var(--line-height-body);
+}
+
+.readme-markdown ul,
+.readme-markdown ol {
+  margin-left: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.readme-markdown li {
+  line-height: var(--line-height-body);
+}
+
+.readme-markdown pre {
+  background-color: var(--color-bg-code);
+  border: var(--border-width) var(--border-style) var(--color-border-lighter);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  overflow-x: auto;
+}
+
+.readme-markdown code {
+  background-color: var(--color-bg-code);
+  padding: 0.2em 0.4em;
+  border-radius: var(--border-radius);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-tiny);
+}
+
+.readme-markdown pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.readme-markdown a {
+  color: var(--color-link-primary);
+  text-decoration: none;
+}
+
+.readme-markdown a:hover {
+  text-decoration: underline;
+}
+
+.readme-markdown blockquote {
+  border-left: 4px solid var(--color-border-lighter);
+  padding-left: var(--spacing-lg);
+  color: var(--color-text-secondary);
+}
+
+/* Utility Classes - Helper Classes for Common Patterns */
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+

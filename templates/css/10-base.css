@@ -1,0 +1,41 @@
+/* Base Styles - Resets and Foundational Elements */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  font-size: var(--font-size-body);
+  font-family: var(--font-family-body);
+  color: var(--color-text-primary);
+}
+
+a {
+  color: var(--color-link-inherit);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  vertical-align: top;
+}
+
+small {
+  color: var(--color-text-muted);
+}
+

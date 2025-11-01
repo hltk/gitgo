@@ -1,8 +1,8 @@
 {{template "header.html" . -}}
 <div class="two-column-container">
 <div class="main-content">
-<div id="nav-clone-container" style="display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1rem; border: 1px solid black; border-radius: 6px; margin-bottom: 1rem;">
-<div id="nav" style="display: flex; gap: 1rem; align-items: center; border: none; margin: 0;">
+<div class="nav-clone-container">
+<div class="nav-links">
 {{range .GlobalData.Links -}}
 {{if and (ne .Pretty "tree") (ne .Pretty "log") -}}
 {{if eq .Pretty "branches" -}}
@@ -15,31 +15,18 @@
 {{end -}}
 {{end -}}
 </div>
-<div id="cloneurl" style="display: flex; align-items: center; gap: 0.5rem; border: none; margin: 0;">
-<span style="font-weight: 600; margin-right: 0.5rem;">Clone:</span>
-<code class="clone-url" style="border: none; background: none;">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
-<button class="copy-btn" onclick="copyCloneUrl(this)">Copy</button>
+<div class="clone-inline">
+<span>Clone:</span>
+<code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
+<button class="copy-btn" data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}" onclick="copyCloneUrl(this)">Copy</button>
 </div>
 </div>
-<script>
-function copyCloneUrl(btn) {
-    const url = "git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}";
-    navigator.clipboard.writeText(url).then(() => {
-        btn.textContent = 'Copied!';
-        btn.style.color = '#28a745';
-        setTimeout(() => {
-            btn.textContent = 'Copy';
-            btn.style.color = '';
-        }, 2000);
-    });
-}
-</script>
 {{if .CommitFound -}}
 <div id="latestcommit">
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 1em;">
+<div class="latest-commit-header">
 <div>
-<h3 style="margin-bottom: 0.5em;">Latest commit</h3>
-<p style="margin: 0;">
+<h3>Latest commit</h3>
+<p>
 <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
 <br>
 <small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>

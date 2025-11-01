@@ -84,6 +84,26 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		return err
 	}
 
+	// Copy styles.css
+	stylesCSS, err := os.ReadFile(filepath.Join(installDir, "templates/styles.css"))
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(filepath.Join(destDir, "styles.css"), stylesCSS, 0644)
+	if err != nil {
+		return err
+	}
+
+	// Copy main.js
+	mainJS, err := os.ReadFile(filepath.Join(installDir, "templates/js/main.js"))
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(filepath.Join(destDir, "main.js"), mainJS, 0644)
+	if err != nil {
+		return err
+	}
+
 	templ = template.New("").Funcs(funcmap)
 
 	t, err = templ.ParseGlob(filepath.Join(installDir, "templates/*.html"))
