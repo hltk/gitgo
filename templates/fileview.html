@@ -1,6 +1,16 @@
 <div class="fileview">
 <div class="fileinfo">
-<p>{{.Name -}}</p>
+<div class="fileinfo-left">
+<p class="filename">{{.Name}}</p>
+</div>
+<div class="fileinfo-right">
+{{if .LastCommitMsg -}}
+<p class="commit-info">
+<a href="{{.LastCommitLink}}">{{.LastCommitMsg}}</a>
+<small> · {{.LastCommitAuthor}} · {{timeAgo .LastCommitDate}}</small>
+</p>
+{{- end}}
+</div>
 </div>
 {{template "linenumberer.html" .Lines}}
 </div>

@@ -55,7 +55,17 @@
 {{if .ReadmeIsMarkdown -}}
 <div class="fileview">
 <div class="fileinfo">
-<p>{{.ReadmeFile.Name -}}</p>
+<div class="fileinfo-left">
+<p class="filename">{{.ReadmeFile.Name}}</p>
+</div>
+<div class="fileinfo-right">
+{{if .ReadmeFile.LastCommitMsg -}}
+<p class="commit-info">
+<a href="{{.ReadmeFile.LastCommitLink}}">{{.ReadmeFile.LastCommitMsg}}</a>
+<small> · {{.ReadmeFile.LastCommitAuthor}} · {{timeAgo .ReadmeFile.LastCommitDate}}</small>
+</p>
+{{- end}}
+</div>
 </div>
 <div class="readme-markdown">
 {{.ReadmeHTML}}

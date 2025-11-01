@@ -293,22 +293,22 @@ func getLastModifiedDate(repo *git.Repository, repoPath string) time.Time {
 	return time.Time{}
 }
 
-// getLastCommitInfo returns the date, message, and link of the last commit that modified the given path
-func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string, string) {
+// getLastCommitInfo returns the date, message, link, and author name of the last commit that modified the given path
+func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string, string, string) {
 	head, err := repo.Head()
 	if err != nil {
-		return time.Time{}, "", ""
+		return time.Time{}, "", "", ""
 	}
 	defer head.Free()
 
 	walk, err := repo.Walk()
 	if err != nil {
-		return time.Time{}, "", ""
+		return time.Time{}, "", "", ""
 	}
 	defer walk.Free()
 
 	if err = walk.Push(head.Target()); err != nil {
-		return time.Time{}, "", ""
+		return time.Time{}, "", "", ""
 	}
 
 	// Remove leading /tree from path for pathspec
@@ -341,9 +341,10 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 			date := commit.Author().When
 			msg := commit.Summary()
 			link := "/commit/" + commit.TreeId().String() + ".html"
+			author := commit.Author().Name
 			tree.Free()
 			commit.Free()
-			return date, msg, link
+			return date, msg, link, author
 		}
 
 		// Check if this path exists in this commit
@@ -357,8 +358,9 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 				date := commit.Author().When
 				msg := commit.Summary()
 				link := "/commit/" + commit.TreeId().String() + ".html"
+				author := commit.Author().Name
 				commit.Free()
-				return date, msg, link
+				return date, msg, link, author
 			}
 
 			parent := commit.Parent(0)
@@ -366,8 +368,9 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 				date := commit.Author().When
 				msg := commit.Summary()
 				link := "/commit/" + commit.TreeId().String() + ".html"
+				author := commit.Author().Name
 				commit.Free()
-				return date, msg, link
+				return date, msg, link, author
 			}
 
 			parentTree, err := parent.Tree()
@@ -376,8 +379,9 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 				date := commit.Author().When
 				msg := commit.Summary()
 				link := "/commit/" + commit.TreeId().String() + ".html"
+				author := commit.Author().Name
 				commit.Free()
-				return date, msg, link
+				return date, msg, link, author
 			}
 
 			// Check if path exists in parent
@@ -390,8 +394,9 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 				date := commit.Author().When
 				msg := commit.Summary()
 				link := "/commit/" + commit.TreeId().String() + ".html"
+				author := commit.Author().Name
 				commit.Free()
-				return date, msg, link
+				return date, msg, link, author
 			}
 
 			// For directories and files, we need to check if content changed
@@ -406,8 +411,9 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 				date := commit.Author().When
 				msg := commit.Summary()
 				link := "/commit/" + commit.TreeId().String() + ".html"
+				author := commit.Author().Name
 				commit.Free()
-				return date, msg, link
+				return date, msg, link, author
 			}
 
 			currentTree, _ := commit.Tree()
@@ -434,8 +440,9 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 						date := commit.Author().When
 						msg := commit.Summary()
 						link := "/commit/" + commit.TreeId().String() + ".html"
+						author := commit.Author().Name
 						commit.Free()
-						return date, msg, link
+						return date, msg, link, author
 					}
 				} else {
 					if diff != nil {
@@ -455,7 +462,7 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 		commit.Free()
 	}
 
-	return time.Time{}, "", ""
+	return time.Time{}, "", "", ""
 }
 
 // getRootTreeFileList returns the file list for the root tree (non-recursive)
@@ -485,11 +492,11 @@ func getRootTreeFileList(repo *git.Repository, tree *git.Tree) []FileListElem {
 		}
 
 		if entry.Type == git.ObjectTree {
-			lastModified, commitMsg, commitLink := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
+			lastModified, commitMsg, commitLink, _ := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
 			filelist = append(filelist, FileListElem{entry.Name + "/", filepath.Join("/tree", entry.Name), false, mode, size, lastModified, commitMsg, commitLink})
 		}
 		if entry.Type == git.ObjectBlob {
-			lastModified, commitMsg, commitLink := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
+			lastModified, commitMsg, commitLink, _ := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
 			filelist = append(filelist, FileListElem{entry.Name, filepath.Join("/tree", entry.Name) + ".html", true, mode, size, lastModified, commitMsg, commitLink})
 		}
 	}
@@ -538,7 +545,7 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 				log.Fatal(err)
 			}
 
-			lastModified, commitMsg, commitLink := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
+			lastModified, commitMsg, commitLink, _ := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
 			filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false, mode, size, lastModified, commitMsg, commitLink})
 			indexTreeRecursive(repo, nexttree, newpath)
 		}
@@ -557,14 +564,22 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 
 			lines := highlightFileContents(entry.Name, blob.Contents())
 
-			err = t.ExecuteTemplate(file, "file.html", FileRenderData{&GlobalDataGlobal, FileViewRenderData{entry.Name, lines}})
+			lastModified, commitMsg, commitLink, commitAuthor := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
+
+			err = t.ExecuteTemplate(file, "file.html", FileRenderData{&GlobalDataGlobal, FileViewRenderData{
+				Name:             entry.Name,
+				Lines:            lines,
+				LastCommitMsg:    commitMsg,
+				LastCommitLink:   commitLink,
+				LastCommitDate:   lastModified,
+				LastCommitAuthor: commitAuthor,
+			}})
 			if err != nil {
 				log.Print("execute:", err)
 			}
 			file.Sync()
 			defer file.Close()
 
-			lastModified, commitMsg, commitLink := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
 			filelist = append(filelist, FileListElem{entry.Name, newpath + ".html", true, mode, size, lastModified, commitMsg, commitLink})
 		}
 		if entry.Type == git.ObjectCommit {

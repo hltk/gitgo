@@ -118,6 +118,9 @@ func run(repoPath, destDir, installDir string, force bool) error {
 
 			filename := strings.TrimPrefix(file, "HEAD:")
 
+			// Get commit info for README
+			lastModified, commitMsg, commitLink, commitAuthor := getLastCommitInfo(repo, filename)
+
 			// Check if README is markdown
 			if strings.HasSuffix(strings.ToLower(filename), ".md") {
 				readmeIsMarkdown = true
@@ -128,6 +131,12 @@ func run(repoPath, destDir, installDir string, force bool) error {
 				readmefile.Name = filename
 				readmefile.Lines = lines
 			}
+
+			// Populate commit info
+			readmefile.LastCommitMsg = commitMsg
+			readmefile.LastCommitLink = commitLink
+			readmefile.LastCommitDate = lastModified
+			readmefile.LastCommitAuthor = commitAuthor
 
 			readmefound = true
 			break
@@ -143,10 +152,19 @@ func run(repoPath, destDir, installDir string, force bool) error {
 				return err
 			}
 
-			lines := highlightFileContents(strings.TrimPrefix(file, "HEAD:"), blob.Contents())
+			filename := strings.TrimPrefix(file, "HEAD:")
+			lines := highlightFileContents(filename, blob.Contents())
 
-			licensefile.Name = strings.TrimPrefix(file, "HEAD:")
+			// Get commit info for LICENSE
+			lastModified, commitMsg, commitLink, commitAuthor := getLastCommitInfo(repo, filename)
+
+			licensefile.Name = filename
 			licensefile.Lines = lines
+			licensefile.LastCommitMsg = commitMsg
+			licensefile.LastCommitLink = commitLink
+			licensefile.LastCommitDate = lastModified
+			licensefile.LastCommitAuthor = commitAuthor
+
 			licensefound = true
 			break
 		}

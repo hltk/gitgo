@@ -64,8 +64,12 @@ type TreeRenderData struct {
 }
 
 type FileViewRenderData struct {
-	Name  string
-	Lines []template.HTML
+	Name             string
+	Lines            []template.HTML
+	LastCommitMsg    string
+	LastCommitLink   string
+	LastCommitDate   time.Time
+	LastCommitAuthor string
 }
 
 type FileRenderData struct {

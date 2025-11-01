@@ -67,6 +67,33 @@ table {
 }
 .fileinfo {
 	border-bottom: 1px solid black;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.75em 1em;
+	min-height: 3em;
+}
+.fileinfo-left {
+	flex: 0 0 auto;
+}
+.fileinfo-right {
+	flex: 1 1 auto;
+	text-align: right;
+}
+.filename {
+	font-weight: bold;
+	margin: 0;
+}
+.commit-info {
+	margin: 0;
+	font-size: 0.9em;
+}
+.commit-info a {
+	color: inherit;
+	text-decoration: none;
+}
+.commit-info a:hover {
+	text-decoration: underline;
 }
 .fileview, #diffstat, #loglist, #treelist, #nav, #commitinfo, #cloneurl, #latestcommit, #contributors {
 	border: 1px solid black;
@@ -121,9 +148,6 @@ html {
 }
 .readme-markdown {
 	background-color: white;
-	border: 1px solid black;
-	margin-top: 15px;
-	margin-bottom: 15px;
 	padding: 2em;
 	overflow-x: auto;
 }
