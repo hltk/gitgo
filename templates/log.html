@@ -4,6 +4,7 @@
 <table>
 <thead>
 <tr>
+<th class="left">Commit</th>
 <th class="left">Summary</th>
 <th class="left">Author</th>
 <th class="right">Date</th>
@@ -12,6 +13,7 @@
 <tbody id="logentries">
 {{range .Commits -}}
 <tr>
+<td class="left"><a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.AbbrevHash -}}</a></td>
 <td class="left"><a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.Msg -}}</a></td>
 <td class="left">{{.Name -}}</td>
 <td class="right">{{.Date.Format "2006-01-02 15:04:05" -}}</td>

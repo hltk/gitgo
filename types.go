@@ -10,10 +10,11 @@ type LinkListElem struct {
 }
 
 type CommitListElem struct {
-	Link string
-	Msg  string
-	Name string
-	Date time.Time
+	Link       string
+	Msg        string
+	Name       string
+	Date       time.Time
+	AbbrevHash string
 }
 
 type FileListElem struct {

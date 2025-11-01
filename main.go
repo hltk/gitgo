@@ -130,6 +130,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 			latestCommit.Msg = commit.Summary()
 			latestCommit.Name = commit.Author().Name
 			latestCommit.Date = commit.Author().When
+			latestCommit.AbbrevHash = commit.TreeId().String()[:8]
 			commitfound = true
 			commit.Free()
 		}

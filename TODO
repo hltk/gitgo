@@ -2,9 +2,6 @@
 	- add better error handling
 	- new file: add refs.html for branches and tags
 	
-- tree.html:
-	- add last commit
-
 - index.html:
  - gather contributors (unique by email) and show their names
  - include the tree list above the readme
@@ -12,6 +9,3 @@
 
 - branches.html
 - tags.html
-
-- log.html
- - include abbreviated hash for every commit

@@ -127,8 +127,15 @@ func getCommitLog(repo *git.Repository, head *git.Oid) []CommitListElem {
 
 		name := commit.Author().Name
 		date := commit.Author().When
+		abbrevHash := commit.TreeId().String()[:8]
 
-		commitlist = append(commitlist, CommitListElem{link, msg, name, date})
+		commitlist = append(commitlist, CommitListElem{
+			Link:       link,
+			Msg:        msg,
+			Name:       name,
+			Date:       date,
+			AbbrevHash: abbrevHash,
+		})
 	}
 
 	return commitlist
@@ -531,7 +538,7 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// Calculate parent path
 	var parentPath string
 	hasParent := false
@@ -548,13 +555,13 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 		parentPath = "/"
 		hasParent = true
 	}
-	
+
 	err = t.ExecuteTemplate(treefile, "tree.html", TreeRenderData{
-		GlobalData: &GlobalDataGlobal, 
-		Files: filelist,
+		GlobalData:  &GlobalDataGlobal,
+		Files:       filelist,
 		CurrentPath: path,
-		ParentPath: parentPath,
-		HasParent: hasParent,
+		ParentPath:  parentPath,
+		HasParent:   hasParent,
 	})
 	if err != nil {
 		log.Print("execute:", err)
