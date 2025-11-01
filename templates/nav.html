@@ -1,5 +1,5 @@
 <div id="nav">
 {{range .GlobalData.Links -}}
-<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}}</a>
+<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}}{{if eq .Link "/log"}} ({{$.GlobalData.CommitCount}}){{end}}</a>
 {{end -}}
 </div>

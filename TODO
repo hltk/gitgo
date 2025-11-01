@@ -5,7 +5,9 @@
 - index.html:
  - gather contributors (unique by email) and show their names
  - include the tree list above the readme
- - include number of commits next to log button
 
 - branches.html
 - tags.html
+
+- log.html:
+ make log branch specific: make index.html link to the log of the default branch

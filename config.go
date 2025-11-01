@@ -33,9 +33,10 @@ type ConfigStruct struct {
 var Config = ConfigStruct{MaxSummaryLen: 20, GitUrl: "github.com/hltk"}
 
 type GlobalRenderData struct {
-	Config    *ConfigStruct
-	Links     []LinkListElem
-	LogoFound bool
+	Config      *ConfigStruct
+	Links       []LinkListElem
+	LogoFound   bool
+	CommitCount int
 }
 
 var GlobalDataGlobal = GlobalRenderData{Config: &Config,

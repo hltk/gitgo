@@ -120,6 +120,24 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		}
 	}
 
+	// Create directories first
+	err = makeDir(filepath.Join(destDir, "commit"))
+	if err != nil {
+		return err
+	}
+	err = makeDir(filepath.Join(destDir, "tree"))
+	if err != nil {
+		return err
+	}
+	err = makeDir(filepath.Join(destDir, "log"))
+	if err != nil {
+		return err
+	}
+
+	// Get commit list for commit count and latest commit
+	commitlist := getCommitLog(repo, head)
+	GlobalDataGlobal.CommitCount = len(commitlist)
+	
 	// Get latest commit
 	headRef, headErr := repo.Head()
 	if headErr == nil {
@@ -146,21 +164,6 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	}
 	indexfile.Sync()
 	defer indexfile.Close()
-
-	err = makeDir(filepath.Join(destDir, "commit"))
-	if err != nil {
-		return err
-	}
-	err = makeDir(filepath.Join(destDir, "tree"))
-	if err != nil {
-		return err
-	}
-	err = makeDir(filepath.Join(destDir, "log"))
-	if err != nil {
-		return err
-	}
-
-	commitlist := getCommitLog(repo, head)
 
 	logfile, err := os.Create(filepath.Join(destDir, "log/index.html"))
 	if err != nil {
