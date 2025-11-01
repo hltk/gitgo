@@ -1,5 +1,5 @@
 module git.hltk.fi/gitgo
 
-go 1.14
+go 1.23
 
-require github.com/libgit2/git2go/v30 v30.0.5
+require github.com/libgit2/git2go/v34 v34.0.0
