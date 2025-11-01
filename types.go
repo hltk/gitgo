@@ -31,6 +31,8 @@ type IndexRenderData struct {
 	ReadmeFound  bool
 	LicenseFile  FileViewRenderData
 	LicenseFound bool
+	LatestCommit CommitListElem
+	CommitFound  bool
 }
 
 type LogRenderData struct {

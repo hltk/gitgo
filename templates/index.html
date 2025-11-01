@@ -4,6 +4,16 @@
 <small>
 <pre>git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</pre>
 </small>
+{{if .CommitFound -}}
+<div id="latestcommit">
+<h3>Latest commit</h3>
+<p>
+<a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
+<br>
+<small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
+</p>
+</div>
+{{end -}}
 </div>
 {{if .ReadmeFound -}}
 {{template "fileview.html" .ReadmeFile -}}

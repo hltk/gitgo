@@ -79,6 +79,9 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		licensefiles = [...]string{"HEAD:LICENSE", "HEAD:COPYING", "HEAD:LICENSE.md"}
 		licensefile  FileViewRenderData
 		licensefound = false
+
+		latestCommit CommitListElem
+		commitfound  = false
 	)
 
 	for _, file := range readmefiles {
@@ -117,11 +120,26 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		}
 	}
 
+	// Get latest commit
+	headRef, headErr := repo.Head()
+	if headErr == nil {
+		commit, commitErr := repo.LookupCommit(headRef.Target())
+		headRef.Free()
+		if commitErr == nil {
+			latestCommit.Link = "/commit/" + commit.Id().String() + ".html"
+			latestCommit.Msg = commit.Summary()
+			latestCommit.Name = commit.Author().Name
+			latestCommit.Date = commit.Author().When
+			commitfound = true
+			commit.Free()
+		}
+	}
+
 	indexfile, err := os.Create(filepath.Join(destDir, "index.html"))
 	if err != nil {
 		return err
 	}
-	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{&GlobalDataGlobal, readmefile, readmefound, licensefile, licensefound})
+	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{&GlobalDataGlobal, readmefile, readmefound, licensefile, licensefound, latestCommit, commitfound})
 	if err != nil {
 		return err
 	}
@@ -174,7 +192,7 @@ func main() {
 			if _, ok := f.Value.(interface{ IsBoolFlag() bool }); ok {
 				flagType = ""
 			}
-			
+
 			if flagType != "" {
 				fmt.Fprintf(flag.CommandLine.Output(), "  --%s %s\n", f.Name, flagType)
 			} else {

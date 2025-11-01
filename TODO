@@ -9,5 +9,12 @@
 - tree.html:
 	- add last commit
 	- add a link to parent folder
-- main.go
-	- have the program throw an error when the installation directory isn't empty
+
+- index.html:
+ - show latest commit with link
+ - gather contributors (unique by email) and show their names
+ - include the tree list above the readme
+ - include number of commits next to log button
+
+- branches.html
+- tags.html
