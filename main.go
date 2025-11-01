@@ -31,7 +31,7 @@ type ConfigStruct struct {
 	DestDir    string
 }
 
-var Config = ConfigStruct{MaxSummaryLen: 20, GitUrl: "git.hltk.fi"}
+var Config = ConfigStruct{MaxSummaryLen: 20, GitUrl: "github.com/hltk"}
 
 type LinkListElem struct {
 	Pretty string

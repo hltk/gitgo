@@ -14,7 +14,7 @@ The goal of the project is not to create the best possible git web portal, inste
 
 ## Usage
 
-1. Obtain a copy of this repo: `git clone ..`
+1. Obtain a copy of this repo: `git clone https://github.com/hltk/gitgo.git`
 2. Build the program: `make`
 3. Run `./gitgo`. When running the program you have to give it two flags:
    - `-destdir` indicates where the static pages are going to be stored
