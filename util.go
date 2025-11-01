@@ -11,7 +11,7 @@ func makedir(dir string) error {
 	if !os.IsNotExist(err) {
 		return err
 	}
-	return os.Mkdir(dir, 0755)
+	return os.MkdirAll(dir, 0755)
 }
 
 // isDirEmpty checks if a directory is empty
