@@ -14,6 +14,7 @@
     gap: var(--spacing-sm);
     padding-top: var(--spacing-px-sm);
     padding-bottom: var(--spacing-px-sm);
+    justify-content: space-between;
 }
 
 .header-logo,

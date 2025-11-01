@@ -160,6 +160,7 @@ h1, h2, h3, h4, h5, h6 {
     gap: var(--spacing-sm);
     padding-top: var(--spacing-px-sm);
     padding-bottom: var(--spacing-px-sm);
+    justify-content: space-between;
 }
 
 .header-logo,
@@ -516,20 +517,6 @@ a.filelink {
 .treelist td:nth-child(4) {
     width: auto;
     white-space: nowrap;
-}
-
-/* Accessibility - Focus states for interactive elements */
-.treelist tbody tr:focus-within,
-.loglist tbody tr:focus-within {
-    outline: 2px solid var(--color-link-primary);
-    outline-offset: -2px;
-}
-
-.treelist a:focus,
-.loglist a:focus {
-    outline: 2px solid var(--color-link-primary);
-    outline-offset: 2px;
-    border-radius: 2px;
 }
 
 /* Commit Message Box */

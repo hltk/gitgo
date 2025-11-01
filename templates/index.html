@@ -2,26 +2,6 @@
 <div class="horizontal-divider"></div>
 <div class="two-column-container">
     <div class="main-content">
-        <div class="nav-clone-container">
-            <div class="nav-links">
-                {{range .GlobalData.Links -}} {{if and (ne .Pretty "tree") (ne
-                .Pretty "log") -}} {{if eq .Pretty "branches" -}}
-                <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.BranchCount}})</a>
-                {{else if eq .Pretty "tags" -}}
-                <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.TagCount}})</a>
-                {{else -}}
-                <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}}</a>
-                {{end -}} {{end -}} {{end -}}
-            </div>
-            <div class="clone-inline">
-                <span>Clone:</span>
-                <code class="clone-url">git clone
-                git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
-                <button class="copy-btn"
-                        data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}"
-                        onclick="copyCloneUrl(this)">Copy</button>
-            </div>
-        </div>
         {{if or .CommitFound .TreeFound -}}
         <div class="commit-tree-container">
             {{if .CommitFound -}}
@@ -111,6 +91,22 @@
             </ul>
         </div>
         {{end -}}
+        <div class="contributors">
+            <h3>Branches ({{.ContributorsCt}})</h3>
+            <ul>
+                {{range .Contributors -}}
+                <li>{{.Name}} &lt;{{.Email}}&gt;</li>
+                {{end -}}
+            </ul>
+        </div>
+        <div class="contributors">
+            <h3>Tags ({{.ContributorsCt}})</h3>
+            <ul>
+                {{range .Contributors -}}
+                <li>{{.Name}} &lt;{{.Email}}&gt;</li>
+                {{end -}}
+            </ul>
+        </div>
     </div>
 </div>
 {{template "footer.html" . -}}

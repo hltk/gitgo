@@ -179,20 +179,6 @@ a.filelink {
     white-space: nowrap;
 }
 
-/* Accessibility - Focus states for interactive elements */
-.treelist tbody tr:focus-within,
-.loglist tbody tr:focus-within {
-    outline: 2px solid var(--color-link-primary);
-    outline-offset: -2px;
-}
-
-.treelist a:focus,
-.loglist a:focus {
-    outline: 2px solid var(--color-link-primary);
-    outline-offset: 2px;
-    border-radius: 2px;
-}
-
 /* Commit Message Box */
 .commit-msg {
     border: var(--border-width) var(--border-style)
