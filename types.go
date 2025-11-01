@@ -43,8 +43,11 @@ type LogRenderData struct {
 }
 
 type TreeRenderData struct {
-	GlobalData *GlobalRenderData
-	Files      []FileListElem
+	GlobalData  *GlobalRenderData
+	Files       []FileListElem
+	CurrentPath string
+	ParentPath  string
+	HasParent   bool
 }
 
 type FileViewRenderData struct {

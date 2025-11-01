@@ -1,14 +1,9 @@
 - larger goals:
-	- add a way of generating the index page (a new binary? like stagit has)
-		- the list of repos could have the last update date for every repo
-		  and it could sort the list by that date
-
 	- add better error handling
-	- submodules are listed in .submodules
 	- new file: add refs.html for branches and tags
+	
 - tree.html:
 	- add last commit
-	- add a link to parent folder
 
 - index.html:
  - gather contributors (unique by email) and show their names

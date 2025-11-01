@@ -531,7 +531,31 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = t.ExecuteTemplate(treefile, "tree.html", TreeRenderData{GlobalData: &GlobalDataGlobal, Files: filelist})
+	
+	// Calculate parent path
+	var parentPath string
+	hasParent := false
+	if path != "/tree" {
+		// For paths like "/tree/subdir", parent is "/tree"
+		// For "/tree/a/b", parent is "/tree/a"
+		parentPath = filepath.Dir(path)
+		if parentPath != "/tree" {
+			parentPath = parentPath + "/"
+		}
+		hasParent = true
+	} else {
+		// For "/tree", parent is the index page
+		parentPath = "/"
+		hasParent = true
+	}
+	
+	err = t.ExecuteTemplate(treefile, "tree.html", TreeRenderData{
+		GlobalData: &GlobalDataGlobal, 
+		Files: filelist,
+		CurrentPath: path,
+		ParentPath: parentPath,
+		HasParent: hasParent,
+	})
 	if err != nil {
 		log.Print("execute:", err)
 	}

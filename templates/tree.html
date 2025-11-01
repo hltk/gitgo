@@ -12,6 +12,15 @@
 </tr>
 </thead>
 <tbody id="treeentries">
+{{if .HasParent -}}
+<tr>
+<td class="left"><pre class="mode"></pre></td>
+<td class="left"><a href="/{{$.GlobalData.Config.RepoName -}}{{.ParentPath -}}">../</a></td>
+<td class="right"><pre class="size"></pre></td>
+<td class="right"><pre class="date"></pre></td>
+<td class="left"></td>
+</tr>
+{{end -}}
 {{range .Files -}}
 <tr>
 <td class="left"><pre class="mode">{{.Mode -}}</pre></td>
