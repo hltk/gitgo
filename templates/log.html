@@ -1,24 +1,28 @@
 {{template "header.html" . -}}
 <div class="loglist">
-<table>
-<thead>
-<tr>
-<th>Commit</th>
-<th>Summary</th>
-<th>Author</th>
-<th>Date</th>
-</tr>
-</thead>
-<tbody id="logentries">
-{{range .Commits -}}
-<tr>
-<td><a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.AbbrevHash -}}</a></td>
-<td><a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.Msg -}}</a></td>
-<td>{{.Name -}}</td>
-<td>{{.Date.Format "2006-01-02 15:04:05" -}}</td>
-</tr>
-{{end -}}
-</tbody>
-</table> 
+    <table>
+        <thead>
+            <tr>
+                <th>Commit</th>
+                <th>Summary</th>
+                <th>Author</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="logentries">
+            {{range .Commits -}}
+            <tr>
+                <td>
+                    <a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.AbbrevHash -}}</a>
+                </td>
+                <td>
+                    <a href="/{{$.GlobalData.Config.RepoName}}{{.Link -}}">{{.Msg -}}</a>
+                </td>
+                <td>{{.Name -}}</td>
+                <td>{{.Date.Format "2006-01-02 15:04:05" -}}</td>
+            </tr>
+            {{end -}}
+        </tbody>
+    </table>
 </div>
 {{template "footer.html" . -}}

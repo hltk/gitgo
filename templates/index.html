@@ -1,106 +1,119 @@
 {{template "header.html" . -}}
 <div class="two-column-container">
-<div class="main-content">
-<div class="nav-clone-container">
-<div class="nav-links">
-{{range .GlobalData.Links -}}
-{{if and (ne .Pretty "tree") (ne .Pretty "log") -}}
-{{if eq .Pretty "branches" -}}
-<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.BranchCount}})</a>
-{{else if eq .Pretty "tags" -}}
-<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.TagCount}})</a>
-{{else -}}
-<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}}</a>
-{{end -}}
-{{end -}}
-{{end -}}
-</div>
-<div class="clone-inline">
-<span>Clone:</span>
-<code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
-<button class="copy-btn" data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}" onclick="copyCloneUrl(this)">Copy</button>
-</div>
-</div>
-{{if or .CommitFound .TreeFound -}}
-<div class="commit-tree-container">
-{{if .CommitFound -}}
-<div class="latest-commit">
-<div class="latest-commit-header">
-<div>
-<p>
-<a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
-<br>
-<small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
-</p>
-</div>
-<div class="log-link">
-{{range .GlobalData.Links -}}
-{{if eq .Pretty "log" -}}
-<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">View all commits ({{$.GlobalData.CommitCount}})</a>
-{{end -}}
-{{end -}}
-</div>
-</div>
-</div>
-{{end -}}
-{{if .TreeFound -}}
-<div class="treelist">
-<table>
-<tbody id="treeentries">
-{{range .RootTree -}}
-<tr>
-<td><pre class="mode">{{.Mode -}}</pre></td>
-<td><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
-<td><pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre></td>
-<td><pre class="date">{{formatDate .LastModified -}}</pre></td>
-<td>{{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}</td>
-</tr>
-{{end -}}
-</tbody>
-</table> 
-</div>
-{{end -}}
-</div>
-{{end -}}
-{{if .ReadmeFound -}}
-{{if .ReadmeIsMarkdown -}}
-<div class="fileview">
-<div class="fileinfo">
-<div>
-<p class="filename">{{.ReadmeFile.Name}}</p>
-</div>
-<div>
-{{if .ReadmeFile.LastCommitMsg -}}
-<p class="commit-info">
-<a href="/{{.GlobalData.Config.RepoName}}{{.ReadmeFile.LastCommitLink}}">{{.ReadmeFile.LastCommitMsg}}</a>
-<small> · {{.ReadmeFile.LastCommitAuthor}} · {{timeAgo .ReadmeFile.LastCommitDate}}</small>
-</p>
-{{- end}}
-</div>
-</div>
-<div class="readme-markdown">
-{{.ReadmeHTML}}
-</div>
-</div>
-{{else -}}
-{{template "fileview.html" .ReadmeFile -}}
-{{end -}}
-{{end -}}
-{{if .LicenseFound -}}
-{{template "fileview.html" .LicenseFile -}}
-{{end -}}
-</div>
-<div class="sidebar">
-{{if gt .ContributorsCt 0 -}}
-<div class="contributors">
-<h3>Contributors ({{.ContributorsCt}})</h3>
-<ul>
-{{range .Contributors -}}
-<li>{{.Name}} &lt;{{.Email}}&gt;</li>
-{{end -}}
-</ul>
-</div>
-{{end -}}
-</div>
+    <div class="main-content">
+        <div class="nav-clone-container">
+            <div class="nav-links">
+                {{range .GlobalData.Links -}}
+                {{if and (ne .Pretty "tree") (ne .Pretty "log") -}}
+                {{if eq .Pretty "branches" -}}
+                <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.BranchCount}})</a>
+                {{else if eq .Pretty "tags" -}}
+                <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.TagCount}})</a>
+                {{else -}}
+                <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}}</a>
+                {{end -}}
+                {{end -}}
+                {{end -}}
+            </div>
+            <div class="clone-inline">
+                <span>Clone:</span>
+                <code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
+                <button class="copy-btn"
+                        data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}"
+                        onclick="copyCloneUrl(this)">Copy</button>
+            </div>
+        </div>
+        {{if or .CommitFound .TreeFound -}}
+        <div class="commit-tree-container">
+            {{if .CommitFound -}}
+            <div class="latest-commit">
+                <div class="latest-commit-header">
+                    <div>
+                        <p>
+                            <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
+                            <br>
+                            <small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
+                        </p>
+                    </div>
+                    <div class="log-link">
+                        {{range .GlobalData.Links -}}
+                        {{if eq .Pretty "log" -}}
+                        <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">View all commits ({{$.GlobalData.CommitCount}})</a>
+                        {{end -}}
+                        {{end -}}
+                    </div>
+                </div>
+            </div>
+            {{end -}}
+            {{if .TreeFound -}}
+            <div class="treelist">
+                <table>
+                    <tbody id="treeentries">
+                        {{range .RootTree -}}
+                        <tr>
+                            <td>
+                                <pre class="mode">{{.Mode -}}</pre>
+                            </td>
+                            <td>
+                                <a {{if .IsFile -}}
+                                   class="filelink"
+                                   {{end -}}
+                                   href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a>
+                            </td>
+                            <td>
+                                <pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre>
+                            </td>
+                            <td>
+                                <pre class="date">{{formatDate .LastModified -}}</pre>
+                            </td>
+                            <td>
+                                {{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}
+                            </td>
+                        </tr>
+                        {{end -}}
+                    </tbody>
+                </table>
+            </div>
+            {{end -}}
+        </div>
+        {{end -}}
+        {{if .ReadmeFound -}}
+        {{if .ReadmeIsMarkdown -}}
+        <div class="fileview">
+            <div class="fileinfo">
+                <div>
+                    <p class="filename">{{.ReadmeFile.Name}}</p>
+                </div>
+                <div>
+                    {{if .ReadmeFile.LastCommitMsg -}}
+                    <p class="commit-info">
+                        <a href="/{{.GlobalData.Config.RepoName}}{{.ReadmeFile.LastCommitLink}}">{{.ReadmeFile.LastCommitMsg}}</a>
+                        <small>· {{.ReadmeFile.LastCommitAuthor}} · {{timeAgo .ReadmeFile.LastCommitDate}}</small>
+                    </p>
+                    {{- end}}
+                </div>
+            </div>
+            <div class="readme-markdown">{{.ReadmeHTML}}</div>
+        </div>
+        {{else -}}
+        {{template "fileview.html" .ReadmeFile -}}
+        {{end -}}
+        {{end -}}
+        {{if .LicenseFound -}}
+        {{template "fileview.html" .LicenseFile -}}
+        {{end -}}
+    </div>
+    <div class="sidebar">
+        {{if gt .ContributorsCt 0 -}}
+        <div class="contributors">
+            <h3>Contributors ({{.ContributorsCt}})</h3>
+            <ul>
+                {{range .Contributors -}}
+                <li>{{.Name}} &lt;{{.Email}}&gt;</li>
+                {{end -}}
+            </ul>
+        </div>
+        {{end -}}
+    </div>
 </div>
 {{template "footer.html" . -}}

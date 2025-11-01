@@ -1,16 +1,16 @@
 <div class="fileview">
-<div class="fileinfo">
-<div>
-<p class="filename">{{.Name}}</p>
-</div>
-<div>
-{{if .LastCommitMsg -}}
-<p class="commit-info">
-<a href="/{{.RepoName}}{{.LastCommitLink}}">{{.LastCommitMsg}}</a>
-<small> · {{.LastCommitAuthor}} · {{timeAgo .LastCommitDate}}</small>
-</p>
-{{- end}}
-</div>
-</div>
-{{template "linenumberer.html" .Lines}}
+    <div class="fileinfo">
+        <div>
+            <p class="filename">{{.Name}}</p>
+        </div>
+        <div>
+            {{if .LastCommitMsg -}}
+            <p class="commit-info">
+                <a href="/{{.RepoName}}{{.LastCommitLink}}">{{.LastCommitMsg}}</a>
+                <small>· {{.LastCommitAuthor}} · {{timeAgo .LastCommitDate}}</small>
+            </p>
+            {{- end}}
+        </div>
+    </div>
+    {{template "linenumberer.html" .Lines}}
 </div>

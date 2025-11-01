@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.GlobalData.Config.RepoName}}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/{{.GlobalData.Config.RepoName}}/styles.css">
-<link rel="stylesheet" href="/{{.GlobalData.Config.RepoName}}/chroma.css">
-</head>
-<body>
-<div class="content">
-<div class="header-container">
-{{if .GlobalData.LogoFound -}}<a href="/"><img class="header-logo" src="/logo.png" alt="logo"/></a>{{end -}}
-<h1 class="header"><a href="/{{.GlobalData.Config.RepoName}}/">{{.GlobalData.Config.RepoName}}</a>	</h1>
-</div>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{.GlobalData.Config.RepoName}}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+              rel="stylesheet">
+        <link rel="stylesheet" href="/{{.GlobalData.Config.RepoName}}/styles.css">
+        <link rel="stylesheet" href="/{{.GlobalData.Config.RepoName}}/chroma.css">
+    </head>
+    <body>
+        <div class="content">
+            <div class="header-container">
+                {{if .GlobalData.LogoFound -}}<a href="/">
+                <img class="header-logo" src="/logo.png" alt="logo" />
+            </a>{{end -}}
+            <h1 class="header">
+                <a href="/{{.GlobalData.Config.RepoName}}/">{{.GlobalData.Config.RepoName}}</a>
+            </h1>
+        </div>

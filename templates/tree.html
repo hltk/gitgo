@@ -1,48 +1,67 @@
 {{template "header.html" . -}}
 <div class="two-column-container file-tree-container">
-<div class="tree-sidebar-column">
-{{template "tree-sidebar.html" . -}}
-</div>
-<div class="file-content-column">
-<div class="commit-tree-container">
-{{if .CommitFound -}}
-<div class="latest-commit">
-<div class="latest-commit-header">
-<div>
-<p>
-<a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
-<br>
-<small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
-</p>
-</div>
-</div>
-</div>
-{{end -}}
-<div class="treelist">
-<table>
-<tbody id="treeentries">
-{{if .HasParent -}}
-<tr>
-<td><pre class="mode"></pre></td>
-<td><a href="/{{$.GlobalData.Config.RepoName -}}{{.ParentPath -}}">../</a></td>
-<td><pre class="size"></pre></td>
-<td><pre class="date"></pre></td>
-<td></td>
-</tr>
-{{end -}}
-{{range .Files -}}
-<tr>
-<td><pre class="mode">{{.Mode -}}</pre></td>
-<td><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
-<td><pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre></td>
-<td><pre class="date">{{formatDate .LastModified -}}</pre></td>
-<td>{{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}</td>
-</tr>
-{{end -}}
-</tbody>
-</table> 
-</div>
-</div>
-</div>
+    <div class="tree-sidebar-column">{{template "tree-sidebar.html" . -}}</div>
+    <div class="file-content-column">
+        <div class="commit-tree-container">
+            {{if .CommitFound -}}
+            <div class="latest-commit">
+                <div class="latest-commit-header">
+                    <div>
+                        <p>
+                            <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
+                            <br>
+                            <small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {{end -}}
+            <div class="treelist">
+                <table>
+                    <tbody id="treeentries">
+                        {{if .HasParent -}}
+                        <tr>
+                            <td>
+                                <pre class="mode"></pre>
+                            </td>
+                            <td>
+                                <a href="/{{$.GlobalData.Config.RepoName -}}{{.ParentPath -}}">../</a>
+                            </td>
+                            <td>
+                                <pre class="size"></pre>
+                            </td>
+                            <td>
+                                <pre class="date"></pre>
+                            </td>
+                            <td></td>
+                        </tr>
+                        {{end -}}
+                        {{range .Files -}}
+                        <tr>
+                            <td>
+                                <pre class="mode">{{.Mode -}}</pre>
+                            </td>
+                            <td>
+                                <a {{if .IsFile -}}
+                                   class="filelink"
+                                   {{end -}}
+                                   href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a>
+                            </td>
+                            <td>
+                                <pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre>
+                            </td>
+                            <td>
+                                <pre class="date">{{formatDate .LastModified -}}</pre>
+                            </td>
+                            <td>
+                                {{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}
+                            </td>
+                        </tr>
+                        {{end -}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {{template "footer.html" . -}}

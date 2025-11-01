@@ -12,7 +12,7 @@ endif
 endif
 endif
 
-.PHONY: all clean serve css
+.PHONY: all clean serve css format format-html
 
 all: css gitgo
 
@@ -35,3 +35,8 @@ serve:
 
 clean:
 	rm -f gitgo templates/styles.css
+
+format-html:
+	uv run djlint templates/ --profile=golang --reformat
+
+format: format-html

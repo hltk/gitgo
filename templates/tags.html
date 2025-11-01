@@ -1,26 +1,27 @@
 {{template "header.html" . -}}
 <div class="refs">
-<h2>Tags</h2>
-{{if .Tags -}}
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Commit</th>
-</tr>
-</thead>
-<tbody>
-{{range .Tags -}}
-<tr>
-<td>{{.Name -}}</td>
-<td><code>{{.CommitHash -}}</code></td>
-</tr>
-{{end -}}
-</tbody>
-</table>
-{{else -}}
-<p>No tags found.</p>
-{{end -}}
+    <h2>Tags</h2>
+    {{if .Tags -}}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Commit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Tags -}}
+            <tr>
+                <td>{{.Name -}}</td>
+                <td>
+                    <code>{{.CommitHash -}}</code>
+                </td>
+            </tr>
+            {{end -}}
+        </tbody>
+    </table>
+    {{else -}}
+    <p>No tags found.</p>
+    {{end -}}
 </div>
 {{template "footer.html" . -}}
-

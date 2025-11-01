@@ -1,62 +1,67 @@
 {{template "header.html" . -}}
 <div class="refs">
-<div class="refs-container">
-<div class="refs-column">
-<h2>Branches</h2>
-{{if .Branches -}}
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Commit</th>
-<th>Log</th>
-</tr>
-</thead>
-<tbody>
-{{range .Branches -}}
-<tr>
-<td>{{.Name -}}</td>
-<td><code>{{.CommitHash -}}</code></td>
-<td><a href="/{{$.GlobalData.Config.RepoName -}}{{.LogLink -}}">log</a></td>
-</tr>
-{{end -}}
-</tbody>
-</table>
-{{else -}}
-<p>No branches found.</p>
-{{end -}}
-
-<h2>Tags</h2>
-{{if .Tags -}}
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Commit</th>
-</tr>
-</thead>
-<tbody>
-{{range .Tags -}}
-<tr>
-<td>{{.Name -}}</td>
-<td><code>{{.CommitHash -}}</code></td>
-</tr>
-{{end -}}
-</tbody>
-</table>
-{{else -}}
-<p>No tags found.</p>
-{{end -}}
-</div>
-
-<div class="cloneurl clone-sidebar">
-<h3>Clone</h3>
-<div class="clone-box">
-<code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
-<button class="copy-btn" data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}" onclick="copyCloneUrl(this)">Copy</button>
-</div>
-</div>
-</div>
+    <div class="refs-container">
+        <div class="refs-column">
+            <h2>Branches</h2>
+            {{if .Branches -}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Commit</th>
+                        <th>Log</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Branches -}}
+                    <tr>
+                        <td>{{.Name -}}</td>
+                        <td>
+                            <code>{{.CommitHash -}}</code>
+                        </td>
+                        <td>
+                            <a href="/{{$.GlobalData.Config.RepoName -}}{{.LogLink -}}">log</a>
+                        </td>
+                    </tr>
+                    {{end -}}
+                </tbody>
+            </table>
+            {{else -}}
+            <p>No branches found.</p>
+            {{end -}}
+            <h2>Tags</h2>
+            {{if .Tags -}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Commit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Tags -}}
+                    <tr>
+                        <td>{{.Name -}}</td>
+                        <td>
+                            <code>{{.CommitHash -}}</code>
+                        </td>
+                    </tr>
+                    {{end -}}
+                </tbody>
+            </table>
+            {{else -}}
+            <p>No tags found.</p>
+            {{end -}}
+        </div>
+        <div class="cloneurl clone-sidebar">
+            <h3>Clone</h3>
+            <div class="clone-box">
+                <code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
+                <button class="copy-btn"
+                        data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}"
+                        onclick="copyCloneUrl(this)">Copy</button>
+            </div>
+        </div>
+    </div>
 </div>
 {{template "footer.html" . -}}
-
