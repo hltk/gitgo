@@ -322,3 +322,7 @@ a.filelink {
   font-weight: var(--font-weight-semibold);
 }
 
+
+.muted {
+  color: var(--color-text-muted);
+}

@@ -636,6 +636,10 @@ a.filelink {
   font-weight: var(--font-weight-semibold);
 }
 
+
+.muted {
+  color: var(--color-text-muted);
+}
 /* Code Display Styles - Syntax Highlighting and Line Numbers */
 
 /* Line Numbering */
