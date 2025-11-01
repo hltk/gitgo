@@ -231,6 +231,14 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	// Get contributors
 	contributors := getContributors(repo, head)
 
+	// Get branches and tags - must be done before generating index page
+	branches := getBranches(repo)
+	tags := getTags(repo)
+
+	// Update global counts
+	GlobalDataGlobal.BranchCount = len(branches)
+	GlobalDataGlobal.TagCount = len(tags)
+
 	indexfile, err := os.Create(filepath.Join(destDir, "index.html"))
 	if err != nil {
 		return err
@@ -267,9 +275,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	logfile.Sync()
 	defer logfile.Close()
 
-	// Generate refs page
-	branches := getBranches(repo)
-	tags := getTags(repo)
+	// Generate refs page (kept for backwards compatibility)
 
 	refsfile, err := os.Create(filepath.Join(destDir, "refs.html"))
 	if err != nil {
@@ -285,6 +291,38 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	}
 	refsfile.Sync()
 	defer refsfile.Close()
+
+	// Generate branches page
+	branchesfile, err := os.Create(filepath.Join(destDir, "branches.html"))
+	if err != nil {
+		return err
+	}
+	err = t.ExecuteTemplate(branchesfile, "branches.html", RefsRenderData{
+		GlobalData: &GlobalDataGlobal,
+		Branches:   branches,
+		Tags:       tags,
+	})
+	if err != nil {
+		return err
+	}
+	branchesfile.Sync()
+	defer branchesfile.Close()
+
+	// Generate tags page
+	tagsfile, err := os.Create(filepath.Join(destDir, "tags.html"))
+	if err != nil {
+		return err
+	}
+	err = t.ExecuteTemplate(tagsfile, "tags.html", RefsRenderData{
+		GlobalData: &GlobalDataGlobal,
+		Branches:   branches,
+		Tags:       tags,
+	})
+	if err != nil {
+		return err
+	}
+	tagsfile.Sync()
+	defer tagsfile.Close()
 
 	indexTree(repo, head)
 

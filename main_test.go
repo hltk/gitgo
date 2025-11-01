@@ -183,8 +183,8 @@ func TestGlobalDataStructure(t *testing.T) {
 			pretty string
 			link   string
 		}{
-			{"summary", "/"},
-			{"refs", "/refs.html"},
+			{"branches", "/branches.html"},
+			{"tags", "/tags.html"},
 			{"tree", "/tree"},
 			{"log", "/log"},
 		}

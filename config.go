@@ -97,7 +97,9 @@ type GlobalRenderData struct {
 	LogoFound   bool
 	CommitCount int
 	BranchName  string
+	BranchCount int
+	TagCount    int
 }
 
 var GlobalDataGlobal = GlobalRenderData{Config: &Config,
-	Links: []LinkListElem{{"refs", "/refs.html"}, {"tree", "/tree"}, {"log", "/log"}}}
+	Links: []LinkListElem{{"branches", "/branches.html"}, {"tags", "/tags.html"}, {"tree", "/tree"}, {"log", "/log"}}}

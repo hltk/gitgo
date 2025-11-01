@@ -2,7 +2,13 @@
 <div id="nav">
 {{range .GlobalData.Links -}}
 {{if and (ne .Pretty "tree") (ne .Pretty "log") -}}
+{{if eq .Pretty "branches" -}}
+<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.BranchCount}})</a>
+{{else if eq .Pretty "tags" -}}
+<a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.TagCount}})</a>
+{{else -}}
 <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}}</a>
+{{end -}}
 {{end -}}
 {{end -}}
 </div>
