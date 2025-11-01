@@ -55,7 +55,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		return err
 	}
 
-	err = makedir(destDir)
+	err = makeDir(destDir)
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 				return err
 			}
 
-			lines := contentstolines(blob.Contents(), int(blob.Size()))
+			lines := contentsToLines(blob.Contents(), int(blob.Size()))
 
 			readmefile.Name = strings.TrimPrefix(file, "HEAD:")
 			readmefile.Lines = lines
@@ -105,7 +105,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 				return err
 			}
 
-			lines := contentstolines(blob.Contents(), int(blob.Size()))
+			lines := contentsToLines(blob.Contents(), int(blob.Size()))
 
 			licensefile.Name = strings.TrimPrefix(file, "HEAD:")
 			licensefile.Lines = lines
@@ -125,20 +125,20 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	indexfile.Sync()
 	defer indexfile.Close()
 
-	err = makedir(filepath.Join(destDir, "commit"))
+	err = makeDir(filepath.Join(destDir, "commit"))
 	if err != nil {
 		return err
 	}
-	err = makedir(filepath.Join(destDir, "tree"))
+	err = makeDir(filepath.Join(destDir, "tree"))
 	if err != nil {
 		return err
 	}
-	err = makedir(filepath.Join(destDir, "log"))
+	err = makeDir(filepath.Join(destDir, "log"))
 	if err != nil {
 		return err
 	}
 
-	commitlist := getcommitlog(repo, head)
+	commitlist := getCommitLog(repo, head)
 
 	logfile, err := os.Create(filepath.Join(destDir, "log/index.html"))
 	if err != nil {
@@ -151,7 +151,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	logfile.Sync()
 	defer logfile.Close()
 
-	indextree(repo, head)
+	indexTree(repo, head)
 
 	return nil
 }

@@ -101,7 +101,7 @@ func createCommitInRepo(t *testing.T, repo *git.Repository, repoPath string, fil
 	return commitId
 }
 
-func TestGetcommitlog(t *testing.T) {
+func TestGetCommitLog(t *testing.T) {
 	// Setup temp directory and configure
 	origDestDir := Config.DestDir
 	origInstallDir := Config.InstallDir
@@ -156,7 +156,7 @@ func TestGetcommitlog(t *testing.T) {
 		// Skip actual commit log test since we need at least one commit
 		// The function will fail with an invalid head OID for empty repos
 		_ = treeId
-		t.Skip("Empty repository test skipped - getcommitlog requires valid HEAD")
+		t.Skip("Empty repository test skipped - getCommitLog requires valid HEAD")
 	})
 
 	t.Run("returns commit list with single commit", func(t *testing.T) {
@@ -176,7 +176,7 @@ func TestGetcommitlog(t *testing.T) {
 		setGlobalTemplate(parsedTemplate)
 
 		// Get commit log
-		commitList := getcommitlog(repo, commitId)
+		commitList := getCommitLog(repo, commitId)
 
 		if len(commitList) != 1 {
 			t.Errorf("expected 1 commit, got %d", len(commitList))
@@ -211,7 +211,7 @@ func TestGetcommitlog(t *testing.T) {
 		setGlobalTemplate(parsedTemplate)
 
 		// Get commit log
-		commitList := getcommitlog(repo, headId)
+		commitList := getCommitLog(repo, headId)
 
 		if len(commitList) != 3 {
 			t.Errorf("expected 3 commits, got %d", len(commitList))
@@ -246,7 +246,7 @@ func TestGetcommitlog(t *testing.T) {
 		}
 		setGlobalTemplate(parsedTemplate)
 
-		commitList := getcommitlog(repo, commitId)
+		commitList := getCommitLog(repo, commitId)
 
 		if len(commitList) != 1 {
 			t.Fatalf("expected 1 commit, got %d", len(commitList))
@@ -263,7 +263,7 @@ func TestGetcommitlog(t *testing.T) {
 	})
 }
 
-func TestIndextree(t *testing.T) {
+func TestIndexTree(t *testing.T) {
 	// Setup temp directory and configure
 	origDestDir := Config.DestDir
 	origInstallDir := Config.InstallDir
@@ -320,8 +320,8 @@ func TestIndextree(t *testing.T) {
 		}
 		setGlobalTemplate(parsedTemplate)
 
-		// Run indextree
-		indextree(repo, commitId)
+		// Run indexTree
+		indexTree(repo, commitId)
 
 		// Verify tree directory was created
 		treePath := filepath.Join(Config.DestDir, "tree")
@@ -417,8 +417,8 @@ func TestIndextree(t *testing.T) {
 		}
 		setGlobalTemplate(parsedTemplate)
 
-		// Run indextree
-		indextree(repo, commitId)
+		// Run indexTree
+		indexTree(repo, commitId)
 
 		// Verify nested directory was created
 		srcPath := filepath.Join(Config.DestDir, "tree", "src")
@@ -434,7 +434,7 @@ func TestIndextree(t *testing.T) {
 	})
 }
 
-func TestIndextreerecursive(t *testing.T) {
+func TestIndexTreeRecursive(t *testing.T) {
 	// Setup temp directory and configure
 	origDestDir := Config.DestDir
 	origInstallDir := Config.InstallDir
@@ -501,8 +501,8 @@ func TestIndextreerecursive(t *testing.T) {
 			t.Fatalf("failed to create tree path: %v", err)
 		}
 
-		// Run indextreerecursive
-		indextreerecursive(repo, tree, treePath)
+		// Run indexTreeRecursive
+		indexTreeRecursive(repo, tree, treePath)
 
 		// Verify file was created
 		filePath := filepath.Join(Config.DestDir, treePath, "test.txt.html")

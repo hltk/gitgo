@@ -9,7 +9,7 @@ import (
 	git "github.com/libgit2/git2go/v34"
 )
 
-func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
+func getCommitLog(repo *git.Repository, head *git.Oid) []CommitListElem {
 	var commitlist []CommitListElem
 
 	walk, err := repo.Walk()
@@ -133,7 +133,7 @@ func getcommitlog(repo *git.Repository, head *git.Oid) []CommitListElem {
 	return commitlist
 }
 
-func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
+func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 	var filelist []FileListElem
 	count := int(tree.EntryCount())
 	for i := 0; i < count; i++ {
@@ -170,13 +170,13 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 
 			newpath := filepath.Join(path, entry.Name)
 
-			err = makedir(filepath.Join(Config.DestDir, newpath))
+			err = makeDir(filepath.Join(Config.DestDir, newpath))
 			if err != nil {
 				log.Fatal(err)
 			}
 
 			filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false, mode, size})
-			indextreerecursive(repo, nexttree, newpath)
+			indexTreeRecursive(repo, nexttree, newpath)
 		}
 		if entry.Type == git.ObjectBlob {
 			blob, err := repo.LookupBlob(entry.Id)
@@ -191,7 +191,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 				log.Fatal(err)
 			}
 
-			lines := contentstolines(blob.Contents(), int(blob.Size()))
+			lines := contentsToLines(blob.Contents(), int(blob.Size()))
 
 			err = t.ExecuteTemplate(file, "file.html", FileRenderData{&GlobalDataGlobal, FileViewRenderData{entry.Name, lines}})
 			if err != nil {
@@ -219,7 +219,7 @@ func indextreerecursive(repo *git.Repository, tree *git.Tree, path string) {
 	defer treefile.Close()
 }
 
-func indextree(repo *git.Repository, head *git.Oid) {
+func indexTree(repo *git.Repository, head *git.Oid) {
 	commit, err := repo.LookupCommit(head)
 	if err != nil {
 		log.Fatal(err)
@@ -228,5 +228,5 @@ func indextree(repo *git.Repository, head *git.Oid) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	indextreerecursive(repo, tree, "/tree")
+	indexTreeRecursive(repo, tree, "/tree")
 }

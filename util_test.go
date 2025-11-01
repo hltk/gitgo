@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func TestMakedir(t *testing.T) {
+func TestMakeDir(t *testing.T) {
 	t.Run("creates new directory", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		newDir := filepath.Join(tmpDir, "test")
 
-		err := makedir(newDir)
+		err := makeDir(newDir)
 		if err != nil {
 			t.Fatalf("makedir() failed: %v", err)
 		}
@@ -29,7 +29,7 @@ func TestMakedir(t *testing.T) {
 		tmpDir := t.TempDir()
 		nestedDir := filepath.Join(tmpDir, "a", "b", "c")
 
-		err := makedir(nestedDir)
+		err := makeDir(nestedDir)
 		if err != nil {
 			t.Fatalf("makedir() failed: %v", err)
 		}
@@ -47,13 +47,13 @@ func TestMakedir(t *testing.T) {
 		tmpDir := t.TempDir()
 
 		// First call should succeed
-		err := makedir(tmpDir)
+		err := makeDir(tmpDir)
 		if err != nil {
-			t.Fatalf("first makedir() failed: %v", err)
+			t.Fatalf("first makeDir() failed: %v", err)
 		}
 
 		// Second call should return nil (directory already exists, stat succeeds)
-		err = makedir(tmpDir)
+		err = makeDir(tmpDir)
 		if err != nil {
 			t.Errorf("expected nil when directory already exists, got %v", err)
 		}
@@ -71,7 +71,7 @@ func TestMakedir(t *testing.T) {
 		f.Close()
 
 		// Try to create directory with same name - returns nil because stat succeeds
-		err = makedir(filePath)
+		err = makeDir(filePath)
 		if err != nil {
 			t.Errorf("expected nil when file exists with same name, got %v", err)
 		}
@@ -320,10 +320,10 @@ func TestValidateDestDir(t *testing.T) {
 	})
 }
 
-func TestContentstolines(t *testing.T) {
+func TestContentsToLines(t *testing.T) {
 	t.Run("splits single line without newline", func(t *testing.T) {
 		content := []byte("hello world")
-		lines := contentstolines(content, len(content))
+		lines := contentsToLines(content, len(content))
 
 		if len(lines) != 1 {
 			t.Errorf("expected 1 line, got %d", len(lines))
@@ -335,7 +335,7 @@ func TestContentstolines(t *testing.T) {
 
 	t.Run("splits multiple lines", func(t *testing.T) {
 		content := []byte("line1\nline2\nline3")
-		lines := contentstolines(content, len(content))
+		lines := contentsToLines(content, len(content))
 
 		expected := []string{"line1", "line2", "line3"}
 		if len(lines) != len(expected) {
@@ -350,7 +350,7 @@ func TestContentstolines(t *testing.T) {
 
 	t.Run("handles trailing newline", func(t *testing.T) {
 		content := []byte("line1\nline2\n")
-		lines := contentstolines(content, len(content))
+		lines := contentsToLines(content, len(content))
 
 		expected := []string{"line1", "line2"}
 		if len(lines) != len(expected) {
@@ -365,7 +365,7 @@ func TestContentstolines(t *testing.T) {
 
 	t.Run("handles empty content", func(t *testing.T) {
 		content := []byte("")
-		lines := contentstolines(content, 0)
+		lines := contentsToLines(content, 0)
 
 		if len(lines) != 1 {
 			t.Errorf("expected 1 line (empty string), got %d", len(lines))
@@ -377,7 +377,7 @@ func TestContentstolines(t *testing.T) {
 
 	t.Run("handles content with only newline", func(t *testing.T) {
 		content := []byte("\n")
-		lines := contentstolines(content, len(content))
+		lines := contentsToLines(content, len(content))
 
 		expected := []string{""}
 		if len(lines) != len(expected) {
@@ -390,7 +390,7 @@ func TestContentstolines(t *testing.T) {
 
 	t.Run("handles multiple consecutive newlines", func(t *testing.T) {
 		content := []byte("line1\n\n\nline2")
-		lines := contentstolines(content, len(content))
+		lines := contentsToLines(content, len(content))
 
 		expected := []string{"line1", "", "", "line2"}
 		if len(lines) != len(expected) {
@@ -405,7 +405,7 @@ func TestContentstolines(t *testing.T) {
 
 	t.Run("handles content with special characters", func(t *testing.T) {
 		content := []byte("hello world\nfoo bar\nbaz")
-		lines := contentstolines(content, len(content))
+		lines := contentsToLines(content, len(content))
 
 		expected := []string{"hello world", "foo bar", "baz"}
 		if len(lines) != len(expected) {
@@ -420,7 +420,7 @@ func TestContentstolines(t *testing.T) {
 
 	t.Run("handles mixed line endings in content", func(t *testing.T) {
 		content := []byte("line1\nline2\nline3\n")
-		lines := contentstolines(content, len(content))
+		lines := contentsToLines(content, len(content))
 
 		expected := []string{"line1", "line2", "line3"}
 		if len(lines) != len(expected) {

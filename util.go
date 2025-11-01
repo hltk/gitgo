@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-func makedir(dir string) error {
+func makeDir(dir string) error {
 	_, err := os.Stat(dir)
 	if !os.IsNotExist(err) {
 		return err
@@ -69,7 +69,7 @@ func validateDestDir(dir string, force bool) error {
 	return nil
 }
 
-func contentstolines(contents []byte, size int) []string {
+func contentsToLines(contents []byte, size int) []string {
 	var lines = []string{""}
 
 	for i := 0; i < size; i++ {
