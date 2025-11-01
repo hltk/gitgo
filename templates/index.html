@@ -27,14 +27,11 @@
             {{if .CommitFound -}}
             <div class="latest-commit">
                 <div class="latest-commit-header">
-                    <div>
-                        <p>
-                            <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
-                            <br />
-                            <small>by {{.LatestCommit.Name}} on {{formatDate
-                            .LatestCommit.Date}}</small>
-                        </p>
-                    </div>
+                    <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}
+                        <small>
+                            by {{.LatestCommit.Name}} on {{formatDate
+                        .LatestCommit.Date}}</small>
+                    </a>
                     <div class="log-link muted">
                         {{range .GlobalData.Links -}} {{if eq .Pretty "log" -}}
                         <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{$.GlobalData.CommitCount}} commits</a>

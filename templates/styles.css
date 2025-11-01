@@ -253,16 +253,19 @@ h1, h2, h3, h4, h5, h6 {
 /* Latest Commit Header */
 .latest-commit-header {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: var(--spacing-lg);
     padding: var(--spacing-lg);
 }
 
-.latest-commit-header > div:first-child {
+.latest-commit-header a {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-xs);
 }
 
 .log-link {
@@ -328,6 +331,11 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     flex-direction: column;
     padding-top: var(--spacing-px-sm);
+}
+
+footer {
+    padding: var(--spacing-xl) 0px;
+    text-align: center;
 }
 /* Component Styles - Reusable UI Components */
 
