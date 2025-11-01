@@ -88,7 +88,7 @@
                     {{if .ReadmeFile.LastCommitMsg -}}
                     <p class="commit-info">
                         <a href="/{{.GlobalData.Config.RepoName}}{{.ReadmeFile.LastCommitLink}}">{{.ReadmeFile.LastCommitMsg}}</a>
-                        <small>· {{.ReadmeFile.LastCommitAuthor}} · {{timeAgo .ReadmeFile.LastCommitDate}}</small>
+                        <small>· {{.ReadmeFile.LastCommitAuthor}} · {{formatDate .ReadmeFile.LastCommitDate}}</small>
                     </p>
                     {{- end}}
                 </div>

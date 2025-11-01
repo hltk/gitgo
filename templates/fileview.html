@@ -7,7 +7,7 @@
             {{if .LastCommitMsg -}}
             <p class="commit-info">
                 <a href="/{{.RepoName}}{{.LastCommitLink}}">{{.LastCommitMsg}}</a>
-                <small>· {{.LastCommitAuthor}} · {{timeAgo .LastCommitDate}}</small>
+                <small>· {{.LastCommitAuthor}} · {{formatDate .LastCommitDate}}</small>
             </p>
             {{- end}}
         </div>
