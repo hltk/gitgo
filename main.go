@@ -68,6 +68,12 @@ func main() {
 
 	Config.DestDir = filepath.Join(Config.DestDir, Config.RepoName)
 
+	// validate that destination directory doesn't exist or is empty
+	err = validateDestDir(Config.DestDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	err = makedir(Config.DestDir)
 	if err != nil {
 		log.Fatal(err)
