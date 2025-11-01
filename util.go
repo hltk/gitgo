@@ -83,3 +83,29 @@ func contentsToLines(contents []byte, size int) []string {
 
 	return lines
 }
+
+// getRepoName extracts a clean repository name from the git repository
+// It tries git remote URL first, then falls back to the directory name
+func getRepoName(repoPath string) (string, error) {
+	// First, resolve the actual path if it's relative (e.g., "." -> actual directory)
+	absPath, err := filepath.Abs(repoPath)
+	if err != nil {
+		return "", err
+	}
+	
+	// Get the base name of the directory
+	repoName := filepath.Base(absPath)
+	
+	// Remove .git suffix if present
+	repoName = filepath.Clean(repoName)
+	if filepath.Ext(repoName) == ".git" {
+		repoName = repoName[:len(repoName)-4]
+	}
+	
+	// Ensure we have a valid name
+	if repoName == "" || repoName == "." || repoName == "/" {
+		repoName = "repo"
+	}
+	
+	return repoName, nil
+}

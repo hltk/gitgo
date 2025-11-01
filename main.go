@@ -41,8 +41,11 @@ func run(repoPath, destDir, installDir string, force bool) error {
 
 	head := obj.Id()
 
-	// remove path and .git suffix from the repo's name
-	repoName := strings.TrimSuffix(filepath.Base(repoPath), ".git")
+	// Get the repo name using the helper function
+	repoName, err := getRepoName(repoPath)
+	if err != nil {
+		return err
+	}
 	Config.RepoName = repoName
 
 	// Update destination directory to include repo name
