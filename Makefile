@@ -18,7 +18,7 @@ gitgo: go.mod main.go config.go types.go git.go util.go
 ifneq ($(LIBGIT2_PATH),)
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	CGO_CFLAGS="-I$(LIBGIT2_PATH)/include" \
-	CGO_LDFLAGS="-L$(LIBGIT2_PATH)/build -Wl,-rpath,$(LIBGIT2_PATH)/build -lgit2" \
+	CGO_LDFLAGS="-L$(LIBGIT2_PATH)/build" \
 	$(GO) build -o gitgo main.go config.go types.go git.go util.go
 else
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \

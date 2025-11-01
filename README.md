@@ -106,6 +106,41 @@ make serve
 
 This will start a web server on http://localhost:8000 serving the `build/` directory. Open that URL in your browser to view the generated pages.
 
+## Testing
+
+Gitgo includes comprehensive test coverage for all major components. The test suite is organized into four main test files:
+
+- `util_test.go` - Tests for utility functions
+- `git_test.go` - Tests for Git operations
+- `main_test.go` - Integration tests for the main application logic
+- `cmd/serve/server_test.go` - Tests for the HTTP server functionality
+
+### Running Tests
+
+Since gitgo depends on libgit2, you need to set the appropriate environment variables when running tests:
+
+```bash
+PKG_CONFIG_PATH=/path/to/libgit2/build \
+CGO_CFLAGS="-I/path/to/libgit2/include" \
+CGO_LDFLAGS="-L/path/to/libgit2/build -Wl,-rpath,/path/to/libgit2/build" \
+go test ./...
+```
+
+Run with verbose output:
+
+```bash
+PKG_CONFIG_PATH=/path/to/libgit2/build \
+CGO_CFLAGS="-I/path/to/libgit2/include" \
+CGO_LDFLAGS="-L/path/to/libgit2/build -Wl,-rpath,/path/to/libgit2/build" \
+go test -v ./...
+```
+
+The server tests can be run independently without libgit2:
+
+```bash
+go test -v ./cmd/serve/
+```
+
 ## License
 
 Gitgo retains the MIT/X Consortium License of stagit.
