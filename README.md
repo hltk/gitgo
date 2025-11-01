@@ -22,7 +22,14 @@ The goal of the project is not to create the best possible git web portal, inste
 ## Usage
 
 1. Obtain a copy of this repo: `git clone https://github.com/hltk/gitgo.git`
-2. Build the program: `make`
+2. Build the program:
+   ```bash
+   # If libgit2 v1.5.x is installed system-wide
+   make
+   
+   # If you have a custom libgit2 build (e.g., in /path/to/libgit2)
+   PKG_CONFIG_PATH=/path/to/libgit2/build LIBGIT2_PATH=/path/to/libgit2 make
+   ```
 3. Run `./gitgo`. When running the program you have to give it two flags:
    - `-destdir` indicates where the static pages are going to be stored
    - `-installdir` indicates where the git repo is stored in the file system
