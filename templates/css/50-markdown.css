@@ -11,18 +11,27 @@
 
 .readme-markdown h1 {
   font-size: 2em;
+  line-height: var(--line-height-heading);
   border-bottom: var(--border-width) var(--border-style) var(--color-border-lighter);
   padding-bottom: 0.3em;
 }
 
 .readme-markdown h2 {
   font-size: 1.5em;
+  line-height: var(--line-height-heading);
   border-bottom: var(--border-width) var(--border-style) var(--color-border-lightest);
   padding-bottom: 0.3em;
 }
 
 .readme-markdown h3 {
   font-size: 1.25em;
+  line-height: var(--line-height-heading);
+}
+
+.readme-markdown h4,
+.readme-markdown h5,
+.readme-markdown h6 {
+  line-height: var(--line-height-heading);
 }
 
 .readme-markdown p {
@@ -42,6 +51,10 @@
 }
 
 .readme-markdown pre {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-code);
+  line-height: var(--line-height-code);
+  font-optical-sizing: auto;
   background-color: var(--color-bg-code);
   border: var(--border-width) var(--border-style) var(--color-border-lighter);
   border-radius: var(--border-radius);
@@ -54,7 +67,9 @@
   padding: 0.2em 0.4em;
   border-radius: 3px;
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-tiny);
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-code);
+  font-optical-sizing: auto;
 }
 
 .readme-markdown pre code {

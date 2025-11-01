@@ -22,6 +22,11 @@
   vertical-align: middle;
 }
 
+.header {
+  font-family: var(--font-family-heading);
+  font-optical-sizing: auto;
+}
+
 .header-logo {
   max-width: var(--logo-size);
   max-height: var(--logo-size);

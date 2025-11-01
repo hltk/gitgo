@@ -56,7 +56,7 @@ a.filelink {
 }
 
 .commit-info {
-  font-size: var(--font-size-tiny);
+  font-size: var(--font-size-small);
 }
 
 .commit-info a {
@@ -121,7 +121,9 @@ a.filelink {
 }
 
 .commit-msg pre {
-  font-size: var(--font-size-small);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-code);
+  font-optical-sizing: auto;
   line-height: var(--line-height-code);
 }
 
@@ -147,6 +149,7 @@ a.filelink {
   flex: 1;
   font-family: var(--font-family-mono);
   font-size: var(--font-size-code);
+  font-optical-sizing: auto;
   padding: var(--spacing-sm);
   background-color: var(--color-bg-code);
   border-radius: var(--border-radius);
@@ -233,10 +236,6 @@ a.filelink {
 .tree-item-current {
   background-color: var(--color-bg-secondary);
   font-weight: var(--font-weight-semibold);
-}
-
-.tree-file {
-  /* Files can have additional styling if needed */
 }
 
 .tree-dir {

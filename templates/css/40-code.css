@@ -18,6 +18,7 @@
 .code-num {
   font-family: var(--font-family-mono);
   font-size: var(--font-size-code);
+  font-optical-sizing: auto;
   line-height: var(--line-height-code);
   padding-left: var(--spacing-px-xs);
   padding-right: var(--spacing-px-xs);
