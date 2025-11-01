@@ -638,6 +638,13 @@ a.filelink {
 .muted {
   color: var(--color-text-muted);
 }
+
+.commitmsg {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 /* Code Display Styles - Syntax Highlighting and Line Numbers */
 
 /* Line Numbering */

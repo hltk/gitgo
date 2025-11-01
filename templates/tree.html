@@ -53,7 +53,7 @@
                             <td class="muted">
                                 <pre class="date">{{formatDate .LastModified -}}</pre>
                             </td>
-                            <td class="muted">
+                            <td class="muted commitmsg">
                                 {{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}
                             </td>
                         </tr>
