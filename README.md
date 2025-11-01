@@ -92,7 +92,7 @@ Custom installation directory (if templates are installed elsewhere):
 ./gitgo --installdir /usr/share/gitgo ../rustgrad
 ```
 
-4. (NOT YET IMPLEMENTED) There is an optional extra step: install gitgo for all users with the command `make install`
+4. There is an optional extra step: install gitgo for all users with the command `make install`
 
 If there is a `logo.png` file in the installation directory, the program will detect it, and add it to every page.
 
