@@ -113,14 +113,12 @@ a.filelink {
 
 /* Table Rows */
 .treelist tbody tr,
-.loglist tbody tr,
-.commitinfo tbody tr {
+.loglist tbody tr {
   transition: background-color var(--transition-fast);
 }
 
 .treelist tbody tr:hover,
-.loglist tbody tr:hover,
-.commitinfo tbody tr:hover {
+.loglist tbody tr:hover {
   background-color: var(--color-bg-hover);
 }
 
