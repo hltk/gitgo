@@ -30,9 +30,28 @@ The goal of the project is not to create the best possible git web portal, inste
    # If you have a custom libgit2 build (e.g., in /path/to/libgit2)
    PKG_CONFIG_PATH=/path/to/libgit2/build LIBGIT2_PATH=/path/to/libgit2 make
    ```
-3. Run `./gitgo`. When running the program you have to give it two flags:
-   - `-destdir` indicates where the static pages are going to be stored
-   - `-installdir` indicates where the git repo is stored in the file system
+3. Run `./gitgo` with a git repository path. The program accepts the following optional flags:
+   - `--destdir`: Directory where static pages will be stored (default: `build`)
+   - `--installdir`: Directory containing the `templates/` folder (default: current directory)
+
+### Examples
+
+Basic usage with defaults (outputs to `build/` directory):
+```bash
+./gitgo ../rustgrad
+./gitgo .
+```
+
+Custom output directory:
+```bash
+./gitgo --destdir output ../rustgrad
+./gitgo --destdir /path/to/output ../rustgrad
+```
+
+Custom installation directory (if templates are installed elsewhere):
+```bash
+./gitgo --installdir /usr/share/gitgo ../rustgrad
+```
 
 4. (NOT YET IMPLEMENTED) There is an optional extra step: install gitgo for all users with the command `make install`
 
