@@ -1,4 +1,5 @@
 {{template "header.html" . -}}
+<div class="horizontal-divider"></div>
 <div class="two-column-container">
     <div class="main-content">
         <div class="nav-clone-container">
@@ -101,6 +102,7 @@
         -}} {{if .LicenseFound -}} {{template "fileview.html" .LicenseFile -}}
         {{end -}}
     </div>
+    <div class="sidebar-divider"></div>
     <div class="sidebar">
         {{if gt .ContributorsCt 0 -}}
         <div class="contributors">

@@ -5,7 +5,6 @@
 .loglist,
 .nav,
 .cloneurl,
-.contributors,
 .refs,
 .commit-tree-container,
 .commit-container {
@@ -270,7 +269,6 @@ a.filelink {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
-    padding: var(--spacing-lg);
 }
 
 .contributors ul {

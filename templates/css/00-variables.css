@@ -1,82 +1,85 @@
 /* CSS Custom Properties - Design Tokens */
 
 :root {
-  /* Colors - Modern Neutral Palette */
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f8f9fa;
-  --color-bg-code: #f6f8fa;
-  --color-bg-hover: #e9ecef;
-  --color-bg-stripe: rgba(0, 0, 0, 0.02);
-  
-  --color-text-primary: #1a202c;
-  --color-text-secondary: #4a5568;
-  --color-text-muted: #718096;
-  --color-text-success: #38a169;
-  
-  --color-border-primary: #cbd5e0;
-  --color-border-secondary: #a0aec0;
-  --color-border-light: #cbd5e0;
-  --color-border-lighter: #edf2f7;
-  --color-border-lightest: #f7fafc;
-  
-  --color-link-primary: #3182ce;
-  --color-link-inherit: inherit;
-  
-  /* Spacing */
-  --spacing-xs: 0.25em;
-  --spacing-sm: 0.5em;
-  --spacing-md: 0.75em;
-  --spacing-lg: 1em;
-  --spacing-xl: 2em;
-  
-  --spacing-px-xs: 10px;
-  --spacing-px-sm: 15px;
-  --spacing-px-md: 20px;
-  
-  /* Typography */
-  --font-family-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-family-heading: "Rubik", sans-serif;
-  --font-family-mono: "Google Sans Code", monospace;
-  
-  --font-size-body: 14px;
-  --font-size-code: 12px;
-  --font-size-small: 12px;
-  
-  --font-weight-normal: normal;
-  --font-weight-semibold: 600;
-  --font-weight-bold: bold;
-  
-  --line-height-body: 1.6;
-  --line-height-heading: 1.3;
-  --line-height-code: 1.5;
-  --line-height-tight: 1;
-  
-  /* Layout */
-  --container-width: 80%;
-  --container-max-width: 1200px;
-  
-  --content-width-main: 80%;
-  --content-width-sidebar: calc(20% - 20px);
-  --content-gap: 20px;
-  
-  --tree-sidebar-width: 25%;
-  --file-content-width: calc(75% - 20px);
-  
-  /* Borders */
-  --border-width: 1px;
-  --border-style: solid;
-  --border-radius: 6px;
-  
-  /* Transitions */
-  --transition-fast: 0.2s ease;
-  
-  /* Table-specific spacing */
-  --table-cell-padding-vertical: var(--spacing-sm);
-  --table-cell-padding-horizontal: var(--spacing-md);
-  --table-header-padding-vertical: var(--spacing-md);
-  --table-row-border-color: var(--color-border-lighter);
-  
-  /* Sizing */
-  --logo-size: 50px;
-}
+    /* Colors - Modern Neutral Palette */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f8f9fa;
+    --color-bg-code: #f6f8fa;
+    --color-bg-hover: #e9ecef;
+    --color-bg-stripe: rgba(0, 0, 0, 0.02);
 
+    --color-text-primary: #1a202c;
+    --color-text-secondary: #4a5568;
+    --color-text-muted: #718096;
+    --color-text-success: #38a169;
+
+    --color-border-primary: #cbd5e0;
+    --color-border-secondary: #a0aec0;
+    --color-border-light: #cbd5e0;
+    --color-border-lighter: #edf2f7;
+    --color-border-lightest: #f7fafc;
+
+    --color-link-primary: #3182ce;
+    --color-link-inherit: inherit;
+
+    /* Spacing */
+    --spacing-xs: 0.25em;
+    --spacing-sm: 0.5em;
+    --spacing-md: 0.75em;
+    --spacing-lg: 1em;
+    --spacing-xl: 2em;
+
+    --spacing-px-xs: 10px;
+    --spacing-px-sm: 15px;
+    --spacing-px-md: 20px;
+
+    /* Typography */
+    --font-family-body:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+    --font-family-heading: "Rubik", sans-serif;
+    --font-family-mono: "Google Sans Code", monospace;
+
+    --font-size-body: 14px;
+    --font-size-code: 12px;
+    --font-size-small: 12px;
+
+    --font-weight-normal: normal;
+    --font-weight-semibold: 600;
+    --font-weight-bold: bold;
+
+    --line-height-body: 1.6;
+    --line-height-heading: 1.3;
+    --line-height-code: 1.5;
+    --line-height-tight: 1;
+
+    /* Layout */
+    --container-width: 80%;
+    --container-max-width: 1200px;
+
+    --content-width-main: 75%;
+    --content-width-sidebar: calc(
+        100% - var(--content-width-main) - 2 * var(--content-gap)
+    );
+    --content-gap: 20px;
+
+    --tree-sidebar-width: var(--content-width-sidebar);
+    --file-content-width: var(--content-width-main);
+
+    /* Borders */
+    --border-width: 1px;
+    --border-style: solid;
+    --border-radius: 6px;
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+
+    /* Table-specific spacing */
+    --table-cell-padding-vertical: var(--spacing-sm);
+    --table-cell-padding-horizontal: var(--spacing-md);
+    --table-header-padding-vertical: var(--spacing-md);
+    --table-row-border-color: var(--color-border-lighter);
+
+    /* Sizing */
+    --logo-size: 50px;
+}
