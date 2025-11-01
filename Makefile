@@ -10,7 +10,7 @@ ifeq ($(LIBGIT2_PATH),)
 else
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	CGO_CFLAGS="-I$(LIBGIT2_PATH)/include" \
-	CGO_LDFLAGS="-L$(LIBGIT2_PATH)/build -lgit2" \
+	CGO_LDFLAGS="-L$(LIBGIT2_PATH)/build -Wl,-rpath,$(LIBGIT2_PATH)/build -lgit2" \
 	$(GO) build -o gitgo
 endif
 
