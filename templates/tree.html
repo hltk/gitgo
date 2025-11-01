@@ -1,6 +1,7 @@
 {{template "header.html" . -}}
 <div class="two-column-container file-tree-container">
     <div class="tree-sidebar-column">{{template "tree-sidebar.html" . -}}</div>
+    <div class="tree-sidebar-divider"></div>
     <div class="file-content-column">
         <div class="commit-tree-container">
             {{if .CommitFound -}}
@@ -9,8 +10,9 @@
                     <div>
                         <p>
                             <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
-                            <br>
-                            <small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
+                            <br />
+                            <small>by {{.LatestCommit.Name}} on {{formatDate
+                            .LatestCommit.Date}}</small>
                         </p>
                     </div>
                 </div>
@@ -35,23 +37,29 @@
                             </td>
                             <td></td>
                         </tr>
-                        {{end -}}
-                        {{range .Files -}}
+                        {{end -}} {{range .Files -}}
                         <tr>
                             <td class="muted">
                                 <pre class="mode">{{.Mode -}}</pre>
                             </td>
                             <td>
-                                <a {{if .IsFile -}}
-                                   class="filelink"
-                                   {{end -}}
-                                   href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a>
+                                <a
+                                    {{if
+                                    .IsFile
+                                    -}}
+                                    class="filelink"
+                                    {{end
+                                    -}}
+                                    href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}"
+                                >{{.Name -}}</a>
                             </td>
                             <td class="muted">
-                                <pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre>
+                                <pre class="size">
+{{if .IsFile}}{{.Size}}{{end -}}</pre>
                             </td>
                             <td class="muted">
-                                <pre class="date">{{formatDate .LastModified -}}</pre>
+                                <pre class="date">
+{{formatDate .LastModified -}}</pre>
                             </td>
                             <td class="muted commitmsg">
                                 {{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}
