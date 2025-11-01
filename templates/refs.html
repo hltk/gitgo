@@ -1,5 +1,7 @@
 {{template "header.html" . -}}
 <div id="refs">
+<div style="display: flex; gap: 2rem; align-items: flex-start;">
+<div style="flex: 1; min-width: 0;">
 <h2>Branches</h2>
 {{if .Branches -}}
 <table>
@@ -45,6 +47,29 @@
 {{else -}}
 <p>No tags found.</p>
 {{end -}}
+</div>
+
+<div id="cloneurl" style="flex-shrink: 0; width: 400px;">
+<h3>Clone</h3>
+<div class="clone-box">
+<code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
+<button class="copy-btn" onclick="copyCloneUrl(this)">Copy</button>
+</div>
+<script>
+function copyCloneUrl(btn) {
+    const url = "git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}";
+    navigator.clipboard.writeText(url).then(() => {
+        btn.textContent = 'Copied!';
+        btn.style.color = '#28a745';
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.style.color = '';
+        }, 2000);
+    });
+}
+</script>
+</div>
+</div>
 </div>
 {{template "footer.html" . -}}
 

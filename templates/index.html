@@ -1,7 +1,8 @@
 {{template "header.html" . -}}
 <div class="two-column-container">
 <div class="main-content">
-<div id="nav">
+<div id="nav-clone-container" style="display: flex; align-items: center; justify-content: space-between; gap: 2rem; margin-bottom: 1rem;">
+<div id="nav" style="display: flex; gap: 1rem; align-items: center;">
 {{range .GlobalData.Links -}}
 {{if and (ne .Pretty "tree") (ne .Pretty "log") -}}
 {{if eq .Pretty "branches" -}}
@@ -14,11 +15,11 @@
 {{end -}}
 {{end -}}
 </div>
-<div id="cloneurl">
-<h3>Clone</h3>
-<div class="clone-box">
-<code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
+<div id="cloneurl" style="display: flex; align-items: center; gap: 0.5rem;">
+<span style="font-weight: 600; margin-right: 0.5rem;">Clone:</span>
+<code class="clone-url" style="border: none; background: none;">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
 <button class="copy-btn" onclick="copyCloneUrl(this)">Copy</button>
+</div>
 </div>
 <script>
 function copyCloneUrl(btn) {
@@ -33,7 +34,6 @@ function copyCloneUrl(btn) {
     });
 }
 </script>
-</div>
 {{if .CommitFound -}}
 <div id="commit-log-container">
 <div id="latestcommit">
