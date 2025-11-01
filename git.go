@@ -594,15 +594,23 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 
 			lastModified, commitMsg, commitLink, commitAuthor := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
 
-			err = t.ExecuteTemplate(file, "file.html", FileRenderData{&GlobalDataGlobal, FileViewRenderData{
-				Name:             entry.Name,
-				Lines:            lines,
-				LastCommitMsg:    commitMsg,
-				LastCommitLink:   commitLink,
-				LastCommitDate:   lastModified,
-				LastCommitAuthor: commitAuthor,
-				RepoName:         Config.RepoName,
-			}})
+			currentPath := newpath + ".html"
+
+			err = t.ExecuteTemplate(file, "file.html", FileRenderData{
+				GlobalData: &GlobalDataGlobal,
+				FileViewData: FileViewRenderData{
+					Name:             entry.Name,
+					Lines:            lines,
+					LastCommitMsg:    commitMsg,
+					LastCommitLink:   commitLink,
+					LastCommitDate:   lastModified,
+					LastCommitAuthor: commitAuthor,
+					RepoName:         Config.RepoName,
+					CurrentPath:      currentPath,
+				},
+				FullTree:    GlobalFullTree,
+				CurrentPath: currentPath,
+			})
 			if err != nil {
 				log.Print("execute:", err)
 			}
@@ -682,12 +690,87 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 		HasParent:    hasParent,
 		LatestCommit: latestCommit,
 		CommitFound:  commitFound,
+		FullTree:     GlobalFullTree,
 	})
 	if err != nil {
 		log.Print("execute:", err)
 	}
 	treefile.Sync()
 	defer treefile.Close()
+}
+
+// flattenTree flattens a tree structure with depth information
+func flattenTree(items []TreeItem, depth int) []FlatTreeItem {
+	var flat []FlatTreeItem
+	for _, item := range items {
+		flat = append(flat, FlatTreeItem{
+			Name:   item.Name,
+			Link:   item.Link,
+			IsFile: item.IsFile,
+			Depth:  depth,
+		})
+		if !item.IsFile && len(item.Children) > 0 {
+			flat = append(flat, flattenTree(item.Children, depth+1)...)
+		}
+	}
+	return flat
+}
+
+// buildFullTreeRecursive builds the complete repository tree structure
+func buildFullTreeRecursive(repo *git.Repository, tree *git.Tree, path string) []TreeItem {
+	var items []TreeItem
+	count := int(tree.EntryCount())
+
+	// Sort entries: directories first, then files
+	var dirs []*git.TreeEntry
+	var files []*git.TreeEntry
+
+	for i := 0; i < count; i++ {
+		entry := tree.EntryByIndex(uint64(i))
+		if entry.Type == git.ObjectTree {
+			dirs = append(dirs, entry)
+		} else if entry.Type == git.ObjectBlob {
+			files = append(files, entry)
+		}
+	}
+
+	// Process directories first
+	for _, entry := range dirs {
+		nexttree, err := repo.LookupTree(entry.Id)
+		if err != nil {
+			log.Print("warning: failed to lookup tree:", err)
+			continue
+		}
+
+		newpath := filepath.Join(path, entry.Name)
+		children := buildFullTreeRecursive(repo, nexttree, newpath)
+
+		link := newpath
+
+		items = append(items, TreeItem{
+			Name:     entry.Name,
+			Link:     link,
+			IsFile:   false,
+			Path:     newpath,
+			Children: children,
+		})
+	}
+
+	// Process files
+	for _, entry := range files {
+		newpath := filepath.Join(path, entry.Name)
+		link := newpath + ".html"
+
+		items = append(items, TreeItem{
+			Name:     entry.Name,
+			Link:     link,
+			IsFile:   true,
+			Path:     newpath,
+			Children: nil,
+		})
+	}
+
+	return items
 }
 
 func indexTree(repo *git.Repository, head *git.Oid) {
@@ -699,6 +782,11 @@ func indexTree(repo *git.Repository, head *git.Oid) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Build full tree structure once and store globally (flattened)
+	treeItems := buildFullTreeRecursive(repo, tree, "/tree")
+	GlobalFullTree = flattenTree(treeItems, 0)
+
 	indexTreeRecursive(repo, tree, "/tree")
 }
 

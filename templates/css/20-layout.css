@@ -143,3 +143,24 @@
   width: 400px;
 }
 
+/* File/Tree View Two-Column Layout */
+.file-tree-container {
+  display: flex;
+  gap: var(--content-gap);
+  align-items: flex-start;
+}
+
+.tree-sidebar-column {
+  flex: 0 0 var(--tree-sidebar-width);
+  width: var(--tree-sidebar-width);
+  display: flex;
+  flex-direction: column;
+}
+
+.file-content-column {
+  flex: 0 0 var(--file-content-width);
+  width: var(--file-content-width);
+  display: flex;
+  flex-direction: column;
+}
+

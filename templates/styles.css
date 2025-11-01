@@ -58,6 +58,9 @@
   --content-width-sidebar: calc(20% - 20px);
   --content-gap: 20px;
   
+  --tree-sidebar-width: 25%;
+  --file-content-width: calc(75% - 20px);
+  
   /* Borders */
   --border-width: 1px;
   --border-style: solid;
@@ -256,6 +259,27 @@ small {
   width: 400px;
 }
 
+/* File/Tree View Two-Column Layout */
+.file-tree-container {
+  display: flex;
+  gap: var(--content-gap);
+  align-items: flex-start;
+}
+
+.tree-sidebar-column {
+  flex: 0 0 var(--tree-sidebar-width);
+  width: var(--tree-sidebar-width);
+  display: flex;
+  flex-direction: column;
+}
+
+.file-content-column {
+  flex: 0 0 var(--file-content-width);
+  width: var(--file-content-width);
+  display: flex;
+  flex-direction: column;
+}
+
 /* Component Styles - Reusable UI Components */
 
 /* Bordered Sections */
@@ -450,6 +474,55 @@ a.filelink {
   flex-direction: column;
   gap: var(--spacing-xs);
   list-style-position: inside;
+}
+
+/* Tree Sidebar */
+.tree-sidebar {
+  border: var(--border-width) var(--border-style) var(--color-border-primary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  background-color: var(--color-bg-primary);
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.tree-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tree-item {
+  margin: 0;
+  padding: 0;
+  border-left: var(--border-width) var(--border-style) var(--color-border-lighter);
+}
+
+.tree-link {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: background-color var(--transition-fast);
+}
+
+.tree-link:hover {
+  background-color: var(--color-bg-hover);
+  text-decoration: none;
+}
+
+.tree-item-current {
+  background-color: var(--color-bg-secondary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.tree-file {
+  /* Files can have additional styling if needed */
+}
+
+.tree-dir {
+  font-weight: var(--font-weight-semibold);
 }
 
 /* Code Display Styles - Syntax Highlighting and Line Numbers */

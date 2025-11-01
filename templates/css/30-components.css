@@ -194,3 +194,52 @@ a.filelink {
   list-style-position: inside;
 }
 
+/* Tree Sidebar */
+.tree-sidebar {
+  border: var(--border-width) var(--border-style) var(--color-border-primary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  background-color: var(--color-bg-primary);
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.tree-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tree-item {
+  margin: 0;
+  padding: 0;
+  border-left: var(--border-width) var(--border-style) var(--color-border-lighter);
+}
+
+.tree-link {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: background-color var(--transition-fast);
+}
+
+.tree-link:hover {
+  background-color: var(--color-bg-hover);
+  text-decoration: none;
+}
+
+.tree-item-current {
+  background-color: var(--color-bg-secondary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.tree-file {
+  /* Files can have additional styling if needed */
+}
+
+.tree-dir {
+  font-weight: var(--font-weight-semibold);
+}
+

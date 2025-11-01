@@ -58,6 +58,9 @@
   --content-width-sidebar: calc(20% - 20px);
   --content-gap: 20px;
   
+  --tree-sidebar-width: 25%;
+  --file-content-width: calc(75% - 20px);
+  
   /* Borders */
   --border-width: 1px;
   --border-style: solid;

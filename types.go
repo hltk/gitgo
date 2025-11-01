@@ -29,6 +29,21 @@ type FileListElem struct {
 	LastCommitLink string
 }
 
+type TreeItem struct {
+	Name     string
+	Link     string
+	IsFile   bool
+	Path     string
+	Children []TreeItem
+}
+
+type FlatTreeItem struct {
+	Name   string
+	Link   string
+	IsFile bool
+	Depth  int
+}
+
 type Contributor struct {
 	Name  string
 	Email string
@@ -63,6 +78,7 @@ type TreeRenderData struct {
 	HasParent    bool
 	LatestCommit CommitListElem
 	CommitFound  bool
+	FullTree     []FlatTreeItem
 }
 
 type FileViewRenderData struct {
@@ -73,11 +89,14 @@ type FileViewRenderData struct {
 	LastCommitDate   time.Time
 	LastCommitAuthor string
 	RepoName         string
+	CurrentPath      string
 }
 
 type FileRenderData struct {
 	GlobalData   *GlobalRenderData
 	FileViewData FileViewRenderData
+	FullTree     []FlatTreeItem
+	CurrentPath  string
 }
 
 type CommitRenderData struct {

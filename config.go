@@ -103,3 +103,6 @@ type GlobalRenderData struct {
 
 var GlobalDataGlobal = GlobalRenderData{Config: &Config,
 	Links: []LinkListElem{{"branches", "/branches.html"}, {"tags", "/tags.html"}, {"tree", "/tree"}, {"log", "/log"}}}
+
+// GlobalFullTree stores the complete repository tree structure (flattened)
+var GlobalFullTree []FlatTreeItem

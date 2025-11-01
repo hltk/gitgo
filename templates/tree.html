@@ -1,4 +1,9 @@
 {{template "header.html" . -}}
+<div class="two-column-container file-tree-container">
+<div class="tree-sidebar-column">
+{{template "tree-sidebar.html" . -}}
+</div>
+<div class="file-content-column">
 <div class="commit-tree-container">
 {{if .CommitFound -}}
 <div class="latest-commit">
@@ -45,6 +50,8 @@
 {{end -}}
 </tbody>
 </table> 
+</div>
+</div>
 </div>
 </div>
 {{template "footer.html" . -}}
