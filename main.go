@@ -166,7 +166,17 @@ func main() {
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "usage: gitgo [options] <git repo>\n")
 		flag.VisitAll(func(f *flag.Flag) {
-			fmt.Fprintf(flag.CommandLine.Output(), "  --%s string\n", f.Name)
+			// Determine the flag type
+			flagType := "string"
+			if _, ok := f.Value.(interface{ IsBoolFlag() bool }); ok {
+				flagType = ""
+			}
+			
+			if flagType != "" {
+				fmt.Fprintf(flag.CommandLine.Output(), "  --%s %s\n", f.Name, flagType)
+			} else {
+				fmt.Fprintf(flag.CommandLine.Output(), "  --%s\n", f.Name)
+			}
 			fmt.Fprintf(flag.CommandLine.Output(), "    	%s\n", f.Usage)
 			if f.DefValue != "" {
 				fmt.Fprintf(flag.CommandLine.Output(), "    	(default %q)\n", f.DefValue)
