@@ -1,4 +1,18 @@
 {{template "header.html" . -}}
+<div class="commit-tree-container">
+{{if .CommitFound -}}
+<div class="latest-commit">
+<div class="latest-commit-header">
+<div>
+<p>
+<a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
+<br>
+<small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
+</p>
+</div>
+</div>
+</div>
+{{end -}}
 <div class="treelist">
 <table>
 <thead>
@@ -31,5 +45,6 @@
 {{end -}}
 </tbody>
 </table> 
+</div>
 </div>
 {{template "footer.html" . -}}

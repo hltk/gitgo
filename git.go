@@ -651,12 +651,37 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 	}
 	// For root "/tree", no parent link
 
+	// Get latest commit info for this folder
+	var latestCommit CommitListElem
+	commitFound := false
+	lastModified, commitMsg, commitLink, commitAuthor := getLastCommitInfo(repo, path)
+	if commitMsg != "" && commitLink != "" {
+		// Extract treeId from commitLink (format: "/commit/{treeId}.html")
+		treeId := strings.TrimPrefix(commitLink, "/commit/")
+		treeId = strings.TrimSuffix(treeId, ".html")
+		abbrevHash := treeId
+		if len(abbrevHash) > 8 {
+			abbrevHash = abbrevHash[:8]
+		}
+
+		latestCommit = CommitListElem{
+			Link:       commitLink,
+			Msg:        commitMsg,
+			Name:       commitAuthor,
+			Date:       lastModified,
+			AbbrevHash: abbrevHash,
+		}
+		commitFound = true
+	}
+
 	err = t.ExecuteTemplate(treefile, "tree.html", TreeRenderData{
-		GlobalData:  &GlobalDataGlobal,
-		Files:       filelist,
-		CurrentPath: path,
-		ParentPath:  parentPath,
-		HasParent:   hasParent,
+		GlobalData:   &GlobalDataGlobal,
+		Files:        filelist,
+		CurrentPath:  path,
+		ParentPath:   parentPath,
+		HasParent:    hasParent,
+		LatestCommit: latestCommit,
+		CommitFound:  commitFound,
 	})
 	if err != nil {
 		log.Print("execute:", err)
