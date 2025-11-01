@@ -376,7 +376,7 @@ a.filelink {
     justify-content: space-between;
     align-items: center;
     gap: var(--spacing-lg);
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-lg);
     min-height: 3em;
     background-color: var(--color-bg-secondary);
 }
