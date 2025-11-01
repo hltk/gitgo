@@ -70,6 +70,12 @@
   /* Transitions */
   --transition-fast: 0.2s ease;
   
+  /* Table-specific spacing */
+  --table-cell-padding-vertical: var(--spacing-sm);
+  --table-cell-padding-horizontal: var(--spacing-md);
+  --table-header-padding-vertical: var(--spacing-md);
+  --table-row-border-color: var(--color-border-lighter);
+  
   /* Sizing */
   --logo-size: 50px;
 }
@@ -388,24 +394,69 @@ a.filelink {
 .loglist table,
 .commitinfo table {
   width: 100%;
-  border-spacing: 0 var(--spacing-xs);
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.loglist td,
-.loglist th,
-.treelist td,
+/* Table Headers */
 .treelist th,
-.commitinfo td,
+.loglist th,
 .commitinfo th {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  line-height: var(--line-height-tight);
+  background-color: var(--color-bg-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-small);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--table-header-padding-vertical) var(--table-cell-padding-horizontal);
+  border-bottom: 2px solid var(--color-border-primary);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
+/* Table Cells */
+.treelist td,
+.loglist td,
+.commitinfo td {
+  padding: var(--table-cell-padding-vertical) var(--table-cell-padding-horizontal);
+  line-height: var(--line-height-code);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--table-row-border-color);
+  transition: background-color var(--transition-fast);
+}
+
+/* Table Rows */
+.treelist tbody tr,
+.loglist tbody tr,
+.commitinfo tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.treelist tbody tr:hover,
+.loglist tbody tr:hover,
+.commitinfo tbody tr:hover {
+  background-color: var(--color-bg-hover);
+}
+
+/* Striped Table Rows */
+#treeentries tr:nth-child(even),
+#logentries tr:nth-child(even) {
+  background-color: var(--color-bg-stripe);
+}
+
+/* Hover state overrides striped background */
+#treeentries tr:nth-child(even):hover,
+#logentries tr:nth-child(even):hover {
+  background-color: var(--color-bg-hover);
+}
+
+/* Table Containers */
 .loglist,
 .treelist {
   position: relative;
   width: auto;
   display: table;
+  overflow-x: auto;
 }
 
 .fileview,
@@ -414,10 +465,45 @@ a.filelink {
   width: 100%;
 }
 
-/* Striped Table Rows */
-#treeentries tr:nth-child(even),
-#logentries tr:nth-child(even) {
-  background-color: var(--color-bg-stripe);
+/* Column Width Distribution */
+.treelist table {
+  table-layout: auto;
+}
+
+/* Mode column - narrow */
+.treelist th:nth-child(1),
+.treelist td:nth-child(1) {
+  width: auto;
+  min-width: 80px;
+}
+
+/* Name column - flexible */
+.treelist th:nth-child(2),
+.treelist td:nth-child(2) {
+  min-width: 200px;
+}
+
+/* Size and Date columns - fixed width, right-aligned */
+.treelist th:nth-child(3),
+.treelist td:nth-child(3),
+.treelist th:nth-child(4),
+.treelist td:nth-child(4) {
+  width: auto;
+  white-space: nowrap;
+}
+
+/* Accessibility - Focus states for interactive elements */
+.treelist tbody tr:focus-within,
+.loglist tbody tr:focus-within {
+  outline: 2px solid var(--color-link-primary);
+  outline-offset: -2px;
+}
+
+.treelist a:focus,
+.loglist a:focus {
+  outline: 2px solid var(--color-link-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* Commit Message Box */
