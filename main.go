@@ -327,12 +327,18 @@ func indextree(repo *git.Repository, head *git.Oid) {
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	flag.StringVar(&Config.DestDir, "destdir", "build", "target directory (default: build)")
-	flag.StringVar(&Config.InstallDir, "installdir", ".", "install directory containing templates (default: current directory)")
+	flag.StringVar(&Config.DestDir, "destdir", "build", "target directory")
+	flag.StringVar(&Config.InstallDir, "installdir", ".", "install directory containing templates")
 
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "usage: gitgo [options] <git repo>\n")
-		flag.PrintDefaults()
+		flag.VisitAll(func(f *flag.Flag) {
+			fmt.Fprintf(flag.CommandLine.Output(), "  --%s string\n", f.Name)
+			fmt.Fprintf(flag.CommandLine.Output(), "    	%s\n", f.Usage)
+			if f.DefValue != "" {
+				fmt.Fprintf(flag.CommandLine.Output(), "    	(default %q)\n", f.DefValue)
+			}
+		})
 	}
 
 	flag.Parse()
