@@ -1,4 +1,5 @@
 {{template "header.html" . -}}
+<div class="commit-container">
 <div class="commitinfo">
 <table>
 <tr>
@@ -55,5 +56,6 @@ Message:
 </div>
 <div class="diffstat">
 {{template "linenumberer.html" .DiffStatLines -}}
+</div>
 </div>
 {{template "footer.html" . -}}

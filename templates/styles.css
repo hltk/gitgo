@@ -260,14 +260,13 @@ small {
 
 /* Bordered Sections */
 .fileview,
-.diffstat,
 .loglist,
 .nav,
-.commitinfo,
 .cloneurl,
 .contributors,
 .refs,
-.commit-tree-container
+.commit-tree-container,
+.commit-container
  {
   border: var(--border-width) var(--border-style) var(--color-border-primary);
   border-radius: var(--border-radius);
@@ -330,6 +329,8 @@ a.filelink {
 /* Commit Info */
 .commitinfo {
   padding: var(--spacing-lg);
+  border-bottom: var(--border-width) var(--border-style) var(--color-border-primary);
+  background-color: var(--color-bg-secondary);
 }
 
 /* Tables */
