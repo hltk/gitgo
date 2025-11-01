@@ -114,7 +114,6 @@
 .log-link a {
     color: var(--color-link-inherit);
     text-decoration: none;
-    font-weight: var(--font-weight-bold);
 }
 
 .log-link a:hover {

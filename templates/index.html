@@ -3,21 +3,19 @@
     <div class="main-content">
         <div class="nav-clone-container">
             <div class="nav-links">
-                {{range .GlobalData.Links -}}
-                {{if and (ne .Pretty "tree") (ne .Pretty "log") -}}
-                {{if eq .Pretty "branches" -}}
+                {{range .GlobalData.Links -}} {{if and (ne .Pretty "tree") (ne
+                .Pretty "log") -}} {{if eq .Pretty "branches" -}}
                 <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.BranchCount}})</a>
                 {{else if eq .Pretty "tags" -}}
                 <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}} ({{$.GlobalData.TagCount}})</a>
                 {{else -}}
                 <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{.Pretty}}</a>
-                {{end -}}
-                {{end -}}
-                {{end -}}
+                {{end -}} {{end -}} {{end -}}
             </div>
             <div class="clone-inline">
                 <span>Clone:</span>
-                <code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
+                <code class="clone-url">git clone
+                git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
                 <button class="copy-btn"
                         data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}"
                         onclick="copyCloneUrl(this)">Copy</button>
@@ -31,21 +29,19 @@
                     <div>
                         <p>
                             <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
-                            <br>
-                            <small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
+                            <br />
+                            <small>by {{.LatestCommit.Name}} on {{formatDate
+                            .LatestCommit.Date}}</small>
                         </p>
                     </div>
-                    <div class="log-link">
-                        {{range .GlobalData.Links -}}
-                        {{if eq .Pretty "log" -}}
-                        <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">View all commits ({{$.GlobalData.CommitCount}})</a>
-                        {{end -}}
-                        {{end -}}
+                    <div class="log-link muted">
+                        {{range .GlobalData.Links -}} {{if eq .Pretty "log" -}}
+                        <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">{{$.GlobalData.CommitCount}} commits</a>
+                        {{end -}} {{end -}}
                     </div>
                 </div>
             </div>
-            {{end -}}
-            {{if .TreeFound -}}
+            {{end -}} {{if .TreeFound -}}
             <div class="treelist">
                 <table>
                     <tbody id="treeentries">
@@ -55,16 +51,23 @@
                                 <pre class="mode">{{.Mode -}}</pre>
                             </td>
                             <td>
-                                <a {{if .IsFile -}}
-                                   class="filelink"
-                                   {{end -}}
-                                   href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a>
+                                <a
+                                    {{if
+                                    .IsFile
+                                    -}}
+                                    class="filelink"
+                                    {{end
+                                    -}}
+                                    href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}"
+                                >{{.Name -}}</a>
                             </td>
                             <td class="muted">
-                                <pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre>
+                                <pre class="size">
+{{if .IsFile}}{{.Size}}{{end -}}</pre>
                             </td>
                             <td class="muted">
-                                <pre class="date">{{formatDate .LastModified -}}</pre>
+                                <pre class="date">
+{{formatDate .LastModified -}}</pre>
                             </td>
                             <td class="muted commitmsg">
                                 {{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}
@@ -76,9 +79,7 @@
             </div>
             {{end -}}
         </div>
-        {{end -}}
-        {{if .ReadmeFound -}}
-        {{if .ReadmeIsMarkdown -}}
+        {{end -}} {{if .ReadmeFound -}} {{if .ReadmeIsMarkdown -}}
         <div class="fileview">
             <div class="fileinfo">
                 <div>
@@ -88,19 +89,16 @@
                     {{if .ReadmeFile.LastCommitMsg -}}
                     <p class="commit-info">
                         <a href="/{{.GlobalData.Config.RepoName}}{{.ReadmeFile.LastCommitLink}}">{{.ReadmeFile.LastCommitMsg}}</a>
-                        <small>· {{.ReadmeFile.LastCommitAuthor}} · {{formatDate .ReadmeFile.LastCommitDate}}</small>
+                        <small>· {{.ReadmeFile.LastCommitAuthor}} · {{formatDate
+                        .ReadmeFile.LastCommitDate}}</small>
                     </p>
                     {{- end}}
                 </div>
             </div>
             <div class="readme-markdown">{{.ReadmeHTML}}</div>
         </div>
-        {{else -}}
-        {{template "fileview.html" .ReadmeFile -}}
-        {{end -}}
-        {{end -}}
-        {{if .LicenseFound -}}
-        {{template "fileview.html" .LicenseFile -}}
+        {{else -}} {{template "fileview.html" .ReadmeFile -}} {{end -}} {{end
+        -}} {{if .LicenseFound -}} {{template "fileview.html" .LicenseFile -}}
         {{end -}}
     </div>
     <div class="sidebar">
