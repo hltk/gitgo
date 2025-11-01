@@ -74,6 +74,16 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		return err
 	}
 
+	// Generate syntax highlighting CSS
+	chromaCSS, err := generateChromaCSS()
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(filepath.Join(destDir, "chroma.css"), []byte(chromaCSS), 0644)
+	if err != nil {
+		return err
+	}
+
 	templ = template.New("").Funcs(funcmap)
 
 	t, err = templ.ParseGlob(filepath.Join(installDir, "templates/*.html"))
@@ -104,7 +114,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 				return err
 			}
 
-			lines := contentsToLines(blob.Contents(), int(blob.Size()))
+			lines := highlightFileContents(strings.TrimPrefix(file, "HEAD:"), blob.Contents())
 
 			readmefile.Name = strings.TrimPrefix(file, "HEAD:")
 			readmefile.Lines = lines
@@ -122,7 +132,7 @@ func run(repoPath, destDir, installDir string, force bool) error {
 				return err
 			}
 
-			lines := contentsToLines(blob.Contents(), int(blob.Size()))
+			lines := highlightFileContents(strings.TrimPrefix(file, "HEAD:"), blob.Contents())
 
 			licensefile.Name = strings.TrimPrefix(file, "HEAD:")
 			licensefile.Lines = lines

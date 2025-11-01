@@ -111,7 +111,7 @@ func getCommitLog(repo *git.Repository, head *git.Oid) []CommitListElem {
 			Parents:       parents,
 			HasAnyParents: parentcountispositive,
 			MsgLines:      strings.Split(strings.TrimRight(commit.Message(), "\n"), "\n"),
-			DiffStatLines: strings.Split(strings.TrimRight(diffstat, "\n"), "\n")})
+			DiffStatLines: highlightDiffLines(diffstat)})
 
 		if err != nil {
 			log.Print("execute:", err)
@@ -555,7 +555,7 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 				log.Fatal(err)
 			}
 
-			lines := contentsToLines(blob.Contents(), int(blob.Size()))
+			lines := highlightFileContents(entry.Name, blob.Contents())
 
 			err = t.ExecuteTemplate(file, "file.html", FileRenderData{&GlobalDataGlobal, FileViewRenderData{entry.Name, lines}})
 			if err != nil {

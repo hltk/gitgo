@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"time"
 )
 
@@ -62,7 +63,7 @@ type TreeRenderData struct {
 
 type FileViewRenderData struct {
 	Name  string
-	Lines []string
+	Lines []template.HTML
 }
 
 type FileRenderData struct {
@@ -79,7 +80,7 @@ type CommitRenderData struct {
 	HasAnyParents bool
 	Date          time.Time
 	MsgLines      []string
-	DiffStatLines []string
+	DiffStatLines []template.HTML
 }
 
 type RefListElem struct {

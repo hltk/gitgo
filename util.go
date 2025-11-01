@@ -1,10 +1,19 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"html"
+	"html/template"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/alecthomas/chroma/v2"
+	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
+	"github.com/alecthomas/chroma/v2/lexers"
+	"github.com/alecthomas/chroma/v2/styles"
 )
 
 func makeDir(dir string) error {
@@ -108,4 +117,120 @@ func getRepoName(repoPath string) (string, error) {
 	}
 
 	return repoName, nil
+}
+
+// highlightFileContents applies syntax highlighting to file contents
+// Returns an array of HTML strings, one per line
+func highlightFileContents(filename string, contents []byte) []template.HTML {
+	// Detect lexer from filename
+	lexer := lexers.Match(filename)
+	if lexer == nil {
+		lexer = lexers.Fallback
+	}
+	lexer = chroma.Coalesce(lexer)
+
+	// Use HTML formatter with classes (not inline styles)
+	formatter := chromahtml.New(chromahtml.WithClasses(true), chromahtml.WithLineNumbers(false), chromahtml.PreventSurroundingPre(true))
+
+	// Get the style (we'll use github style, CSS will be generated separately)
+	style := styles.Get("github")
+	if style == nil {
+		style = styles.Fallback
+	}
+
+	// Tokenize the code
+	iterator, err := lexer.Tokenise(nil, string(contents))
+	if err != nil {
+		// If tokenization fails, return plain text lines
+		return contentsToLinesHTML(contents, len(contents))
+	}
+
+	// Format to HTML
+	var buf bytes.Buffer
+	err = formatter.Format(&buf, style, iterator)
+	if err != nil {
+		// If formatting fails, return plain text lines
+		return contentsToLinesHTML(contents, len(contents))
+	}
+
+	// Split the HTML into lines
+	htmlStr := buf.String()
+	lines := strings.Split(strings.TrimRight(htmlStr, "\n"), "\n")
+
+	// Convert to template.HTML to prevent escaping
+	result := make([]template.HTML, len(lines))
+	for i, line := range lines {
+		result[i] = template.HTML(line)
+	}
+
+	return result
+}
+
+// highlightDiffLines applies basic coloring to diff lines
+// Lines starting with + are wrapped in diff-add span, - in diff-del span
+func highlightDiffLines(diffText string) []template.HTML {
+	lines := strings.Split(strings.TrimRight(diffText, "\n"), "\n")
+	result := make([]template.HTML, len(lines))
+
+	for i, line := range lines {
+		// Escape HTML in the line first
+		escapedLine := html.EscapeString(line)
+
+		if len(line) > 0 {
+			if line[0] == '+' {
+				result[i] = template.HTML(`<span class="diff-add">` + escapedLine + `</span>`)
+			} else if line[0] == '-' {
+				result[i] = template.HTML(`<span class="diff-del">` + escapedLine + `</span>`)
+			} else {
+				result[i] = template.HTML(escapedLine)
+			}
+		} else {
+			result[i] = template.HTML(escapedLine)
+		}
+	}
+
+	return result
+}
+
+// contentsToLinesHTML is a fallback that converts plain text to HTML lines
+// Used when syntax highlighting fails
+func contentsToLinesHTML(contents []byte, size int) []template.HTML {
+	lines := contentsToLines(contents, size)
+	result := make([]template.HTML, len(lines))
+	for i, line := range lines {
+		result[i] = template.HTML(html.EscapeString(line))
+	}
+	return result
+}
+
+// generateChromaCSS generates the CSS stylesheet for syntax highlighting
+// Returns the CSS as a string
+func generateChromaCSS() (string, error) {
+	style := styles.Get("github")
+	if style == nil {
+		style = styles.Fallback
+	}
+
+	formatter := chromahtml.New(chromahtml.WithClasses(true))
+
+	var buf bytes.Buffer
+	err := formatter.WriteCSS(&buf, style)
+	if err != nil {
+		return "", err
+	}
+
+	// Add custom diff colors
+	customCSS := `
+/* Diff highlighting */
+.diff-add {
+	background-color: #e6ffed;
+	color: #24292e;
+}
+.diff-del {
+	background-color: #ffeef0;
+	color: #24292e;
+}
+`
+
+	return buf.String() + customCSS, nil
 }
