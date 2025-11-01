@@ -113,7 +113,7 @@ small {
 
 /* Layout Styles - Containers and Structure */
 
-#content {
+.content {
   width: var(--container-width);
   max-width: var(--container-max-width);
   margin: 0 auto;
@@ -122,7 +122,7 @@ small {
   gap: var(--spacing-px-sm);
 }
 
-#headerdiv {
+.header-container {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -130,22 +130,22 @@ small {
   padding-bottom: var(--spacing-px-sm);
 }
 
-#headerlogo,
-#header {
+.header-logo,
+.header {
   vertical-align: middle;
 }
 
-#headerlogo {
+.header-logo {
   max-width: var(--logo-size);
   max-height: var(--logo-size);
 }
 
-#header a {
+.header a {
   color: var(--color-link-inherit);
   text-decoration: none;
 }
 
-#header a:hover {
+.header a:hover {
   text-decoration: underline;
 }
 
@@ -214,23 +214,23 @@ small {
   gap: var(--spacing-sm);
 }
 
-#loglink {
+.log-link {
   flex: 0 0 auto;
   white-space: nowrap;
 }
 
-#loglink a {
+.log-link a {
   color: var(--color-link-inherit);
   text-decoration: none;
   font-weight: var(--font-weight-bold);
 }
 
-#loglink a:hover {
+.log-link a:hover {
   text-decoration: underline;
 }
 
 /* Refs Layout */
-#refs {
+.refs {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
@@ -260,13 +260,13 @@ small {
 
 /* Bordered Sections */
 .fileview,
-#diffstat,
-#loglist,
-#nav,
-#commitinfo,
-#cloneurl,
-#contributors,
-#refs,
+.diffstat,
+.loglist,
+.nav,
+.commitinfo,
+.cloneurl,
+.contributors,
+.refs,
 .commit-tree-container
  {
   border: var(--border-width) var(--border-style) var(--color-border-primary);
@@ -279,7 +279,7 @@ small {
   background-color: var(--color-bg-secondary);
 }
 
-#latestcommit {
+.latest-commit {
   overflow-x: auto;
 }
 
@@ -301,11 +301,11 @@ a.filelink {
   background-color: var(--color-bg-secondary);
 }
 
-.fileinfo-left {
+.fileinfo > :first-child {
   flex: 0 0 auto;
 }
 
-.fileinfo-right {
+.fileinfo > :last-child {
   flex: 1 1 auto;
   text-align: right;
 }
@@ -328,38 +328,38 @@ a.filelink {
 }
 
 /* Commit Info */
-#commitinfo {
+.commitinfo {
   padding: var(--spacing-lg);
 }
 
 /* Tables */
-#treelist table,
-#loglist table,
-#commitinfo table {
+.treelist table,
+.loglist table,
+.commitinfo table {
   width: 100%;
   border-spacing: 0 var(--spacing-xs);
 }
 
-#loglist td,
-#loglist th,
-#treelist td,
-#treelist th,
-#commitinfo td,
-#commitinfo th {
+.loglist td,
+.loglist th,
+.treelist td,
+.treelist th,
+.commitinfo td,
+.commitinfo th {
   padding: var(--spacing-xs) var(--spacing-sm);
   line-height: var(--line-height-tight);
 }
 
-#loglist,
-#treelist {
+.loglist,
+.treelist {
   position: relative;
   width: auto;
   display: table;
 }
 
 .fileview,
-#loglist,
-#treelist {
+.loglist,
+.treelist {
   width: 100%;
 }
 
@@ -370,20 +370,20 @@ a.filelink {
 }
 
 /* Commit Message Box */
-#commitmsg {
+.commit-msg {
   border: var(--border-width) var(--border-style) var(--color-border-secondary);
   border-radius: var(--border-radius);
   padding: var(--spacing-sm);
   margin: var(--spacing-xs);
 }
 
-#commitmsg pre {
+.commit-msg pre {
   font-size: var(--font-size-small);
   line-height: var(--line-height-code);
 }
 
 /* Clone URL Widget */
-#cloneurl {
+.cloneurl {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
@@ -437,14 +437,14 @@ a.filelink {
 }
 
 /* Contributors */
-#contributors {
+.contributors {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
   padding: var(--spacing-lg);
 }
 
-#contributors ul {
+.contributors ul {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
@@ -487,7 +487,7 @@ a.filelink {
 
 /* Line Number Container */
 .linenum,
-#commitmsg {
+.commit-msg {
   overflow-x: auto;
 }
 
@@ -573,11 +573,54 @@ a.filelink {
 
 /* Utility Classes - Helper Classes for Common Patterns */
 
-.left {
+/* Table alignment - structural selectors based on column position */
+/* Tree tables: Mode, Name, Size, Last Modified, Last Commit */
+.treelist th:nth-child(1),
+.treelist th:nth-child(2),
+.treelist th:nth-child(5),
+.treelist td:nth-child(1),
+.treelist td:nth-child(2),
+.treelist td:nth-child(5) {
   text-align: left;
 }
 
-.right {
+.treelist th:nth-child(3),
+.treelist th:nth-child(4),
+.treelist td:nth-child(3),
+.treelist td:nth-child(4) {
   text-align: right;
+}
+
+/* Log tables: Commit, Summary, Author, Date */
+.loglist th:nth-child(1),
+.loglist th:nth-child(2),
+.loglist th:nth-child(3),
+.loglist td:nth-child(1),
+.loglist td:nth-child(2),
+.loglist td:nth-child(3) {
+  text-align: left;
+}
+
+.loglist th:nth-child(4),
+.loglist td:nth-child(4) {
+  text-align: right;
+}
+
+/* Refs/Branches/Tags tables: Name, Commit, Log - all left-aligned */
+.refs th,
+.refs td,
+.refs th:nth-child(1),
+.refs th:nth-child(2),
+.refs th:nth-child(3),
+.refs td:nth-child(1),
+.refs td:nth-child(2),
+.refs td:nth-child(3) {
+  text-align: left;
+}
+
+/* Commit info tables: two-column layout, both left-aligned */
+.commitinfo th,
+.commitinfo td {
+  text-align: left;
 }
 

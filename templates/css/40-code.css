@@ -34,7 +34,7 @@
 
 /* Line Number Container */
 .linenum,
-#commitmsg {
+.commit-msg {
   overflow-x: auto;
 }
 

@@ -1,19 +1,19 @@
 {{template "header.html" . -}}
-<div id="refs">
+<div class="refs">
 <h2>Tags</h2>
 {{if .Tags -}}
 <table>
 <thead>
 <tr>
-<th class="left">Name</th>
-<th class="left">Commit</th>
+<th>Name</th>
+<th>Commit</th>
 </tr>
 </thead>
 <tbody>
 {{range .Tags -}}
 <tr>
-<td class="left">{{.Name -}}</td>
-<td class="left"><code>{{.CommitHash -}}</code></td>
+<td>{{.Name -}}</td>
+<td><code>{{.CommitHash -}}</code></td>
 </tr>
 {{end -}}
 </tbody>

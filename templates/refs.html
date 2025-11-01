@@ -1,5 +1,5 @@
 {{template "header.html" . -}}
-<div id="refs">
+<div class="refs">
 <div class="refs-container">
 <div class="refs-column">
 <h2>Branches</h2>
@@ -7,17 +7,17 @@
 <table>
 <thead>
 <tr>
-<th class="left">Name</th>
-<th class="left">Commit</th>
-<th class="left">Log</th>
+<th>Name</th>
+<th>Commit</th>
+<th>Log</th>
 </tr>
 </thead>
 <tbody>
 {{range .Branches -}}
 <tr>
-<td class="left">{{.Name -}}</td>
-<td class="left"><code>{{.CommitHash -}}</code></td>
-<td class="left"><a href="/{{$.GlobalData.Config.RepoName -}}{{.LogLink -}}">log</a></td>
+<td>{{.Name -}}</td>
+<td><code>{{.CommitHash -}}</code></td>
+<td><a href="/{{$.GlobalData.Config.RepoName -}}{{.LogLink -}}">log</a></td>
 </tr>
 {{end -}}
 </tbody>
@@ -31,15 +31,15 @@
 <table>
 <thead>
 <tr>
-<th class="left">Name</th>
-<th class="left">Commit</th>
+<th>Name</th>
+<th>Commit</th>
 </tr>
 </thead>
 <tbody>
 {{range .Tags -}}
 <tr>
-<td class="left">{{.Name -}}</td>
-<td class="left"><code>{{.CommitHash -}}</code></td>
+<td>{{.Name -}}</td>
+<td><code>{{.CommitHash -}}</code></td>
 </tr>
 {{end -}}
 </tbody>
@@ -49,7 +49,7 @@
 {{end -}}
 </div>
 
-<div id="cloneurl" class="clone-sidebar">
+<div class="cloneurl clone-sidebar">
 <h3>Clone</h3>
 <div class="clone-box">
 <code class="clone-url">git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>

@@ -2,13 +2,13 @@
 
 /* Bordered Sections */
 .fileview,
-#diffstat,
-#loglist,
-#nav,
-#commitinfo,
-#cloneurl,
-#contributors,
-#refs,
+.diffstat,
+.loglist,
+.nav,
+.commitinfo,
+.cloneurl,
+.contributors,
+.refs,
 .commit-tree-container
  {
   border: var(--border-width) var(--border-style) var(--color-border-primary);
@@ -21,7 +21,7 @@
   background-color: var(--color-bg-secondary);
 }
 
-#latestcommit {
+.latest-commit {
   overflow-x: auto;
 }
 
@@ -43,11 +43,11 @@ a.filelink {
   background-color: var(--color-bg-secondary);
 }
 
-.fileinfo-left {
+.fileinfo > :first-child {
   flex: 0 0 auto;
 }
 
-.fileinfo-right {
+.fileinfo > :last-child {
   flex: 1 1 auto;
   text-align: right;
 }
@@ -70,38 +70,38 @@ a.filelink {
 }
 
 /* Commit Info */
-#commitinfo {
+.commitinfo {
   padding: var(--spacing-lg);
 }
 
 /* Tables */
-#treelist table,
-#loglist table,
-#commitinfo table {
+.treelist table,
+.loglist table,
+.commitinfo table {
   width: 100%;
   border-spacing: 0 var(--spacing-xs);
 }
 
-#loglist td,
-#loglist th,
-#treelist td,
-#treelist th,
-#commitinfo td,
-#commitinfo th {
+.loglist td,
+.loglist th,
+.treelist td,
+.treelist th,
+.commitinfo td,
+.commitinfo th {
   padding: var(--spacing-xs) var(--spacing-sm);
   line-height: var(--line-height-tight);
 }
 
-#loglist,
-#treelist {
+.loglist,
+.treelist {
   position: relative;
   width: auto;
   display: table;
 }
 
 .fileview,
-#loglist,
-#treelist {
+.loglist,
+.treelist {
   width: 100%;
 }
 
@@ -112,20 +112,20 @@ a.filelink {
 }
 
 /* Commit Message Box */
-#commitmsg {
+.commit-msg {
   border: var(--border-width) var(--border-style) var(--color-border-secondary);
   border-radius: var(--border-radius);
   padding: var(--spacing-sm);
   margin: var(--spacing-xs);
 }
 
-#commitmsg pre {
+.commit-msg pre {
   font-size: var(--font-size-small);
   line-height: var(--line-height-code);
 }
 
 /* Clone URL Widget */
-#cloneurl {
+.cloneurl {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
@@ -179,14 +179,14 @@ a.filelink {
 }
 
 /* Contributors */
-#contributors {
+.contributors {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
   padding: var(--spacing-lg);
 }
 
-#contributors ul {
+.contributors ul {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);

@@ -1,21 +1,21 @@
 {{template "header.html" . -}}
-<div id="refs">
+<div class="refs">
 <h2>Branches</h2>
 {{if .Branches -}}
 <table>
 <thead>
 <tr>
-<th class="left">Name</th>
-<th class="left">Commit</th>
-<th class="left">Log</th>
+<th>Name</th>
+<th>Commit</th>
+<th>Log</th>
 </tr>
 </thead>
 <tbody>
 {{range .Branches -}}
 <tr>
-<td class="left">{{.Name -}}</td>
-<td class="left"><code>{{.CommitHash -}}</code></td>
-<td class="left"><a href="/{{$.GlobalData.Config.RepoName -}}{{.LogLink -}}">log</a></td>
+<td>{{.Name -}}</td>
+<td><code>{{.CommitHash -}}</code></td>
+<td><a href="/{{$.GlobalData.Config.RepoName -}}{{.LogLink -}}">log</a></td>
 </tr>
 {{end -}}
 </tbody>

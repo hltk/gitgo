@@ -1,20 +1,20 @@
 {{template "header.html" . -}}
-<div id="commitinfo">
+<div class="commitinfo">
 <table>
 <tr>
-<td class="left">
+<td>
 Commit:
 </td>
-<td class="left">
+<td>
 {{.Id -}}
 </td>
 </tr>
 <tr>
 {{if .HasAnyParents -}}
-<td class="left">
+<td>
 Parent(s):
 </td>
-<td class="left">
+<td>
 {{range .Parents -}}
 <a href="/{{$.GlobalData.Config.RepoName -}}/commit/{{. -}}.html">{{. -}}</a><br>
 {{end -}}
@@ -22,27 +22,27 @@ Parent(s):
 </tr>
 {{end -}}
 <tr>
-<td class="left">
+<td>
 Author:
 </td>
-<td class="left">
+<td>
 {{.Author -}} &lt;<a href="mailto:{{.Mail -}}">{{.Mail}}</a>&gt;
 </td>
 </tr>
 <tr>
-<td class="left">
+<td>
 Date:
 </td>
-<td class="left">
+<td>
 {{.Date.Format "2006-01-02 15:04:05" -}}
 </td>
 </tr>
 <tr>
-<td class="left">
+<td>
 Message:
 </td>
-<td class="left">
-<div id="commitmsg">
+<td>
+<div class="commit-msg">
 {{range .MsgLines -}}
 <pre>
 {{. -}}
@@ -53,7 +53,7 @@ Message:
 </tr>
 </table>
 </div>
-<div id="diffstat">
+<div class="diffstat">
 {{template "linenumberer.html" .DiffStatLines -}}
 </div>
 {{template "footer.html" . -}}

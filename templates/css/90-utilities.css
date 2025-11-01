@@ -1,10 +1,53 @@
 /* Utility Classes - Helper Classes for Common Patterns */
 
-.left {
+/* Table alignment - structural selectors based on column position */
+/* Tree tables: Mode, Name, Size, Last Modified, Last Commit */
+.treelist th:nth-child(1),
+.treelist th:nth-child(2),
+.treelist th:nth-child(5),
+.treelist td:nth-child(1),
+.treelist td:nth-child(2),
+.treelist td:nth-child(5) {
   text-align: left;
 }
 
-.right {
+.treelist th:nth-child(3),
+.treelist th:nth-child(4),
+.treelist td:nth-child(3),
+.treelist td:nth-child(4) {
   text-align: right;
+}
+
+/* Log tables: Commit, Summary, Author, Date */
+.loglist th:nth-child(1),
+.loglist th:nth-child(2),
+.loglist th:nth-child(3),
+.loglist td:nth-child(1),
+.loglist td:nth-child(2),
+.loglist td:nth-child(3) {
+  text-align: left;
+}
+
+.loglist th:nth-child(4),
+.loglist td:nth-child(4) {
+  text-align: right;
+}
+
+/* Refs/Branches/Tags tables: Name, Commit, Log - all left-aligned */
+.refs th,
+.refs td,
+.refs th:nth-child(1),
+.refs th:nth-child(2),
+.refs th:nth-child(3),
+.refs td:nth-child(1),
+.refs td:nth-child(2),
+.refs td:nth-child(3) {
+  text-align: left;
+}
+
+/* Commit info tables: two-column layout, both left-aligned */
+.commitinfo th,
+.commitinfo td {
+  text-align: left;
 }
 

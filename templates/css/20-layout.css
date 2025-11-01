@@ -1,6 +1,6 @@
 /* Layout Styles - Containers and Structure */
 
-#content {
+.content {
   width: var(--container-width);
   max-width: var(--container-max-width);
   margin: 0 auto;
@@ -9,7 +9,7 @@
   gap: var(--spacing-px-sm);
 }
 
-#headerdiv {
+.header-container {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -17,22 +17,22 @@
   padding-bottom: var(--spacing-px-sm);
 }
 
-#headerlogo,
-#header {
+.header-logo,
+.header {
   vertical-align: middle;
 }
 
-#headerlogo {
+.header-logo {
   max-width: var(--logo-size);
   max-height: var(--logo-size);
 }
 
-#header a {
+.header a {
   color: var(--color-link-inherit);
   text-decoration: none;
 }
 
-#header a:hover {
+.header a:hover {
   text-decoration: underline;
 }
 
@@ -101,23 +101,23 @@
   gap: var(--spacing-sm);
 }
 
-#loglink {
+.log-link {
   flex: 0 0 auto;
   white-space: nowrap;
 }
 
-#loglink a {
+.log-link a {
   color: var(--color-link-inherit);
   text-decoration: none;
   font-weight: var(--font-weight-bold);
 }
 
-#loglink a:hover {
+.log-link a:hover {
   text-decoration: underline;
 }
 
 /* Refs Layout */
-#refs {
+.refs {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);

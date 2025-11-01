@@ -24,7 +24,7 @@
 {{if or .CommitFound .TreeFound -}}
 <div class="commit-tree-container">
 {{if .CommitFound -}}
-<div id="latestcommit">
+<div class="latest-commit">
 <div class="latest-commit-header">
 <div>
 <p>
@@ -33,7 +33,7 @@
 <small>by {{.LatestCommit.Name}} on {{formatDate .LatestCommit.Date}}</small>
 </p>
 </div>
-<div id="loglink">
+<div class="log-link">
 {{range .GlobalData.Links -}}
 {{if eq .Pretty "log" -}}
 <a href="/{{$.GlobalData.Config.RepoName -}}{{.Link}}">View all commits ({{$.GlobalData.CommitCount}})</a>
@@ -44,25 +44,25 @@
 </div>
 {{end -}}
 {{if .TreeFound -}}
-<div id="treelist">
+<div class="treelist">
 <table>
 <thead>
 <tr>
-<th class="left">Mode</th>
-<th class="left">Name</th>
-<th class="right">Size</th>
-<th class="right">Last Modified</th>
-<th class="left">Last Commit</th>
+<th>Mode</th>
+<th>Name</th>
+<th>Size</th>
+<th>Last Modified</th>
+<th>Last Commit</th>
 </tr>
 </thead>
 <tbody id="treeentries">
 {{range .RootTree -}}
 <tr>
-<td class="left"><pre class="mode">{{.Mode -}}</pre></td>
-<td class="left"><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
-<td class="right"><pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre></td>
-<td class="right"><pre class="date">{{formatDate .LastModified -}}</pre></td>
-<td class="left">{{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}</td>
+<td><pre class="mode">{{.Mode -}}</pre></td>
+<td><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
+<td><pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre></td>
+<td><pre class="date">{{formatDate .LastModified -}}</pre></td>
+<td>{{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}</td>
 </tr>
 {{end -}}
 </tbody>
@@ -75,10 +75,10 @@
 {{if .ReadmeIsMarkdown -}}
 <div class="fileview">
 <div class="fileinfo">
-<div class="fileinfo-left">
+<div>
 <p class="filename">{{.ReadmeFile.Name}}</p>
 </div>
-<div class="fileinfo-right">
+<div>
 {{if .ReadmeFile.LastCommitMsg -}}
 <p class="commit-info">
 <a href="/{{.GlobalData.Config.RepoName}}{{.ReadmeFile.LastCommitLink}}">{{.ReadmeFile.LastCommitMsg}}</a>
@@ -101,7 +101,7 @@
 </div>
 <div class="sidebar">
 {{if gt .ContributorsCt 0 -}}
-<div id="contributors">
+<div class="contributors">
 <h3>Contributors ({{.ContributorsCt}})</h3>
 <ul>
 {{range .Contributors -}}

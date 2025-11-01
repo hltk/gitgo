@@ -1,32 +1,32 @@
 {{template "header.html" . -}}
-<div id="treelist">
+<div class="treelist">
 <table>
 <thead>
 <tr>
-<th class="left">Mode</th>
-<th class="left">Name</th>
-<th class="right">Size</th>
-<th class="right">Last Modified</th>
-<th class="left">Last Commit</th>
+<th>Mode</th>
+<th>Name</th>
+<th>Size</th>
+<th>Last Modified</th>
+<th>Last Commit</th>
 </tr>
 </thead>
 <tbody id="treeentries">
 {{if .HasParent -}}
 <tr>
-<td class="left"><pre class="mode"></pre></td>
-<td class="left"><a href="/{{$.GlobalData.Config.RepoName -}}{{.ParentPath -}}">../</a></td>
-<td class="right"><pre class="size"></pre></td>
-<td class="right"><pre class="date"></pre></td>
-<td class="left"></td>
+<td><pre class="mode"></pre></td>
+<td><a href="/{{$.GlobalData.Config.RepoName -}}{{.ParentPath -}}">../</a></td>
+<td><pre class="size"></pre></td>
+<td><pre class="date"></pre></td>
+<td></td>
 </tr>
 {{end -}}
 {{range .Files -}}
 <tr>
-<td class="left"><pre class="mode">{{.Mode -}}</pre></td>
-<td class="left"><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
-<td class="right"><pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre></td>
-<td class="right"><pre class="date">{{formatDate .LastModified -}}</pre></td>
-<td class="left">{{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}</td>
+<td><pre class="mode">{{.Mode -}}</pre></td>
+<td><a {{if .IsFile -}}class="filelink"{{end -}}href="/{{$.GlobalData.Config.RepoName -}}{{.Link -}}">{{.Name -}}</a></td>
+<td><pre class="size">{{if .IsFile}}{{.Size}}{{end -}}</pre></td>
+<td><pre class="date">{{formatDate .LastModified -}}</pre></td>
+<td>{{if .LastCommitMsg -}}<a href="/{{$.GlobalData.Config.RepoName -}}{{.LastCommitLink -}}">{{.LastCommitMsg -}}</a>{{end -}}</td>
 </tr>
 {{end -}}
 </tbody>
