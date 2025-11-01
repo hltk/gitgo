@@ -35,17 +35,19 @@ type Contributor struct {
 }
 
 type IndexRenderData struct {
-	GlobalData     *GlobalRenderData
-	ReadmeFile     FileViewRenderData
-	ReadmeFound    bool
-	LicenseFile    FileViewRenderData
-	LicenseFound   bool
-	LatestCommit   CommitListElem
-	CommitFound    bool
-	RootTree       []FileListElem
-	TreeFound      bool
-	Contributors   []Contributor
-	ContributorsCt int
+	GlobalData       *GlobalRenderData
+	ReadmeFile       FileViewRenderData
+	ReadmeFound      bool
+	ReadmeIsMarkdown bool
+	ReadmeHTML       template.HTML
+	LicenseFile      FileViewRenderData
+	LicenseFound     bool
+	LatestCommit     CommitListElem
+	CommitFound      bool
+	RootTree         []FileListElem
+	TreeFound        bool
+	Contributors     []Contributor
+	ContributorsCt   int
 }
 
 type LogRenderData struct {

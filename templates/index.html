@@ -52,7 +52,13 @@
 </div>
 {{end -}}
 {{if .ReadmeFound -}}
+{{if .ReadmeIsMarkdown -}}
+<div class="readme-markdown">
+{{.ReadmeHTML}}
+</div>
+{{else -}}
 {{template "fileview.html" .ReadmeFile -}}
+{{end -}}
 {{end -}}
 {{if .LicenseFound -}}
 {{template "fileview.html" .LicenseFile -}}

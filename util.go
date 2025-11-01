@@ -14,6 +14,7 @@ import (
 	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/alecthomas/chroma/v2/styles"
+	"github.com/yuin/goldmark"
 )
 
 func makeDir(dir string) error {
@@ -233,4 +234,15 @@ func generateChromaCSS() (string, error) {
 `
 
 	return buf.String() + customCSS, nil
+}
+
+// renderMarkdownToHTML converts markdown bytes to HTML using goldmark
+// Returns the HTML as template.HTML to prevent escaping
+func renderMarkdownToHTML(contents []byte) template.HTML {
+	var buf bytes.Buffer
+	if err := goldmark.Convert(contents, &buf); err != nil {
+		// If conversion fails, return plain text (escaped)
+		return template.HTML("<pre>" + html.EscapeString(string(contents)) + "</pre>")
+	}
+	return template.HTML(buf.String())
 }

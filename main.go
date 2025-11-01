@@ -93,9 +93,11 @@ func run(repoPath, destDir, installDir string, force bool) error {
 	}
 
 	var (
-		readmefiles = [...]string{"HEAD:README", "HEAD:README.md"}
-		readmefile  FileViewRenderData
-		readmefound = false
+		readmefiles      = [...]string{"HEAD:README", "HEAD:README.md"}
+		readmefile       FileViewRenderData
+		readmefound      = false
+		readmeIsMarkdown = false
+		readmeHTML       template.HTML
 
 		licensefiles = [...]string{"HEAD:LICENSE", "HEAD:COPYING", "HEAD:LICENSE.md"}
 		licensefile  FileViewRenderData
@@ -114,10 +116,18 @@ func run(repoPath, destDir, installDir string, force bool) error {
 				return err
 			}
 
-			lines := highlightFileContents(strings.TrimPrefix(file, "HEAD:"), blob.Contents())
+			filename := strings.TrimPrefix(file, "HEAD:")
 
-			readmefile.Name = strings.TrimPrefix(file, "HEAD:")
-			readmefile.Lines = lines
+			// Check if README is markdown
+			if strings.HasSuffix(strings.ToLower(filename), ".md") {
+				readmeIsMarkdown = true
+				readmeHTML = renderMarkdownToHTML(blob.Contents())
+			} else {
+				lines := highlightFileContents(filename, blob.Contents())
+				readmefile.Name = filename
+				readmefile.Lines = lines
+			}
+
 			readmefound = true
 			break
 		}
@@ -200,17 +210,19 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		return err
 	}
 	err = t.ExecuteTemplate(indexfile, "index.html", IndexRenderData{
-		GlobalData:     &GlobalDataGlobal,
-		ReadmeFile:     readmefile,
-		ReadmeFound:    readmefound,
-		LicenseFile:    licensefile,
-		LicenseFound:   licensefound,
-		LatestCommit:   latestCommit,
-		CommitFound:    commitfound,
-		RootTree:       rootTree,
-		TreeFound:      treefound,
-		Contributors:   contributors,
-		ContributorsCt: len(contributors),
+		GlobalData:       &GlobalDataGlobal,
+		ReadmeFile:       readmefile,
+		ReadmeFound:      readmefound,
+		ReadmeIsMarkdown: readmeIsMarkdown,
+		ReadmeHTML:       readmeHTML,
+		LicenseFile:      licensefile,
+		LicenseFound:     licensefound,
+		LatestCommit:     latestCommit,
+		CommitFound:      commitfound,
+		RootTree:         rootTree,
+		TreeFound:        treefound,
+		Contributors:     contributors,
+		ContributorsCt:   len(contributors),
 	})
 	if err != nil {
 		return err
