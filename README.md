@@ -1,12 +1,26 @@
 # Gitgo
 
-![Example of gitgo page](gitgo.png)
+![Example of Gitgo page](gitgo.png)
 
-Go program for creating static web pages of git repositories.
+A static site generator for Git repositories. Creates a fast and beautiful web interface for browsing code, without server-side processing or JS needed.
 
-This project is inspired by [stagit](https://git.codemadness.org/stagit/) (written in C). The basic structure and approach to interacting with the libgit2 API are based on stagit's design.
+## Static Git Pages
 
-This project is primarily a learning exercise for exploring Git and Go, rather than aiming to be a production-ready git web portal.
+In a world of heavy and complex git hosting platforms, Gitgo offers a fresh breath of air. Static pages have a few key advantages:
+
+- **Scalability**: Serve from any static host.
+- **Simplicity**: No server-side processing, no runtime dependencies.
+- **Performance**: Pages load instantly.
+- **Security**: Minimal attack surface.
+- **No JS Required**: Works with any browser, including the likes of Lynx.
+
+One tradeoff is that pages must be regenerated after each push. Generation time grows with repository size, so Gitgo is currently best suited for small repositories rather than massive monorepos.
+
+## What Makes Gitgo Different?
+
+Originally, this project was inspired by [stagit](https://git.codemadness.org/stagit/) (written in C). Gitgo modernizes this concept: It is written in Go, features precalculated syntax highlighting, and a beautiful modern user interface.
+
+Gitgo is ideal for anyone who values lightweight, performant git browsing over feature-heavy platforms. What's more, tt easy to extend.
 
 ## Requirements
 
