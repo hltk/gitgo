@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -470,9 +471,30 @@ func getLastCommitInfo(repo *git.Repository, repoPath string) (time.Time, string
 func getRootTreeFileList(repo *git.Repository, tree *git.Tree) []FileListElem {
 	var filelist []FileListElem
 	count := int(tree.EntryCount())
+	
+	// Separate directories and files
+	var dirs []*git.TreeEntry
+	var files []*git.TreeEntry
+	
 	for i := 0; i < count; i++ {
 		entry := tree.EntryByIndex(uint64(i))
-
+		if entry.Type == git.ObjectTree {
+			dirs = append(dirs, entry)
+		} else if entry.Type == git.ObjectBlob {
+			files = append(files, entry)
+		}
+	}
+	
+	// Sort directories and files alphabetically (case-insensitive)
+	sort.Slice(dirs, func(i, j int) bool {
+		return strings.ToLower(dirs[i].Name) < strings.ToLower(dirs[j].Name)
+	})
+	sort.Slice(files, func(i, j int) bool {
+		return strings.ToLower(files[i].Name) < strings.ToLower(files[j].Name)
+	})
+	
+	// Process directories first
+	for _, entry := range dirs {
 		filemode := entry.Filemode
 		mode := os.FileMode(filemode).String()
 
@@ -492,15 +514,35 @@ func getRootTreeFileList(repo *git.Repository, tree *git.Tree) []FileListElem {
 			size = int(blob.Size())
 		}
 
-		if entry.Type == git.ObjectTree {
-			lastModified, commitMsg, commitLink, _ := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
-			filelist = append(filelist, FileListElem{entry.Name + "/", filepath.Join("/tree", entry.Name), false, mode, size, lastModified, commitMsg, commitLink})
-		}
-		if entry.Type == git.ObjectBlob {
-			lastModified, commitMsg, commitLink, _ := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
-			filelist = append(filelist, FileListElem{entry.Name, filepath.Join("/tree", entry.Name) + ".html", true, mode, size, lastModified, commitMsg, commitLink})
-		}
+		lastModified, commitMsg, commitLink, _ := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
+		filelist = append(filelist, FileListElem{entry.Name + "/", filepath.Join("/tree", entry.Name), false, mode, size, lastModified, commitMsg, commitLink})
 	}
+	
+	// Process files
+	for _, entry := range files {
+		filemode := entry.Filemode
+		mode := os.FileMode(filemode).String()
+
+		if filemode == git.FilemodeTree {
+			mode = "d" + mode[1:]
+		}
+		if filemode == git.FilemodeLink {
+			mode = "l" + mode[1:]
+		}
+		if filemode == git.FilemodeCommit {
+			mode = "m" + mode[1:]
+		}
+
+		size := 0
+		blob, err := repo.LookupBlob(entry.Id)
+		if err == nil {
+			size = int(blob.Size())
+		}
+
+		lastModified, commitMsg, commitLink, _ := getLastCommitInfo(repo, filepath.Join("/tree", entry.Name))
+		filelist = append(filelist, FileListElem{entry.Name, filepath.Join("/tree", entry.Name) + ".html", true, mode, size, lastModified, commitMsg, commitLink})
+	}
+	
 	return filelist
 }
 
@@ -534,11 +576,34 @@ func getImageFileContents(repo *git.Repository, treePath, filename string) ([]by
 func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 	var filelist []FileListElem
 	count := int(tree.EntryCount())
+	
+	// Separate directories and files
+	var dirs []*git.TreeEntry
+	var files []*git.TreeEntry
+	
 	for i := 0; i < count; i++ {
 		entry := tree.EntryByIndex(uint64(i))
-
+		if entry.Type == git.ObjectTree {
+			dirs = append(dirs, entry)
+		} else if entry.Type == git.ObjectBlob {
+			files = append(files, entry)
+		} else if entry.Type == git.ObjectCommit {
+			log.Print("FATAL: submodules not implemented")
+			log.Fatal()
+		}
+	}
+	
+	// Sort directories and files alphabetically (case-insensitive)
+	sort.Slice(dirs, func(i, j int) bool {
+		return strings.ToLower(dirs[i].Name) < strings.ToLower(dirs[j].Name)
+	})
+	sort.Slice(files, func(i, j int) bool {
+		return strings.ToLower(files[i].Name) < strings.ToLower(files[j].Name)
+	})
+	
+	// Process directories first
+	for _, entry := range dirs {
 		filemode := entry.Filemode
-
 		mode := os.FileMode(filemode).String()
 
 		if filemode == git.FilemodeTree {
@@ -552,93 +617,106 @@ func indexTreeRecursive(repo *git.Repository, tree *git.Tree, path string) {
 		}
 
 		size := 0
-
 		blob, err := repo.LookupBlob(entry.Id)
-
 		if err == nil {
 			size = int(blob.Size())
 		}
 
-		if entry.Type == git.ObjectTree {
-			// possibly very slow?
-			nexttree, err := repo.LookupTree(entry.Id)
-			if err != nil {
-				log.Fatal()
-			}
-
-			newpath := filepath.Join(path, entry.Name)
-
-			err = makeDir(filepath.Join(Config.DestDir, newpath))
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			lastModified, commitMsg, commitLink, _ := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
-			filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false, mode, size, lastModified, commitMsg, commitLink})
-			indexTreeRecursive(repo, nexttree, newpath)
-		}
-		if entry.Type == git.ObjectBlob {
-			blob, err := repo.LookupBlob(entry.Id)
-			if err != nil {
-				log.Fatal()
-			}
-
-			newpath := filepath.Join(path, entry.Name)
-			file, err := os.Create(filepath.Join(Config.DestDir, newpath+".html"))
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			lines := highlightFileContents(entry.Name, blob.Contents())
-
-			lastModified, commitMsg, commitLink, commitAuthor := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
-
-			currentPath := newpath + ".html"
-
-			err = t.ExecuteTemplate(file, "file.html", FileRenderData{
-				GlobalData: &GlobalDataGlobal,
-				FileViewData: FileViewRenderData{
-					Name:             entry.Name,
-					Lines:            lines,
-					LastCommitMsg:    commitMsg,
-					LastCommitLink:   commitLink,
-					LastCommitDate:   lastModified,
-					LastCommitAuthor: commitAuthor,
-					RepoName:         Config.RepoName,
-					CurrentPath:      currentPath,
-				},
-				FullTree:    GlobalFullTree,
-				CurrentPath: currentPath,
-			})
-			if err != nil {
-				log.Print("execute:", err)
-			}
-			file.Sync()
-			defer file.Close()
-
-			// If this is an image file, also write it to the assets directory
-			// Read from working directory to handle Git LFS properly
-			if isImageFile(entry.Name) {
-				imagePath := filepath.Join(Config.DestDir, "assets", entry.Name)
-				imageContents, err := getImageFileContents(repo, path, entry.Name)
-				if err != nil {
-					// Fallback to blob contents if reading from working directory fails
-					log.Print("warning: failed to read image from working directory, using blob contents:", err)
-					imageContents = blob.Contents()
-				}
-				err = os.WriteFile(imagePath, imageContents, 0644)
-				if err != nil {
-					log.Print("write image:", err)
-				}
-			}
-
-			filelist = append(filelist, FileListElem{entry.Name, newpath + ".html", true, mode, size, lastModified, commitMsg, commitLink})
-		}
-		if entry.Type == git.ObjectCommit {
-			log.Print("FATAL: submodules not implemented")
+		// possibly very slow?
+		nexttree, err := repo.LookupTree(entry.Id)
+		if err != nil {
 			log.Fatal()
 		}
+
+		newpath := filepath.Join(path, entry.Name)
+
+		err = makeDir(filepath.Join(Config.DestDir, newpath))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		lastModified, commitMsg, commitLink, _ := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
+		filelist = append(filelist, FileListElem{entry.Name + "/", newpath, false, mode, size, lastModified, commitMsg, commitLink})
+		indexTreeRecursive(repo, nexttree, newpath)
+	}
+	
+	// Process files
+	for _, entry := range files {
+		filemode := entry.Filemode
+		mode := os.FileMode(filemode).String()
+
+		if filemode == git.FilemodeTree {
+			mode = "d" + mode[1:]
+		}
+		if filemode == git.FilemodeLink {
+			mode = "l" + mode[1:]
+		}
+		if filemode == git.FilemodeCommit {
+			mode = "m" + mode[1:]
+		}
+
+		size := 0
+		blob, err := repo.LookupBlob(entry.Id)
+		if err == nil {
+			size = int(blob.Size())
+		}
+
+		blob, err = repo.LookupBlob(entry.Id)
+		if err != nil {
+			log.Fatal()
+		}
+
+		newpath := filepath.Join(path, entry.Name)
+		file, err := os.Create(filepath.Join(Config.DestDir, newpath+".html"))
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		lines := highlightFileContents(entry.Name, blob.Contents())
+
+		lastModified, commitMsg, commitLink, commitAuthor := getLastCommitInfo(repo, filepath.Join(path, entry.Name))
+
+		currentPath := newpath + ".html"
+
+		err = t.ExecuteTemplate(file, "file.html", FileRenderData{
+			GlobalData: &GlobalDataGlobal,
+			FileViewData: FileViewRenderData{
+				Name:             entry.Name,
+				Lines:            lines,
+				LastCommitMsg:    commitMsg,
+				LastCommitLink:   commitLink,
+				LastCommitDate:   lastModified,
+				LastCommitAuthor: commitAuthor,
+				RepoName:         Config.RepoName,
+				CurrentPath:      currentPath,
+			},
+			FullTree:    GlobalFullTree,
+			CurrentPath: currentPath,
+		})
+		if err != nil {
+			log.Print("execute:", err)
+		}
+		file.Sync()
+		defer file.Close()
+
+		// If this is an image file, also write it to the assets directory
+		// Read from working directory to handle Git LFS properly
+		if isImageFile(entry.Name) {
+			imagePath := filepath.Join(Config.DestDir, "assets", entry.Name)
+			imageContents, err := getImageFileContents(repo, path, entry.Name)
+			if err != nil {
+				// Fallback to blob contents if reading from working directory fails
+				log.Print("warning: failed to read image from working directory, using blob contents:", err)
+				imageContents = blob.Contents()
+			}
+			err = os.WriteFile(imagePath, imageContents, 0644)
+			if err != nil {
+				log.Print("write image:", err)
+			}
+		}
+
+		filelist = append(filelist, FileListElem{entry.Name, newpath + ".html", true, mode, size, lastModified, commitMsg, commitLink})
 	}
 	treefile, err := os.Create(filepath.Join(Config.DestDir, path, "index.html"))
 	if err != nil {
@@ -733,6 +811,14 @@ func buildFullTreeRecursive(repo *git.Repository, tree *git.Tree, path string) [
 			files = append(files, entry)
 		}
 	}
+
+	// Sort directories and files alphabetically (case-insensitive)
+	sort.Slice(dirs, func(i, j int) bool {
+		return strings.ToLower(dirs[i].Name) < strings.ToLower(dirs[j].Name)
+	})
+	sort.Slice(files, func(i, j int) bool {
+		return strings.ToLower(files[i].Name) < strings.ToLower(files[j].Name)
+	})
 
 	// Process directories first
 	for _, entry := range dirs {
