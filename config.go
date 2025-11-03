@@ -14,6 +14,9 @@ var (
 			}
 			return t.Format("2006-01-02 15:04")
 		},
+		"mul": func(a int, b float64) float64 {
+			return float64(a) * b
+		},
 	}
 	templ *template.Template
 	t     *template.Template

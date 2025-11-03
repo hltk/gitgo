@@ -3,7 +3,7 @@
         {{$currentPath := .CurrentPath}}
         {{range .FullTree -}}
     <li class="tree-item{{if .IsFile}} tree-file{{else}} tree-dir{{end}}"
-        style="padding-left: {{.Depth}}em;
+        style="padding-left: {{mul .Depth 1.5}}em;
                border-left-color: {{if gt .Depth 0}}var(--color-border-lighter){{else}}transparent{{end}}">
         <a href="/{{$.GlobalData.Config.RepoName}}{{.Link}}"
            class="tree-link{{if and $currentPath (eq $currentPath .Link)}} tree-item-current{{end}}">

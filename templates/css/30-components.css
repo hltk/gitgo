@@ -300,17 +300,19 @@ a.filelink {
 }
 
 .tree-link:hover {
-    background-color: var(--color-bg-hover);
+    background-color: var(--color-bg-secondary);
     text-decoration: none;
 }
 
 .tree-item-current {
-    background-color: var(--color-bg-secondary);
-    font-weight: var(--font-weight-semibold);
+    background-color: #dde2e8;
+}
+
+.tree-item-current:hover {
+    background-color: #d0d7e0;
 }
 
 .tree-dir {
-    font-weight: var(--font-weight-semibold);
 }
 
 .muted {
