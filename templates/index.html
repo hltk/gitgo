@@ -99,7 +99,9 @@
             <h3>Branches ({{len .Branches}})</h3>
             <ul>
                 {{range .Branches -}}
-                <li><a href="#" class="disabled-link">{{.Name}}</a></li>
+                <li>
+                    <a href="#" class="disabled-link">{{.Name}}</a>
+                </li>
                 {{end -}}
             </ul>
         </div>
@@ -108,7 +110,9 @@
             <h3>Tags ({{len .Tags}})</h3>
             <ul>
                 {{range .Tags -}}
-                <li><a href="#" class="disabled-link">{{.Name}}</a></li>
+                <li>
+                    <a href="#" class="disabled-link">{{.Name}}</a>
+                </li>
                 {{end -}}
             </ul>
         </div>
