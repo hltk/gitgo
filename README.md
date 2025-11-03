@@ -1,5 +1,7 @@
 # Gitgo
 
+![Example of gitgo page](gitgo.png)
+
 Go program for creating static web pages of git repositories.
 
 This project is inspired by [stagit](https://git.codemadness.org/stagit/) (written in C). The basic structure and approach to interacting with the libgit2 API are based on stagit's design.
