@@ -63,6 +63,8 @@ type IndexRenderData struct {
 	TreeFound        bool
 	Contributors     []Contributor
 	ContributorsCt   int
+	Branches         []RefListElem
+	Tags             []RefListElem
 }
 
 type LogRenderData struct {

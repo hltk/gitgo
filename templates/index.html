@@ -87,27 +87,32 @@
             <h3>Contributors ({{.ContributorsCt}})</h3>
             <ul>
                 {{range .Contributors -}}
-                <li>{{.Name}} &lt;{{.Email}}&gt;</li>
+                <li>
+                    <div class="contributor-name">{{.Name}}</div>
+                    <div class="contributor-email">{{.Email}}</div>
+                </li>
                 {{end -}}
             </ul>
         </div>
         {{end -}}
         <div class="contributors">
-            <h3>Branches ({{.ContributorsCt}})</h3>
+            <h3>Branches ({{len .Branches}})</h3>
             <ul>
-                {{range .Contributors -}}
-                <li>{{.Name}} &lt;{{.Email}}&gt;</li>
+                {{range .Branches -}}
+                <li><a href="#" class="disabled-link">{{.Name}}</a></li>
                 {{end -}}
             </ul>
         </div>
+        {{if gt (len .Tags) 0 -}}
         <div class="contributors">
-            <h3>Tags ({{.ContributorsCt}})</h3>
+            <h3>Tags ({{len .Tags}})</h3>
             <ul>
-                {{range .Contributors -}}
-                <li>{{.Name}} &lt;{{.Email}}&gt;</li>
+                {{range .Tags -}}
+                <li><a href="#" class="disabled-link">{{.Name}}</a></li>
                 {{end -}}
             </ul>
         </div>
+        {{end -}}
     </div>
 </div>
 {{template "footer.html" . -}}

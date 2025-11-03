@@ -277,6 +277,8 @@ func run(repoPath, destDir, installDir string, force bool) error {
 		TreeFound:        treefound,
 		Contributors:     contributors,
 		ContributorsCt:   len(contributors),
+		Branches:         branches,
+		Tags:             tags,
 	})
 	if err != nil {
 		return err
