@@ -261,14 +261,6 @@ h1, h2, h3, h4, h5, h6 {
     padding: var(--spacing-lg);
 }
 
-.latest-commit-header a {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
 .log-link {
     flex: 0 0 auto;
     white-space: nowrap;
