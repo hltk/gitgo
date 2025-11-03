@@ -115,14 +115,6 @@
     padding: var(--spacing-lg);
 }
 
-.latest-commit-header a {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
 .log-link {
     flex: 0 0 auto;
     white-space: nowrap;

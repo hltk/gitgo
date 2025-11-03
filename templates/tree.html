@@ -8,11 +8,9 @@
             <div class="latest-commit">
                 <div class="latest-commit-header">
                     <div>
-                        <p>
+                        <p class="commit-info">
                             <a href="/{{$.GlobalData.Config.RepoName}}{{.LatestCommit.Link}}">{{.LatestCommit.Msg}}</a>
-                            <br />
-                            <small>by {{.LatestCommit.Name}} on {{formatDate
-                            .LatestCommit.Date}}</small>
+                            <small>· {{.LatestCommit.Name}} · {{formatDate .LatestCommit.Date}}</small>
                         </p>
                     </div>
                 </div>
