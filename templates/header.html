@@ -19,12 +19,8 @@
             <h1 class="header">
                 <a href="/{{.GlobalData.Config.RepoName}}/">{{.GlobalData.Config.RepoName}}</a>
             </h1>
-            <div class="clone-inline">
-                <span>Clone:</span>
-                <code class="clone-url">git clone
-                git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</code>
-                <button class="copy-btn"
-                        data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}"
-                        onclick="copyCloneUrl(this)">Copy</button>
-            </div>
+            <a href="#" class="clone-link"
+               data-clone-url="git clone git://{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}"
+               onclick="copyCloneUrl(event, this)"
+               title="Click to copy clone command">{{.GlobalData.Config.GitUrl}}/{{.GlobalData.Config.RepoName}}</a>
         </div>

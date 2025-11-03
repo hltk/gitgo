@@ -241,14 +241,17 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
 }
 
-.clone-inline {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+.clone-link {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-code);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
 }
 
-.clone-inline span {
-    font-weight: var(--font-weight-semibold);
+.clone-link:hover {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
 }
 
 /* Latest Commit Header */
@@ -557,30 +560,6 @@ a.filelink {
     white-space: nowrap;
 }
 
-/* Copy Button */
-.copy-btn {
-    flex-shrink: 0;
-    background-color: transparent;
-    border: var(--border-width) var(--border-style) var(--color-border-light);
-    padding: var(--spacing-sm);
-    cursor: pointer;
-    border-radius: var(--border-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-fast);
-    color: var(--color-text-secondary);
-}
-
-.copy-btn:hover {
-    background-color: var(--color-bg-code);
-    border-color: #999;
-    color: #333;
-}
-
-.copy-btn:active {
-    background-color: var(--color-bg-hover);
-}
 
 /* Contributors */
 .contributors {

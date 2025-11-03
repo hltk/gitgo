@@ -225,30 +225,6 @@ a.filelink {
     white-space: nowrap;
 }
 
-/* Copy Button */
-.copy-btn {
-    flex-shrink: 0;
-    background-color: transparent;
-    border: var(--border-width) var(--border-style) var(--color-border-light);
-    padding: var(--spacing-sm);
-    cursor: pointer;
-    border-radius: var(--border-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-fast);
-    color: var(--color-text-secondary);
-}
-
-.copy-btn:hover {
-    background-color: var(--color-bg-code);
-    border-color: #999;
-    color: #333;
-}
-
-.copy-btn:active {
-    background-color: var(--color-bg-hover);
-}
 
 /* Contributors */
 .contributors {

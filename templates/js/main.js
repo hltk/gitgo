@@ -1,13 +1,13 @@
 // Main JavaScript functionality
 
-function copyCloneUrl(btn) {
-  const url = btn.getAttribute("data-clone-url");
+function copyCloneUrl(event, link) {
+  event.preventDefault();
+  const url = link.getAttribute("data-clone-url");
   navigator.clipboard.writeText(url).then(() => {
-    btn.textContent = "Copied!";
-    btn.style.color = "#28a745";
+    const originalColor = link.style.color;
+    link.style.color = "#38a169";
     setTimeout(() => {
-      btn.textContent = "Copy";
-      btn.style.color = "";
-    }, 2000);
+      link.style.color = originalColor;
+    }, 1000);
   });
 }
